@@ -3,6 +3,7 @@ using DisneyDown.Common.Processors.Downloaders;
 using DisneyDown.Common.Processors.Parsers;
 using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 // ReSharper disable InconsistentNaming
@@ -18,14 +19,22 @@ namespace DisneyDown.Console
 
         private static void PrintUsage()
         {
-            System.Console.WriteLine(@"Usage:");
-            System.Console.WriteLine($@"{ExecutableName} widevine_hex_key master_manifest_URL [output_file_name]");
+            System.Console.WriteLine($@"usage: {ExecutableName} widevine_hex_key master_manifest_URL [output_file_name]");
+            System.Console.WriteLine(@" options:");
+            System.Console.WriteLine(@"  widevine_hex_key    - 32 character content decryption key");
+            System.Console.WriteLine(@"  master_manifest_URL - m3u8 master manifest URL; do not input a locally available manifest.");
+            System.Console.WriteLine(@"  output_file_name    - Name of the remuxed file in the .\output folder");
         }
 
         private static void Main(string[] args)
         {
             //verify arguments
-            if (args.Length < 2)
+            if (args.Length < 2
+                || args.Contains(@"-?")
+                || args.Contains(@"-help")
+                || args.Contains(@"-h"))
+
+                //help information
                 PrintUsage();
             else
             {
