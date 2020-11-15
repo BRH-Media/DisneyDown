@@ -40,11 +40,12 @@ namespace DisneyDown.Console
         /// </summary>
         private static void PrintUsage()
         {
-            System.Console.WriteLine($@"usage: {ExecutableName} widevine_hex_key master_manifest_URL [output_file_name]");
+            System.Console.WriteLine($@"usage: {ExecutableName} widevine_hex_key master_manifest_URL [output_file_name] [-t]");
             System.Console.WriteLine(@" options:");
             System.Console.WriteLine(@"  widevine_hex_key    - 32 character content decryption key");
-            System.Console.WriteLine(@"  master_manifest_URL - m3u8 master manifest URL; do not input a locally available manifest.");
+            System.Console.WriteLine(@"  master_manifest_URL - m3u8 master manifest URL; do not input a locally available manifest");
             System.Console.WriteLine(@"  output_file_name    - Name of the remuxed file in the .\output folder");
+            System.Console.WriteLine(@"  -t                  - Enables execution timing; reports how long each operation took");
         }
 
         /// <summary>
@@ -53,6 +54,9 @@ namespace DisneyDown.Console
         /// <param name="args"></param>
         private static void Main(string[] args)
         {
+            //main execution timer start
+            Timers.StartTimer(Timers.ExecutionTimer);
+
             //verify arguments
             if (args.Length < 2
                 || args.Contains(@"-?")
@@ -74,6 +78,19 @@ namespace DisneyDown.Console
                 //begin
                 StartProcessor();
             }
+
+            //main execution timer stop
+            Timers.StopTimer(Timers.ExecutionTimer);
+
+            //line break for timings
+            if (Timers.TimersEnabled)
+                System.Console.WriteLine();
+
+            //report all diagnostics timings
+            Timers.ReportTimers();
+
+            //report finality
+            System.Console.WriteLine("\nDone!");
         }
 
         /// <summary>
@@ -158,25 +175,51 @@ namespace DisneyDown.Console
                                 if (!Directory.Exists(workingDir))
                                     Directory.CreateDirectory(workingDir);
 
-                                //download audio and video data
+                                //start measuring audio download time
+                                Timers.StartTimer(Timers.AudioDownloadTimer);
+
+                                //download audio where audioFile is the path of the saved data
                                 var audioFile =
                                     AudioDownloader.DownloadBestAudioFromMaster(masterPlaylist, ManifestURL,
                                         encryptedAudio);
+
+                                //stop measuring audio download time
+                                Timers.StopTimer(Timers.AudioDownloadTimer);
+
+                                //start measuring video download time
+                                Timers.StartTimer(Timers.VideoDownloadTimer);
+
+                                //download video where videoFile is the path of the saved data
                                 var videoFile =
                                     VideoDownloader.DownloadBestVideoFromMaster(masterPlaylist, ManifestURL,
                                         encryptedVideo);
 
+                                //stop measuring video download time
+                                Timers.StopTimer(Timers.VideoDownloadTimer);
+
                                 //report progress
                                 System.Console.WriteLine(@"Attempting decryption on audio");
+
+                                //start measuring audio decrypt time
+                                Timers.StartTimer(Timers.AudioDecryptTimer);
 
                                 //decrypt audio stream
                                 External.DoDecrypt(audioFile, decryptedAudio, DecryptionKey);
 
+                                //stop measuring audio decrypt time
+                                Timers.StopTimer(Timers.AudioDecryptTimer);
+
                                 //report progress
                                 System.Console.WriteLine(@"Attempting decryption on video");
 
+                                //start measuring video decrypt time
+                                Timers.StartTimer(Timers.VideoDecryptTimer);
+
                                 //decrypt video stream
                                 External.DoDecrypt(videoFile, decryptedVideo, DecryptionKey);
+
+                                //stop measuring video decrypt time
+                                Timers.StopTimer(Timers.VideoDecryptTimer);
 
                                 //report progress
                                 System.Console.WriteLine("\nDecryption procedure completed");
@@ -185,9 +228,17 @@ namespace DisneyDown.Console
                                 //attempt mux audio and video together (only if the decryption succeeded)
                                 if (File.Exists(decryptedVideo) && File.Exists(decryptedAudio))
                                 {
+                                    //start measuring remux time
+                                    Timers.StartTimer(Timers.RemuxTimer);
+
+                                    //execute FFMPEG
                                     External.DoMux(decryptedAudio, decryptedVideo, outputFile);
+
+                                    //stop measuring remux time
+                                    Timers.StopTimer(Timers.RemuxTimer);
+
+                                    //report progress
                                     System.Console.WriteLine(@"Remux process completed");
-                                    System.Console.WriteLine("\nDone!");
                                 }
                                 else
                                     System.Console.WriteLine(
