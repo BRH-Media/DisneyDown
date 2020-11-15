@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DisneyDown.Console
+namespace DisneyDown.Common
 {
     public static class Extensions
     {

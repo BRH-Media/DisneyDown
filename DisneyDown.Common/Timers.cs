@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 
-namespace DisneyDown.Console
+namespace DisneyDown.Common
 {
     public static class Timers
     {
