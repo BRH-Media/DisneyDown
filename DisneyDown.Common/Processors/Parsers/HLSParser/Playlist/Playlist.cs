@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace DisneyDown.Common.Interpreters.HLSParser.Playlist
+namespace DisneyDown.Common.Processors.Parsers.HLSParser.Playlist
 {
     public class Playlist
     {

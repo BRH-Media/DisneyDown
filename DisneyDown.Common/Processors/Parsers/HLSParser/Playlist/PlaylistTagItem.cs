@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DisneyDown.Common.Interpreters.HLSParser.Playlist
+namespace DisneyDown.Common.Processors.Parsers.HLSParser.Playlist
 {
     public class PlaylistTagItem : PlaylistItem
     {

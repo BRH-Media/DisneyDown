@@ -1,9 +1,9 @@
-using DisneyDown.Common.Interpreters.HLSParser.Playlist;
+using DisneyDown.Common.Processors.Parsers.HLSParser.Playlist;
 using Sprache;
 using System.Collections.Generic;
 using System.IO;
 
-namespace DisneyDown.Common.Interpreters.HLSParser
+namespace DisneyDown.Common.Processors.Parsers.HLSParser
 {
     public class PlaylistParser
     {
