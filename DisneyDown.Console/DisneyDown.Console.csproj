@@ -36,12 +36,8 @@
     <StartupObject>DisneyDown.Console.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Sprache, Version=2.3.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\DisneyDown\packages\Sprache.2.3.1\lib\net45\Sprache.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -49,7 +45,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DisneyDown.Common\DisneyDown.Common.csproj">

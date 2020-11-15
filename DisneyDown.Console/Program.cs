@@ -10,13 +10,34 @@ using System.Reflection;
 
 namespace DisneyDown.Console
 {
+    /// <summary>
+    /// DisneyDown.Console main program code
+    /// </summary>
     public static class Program
     {
+        /// <summary>
+        /// Name of the the executable (used in-case the user renames it)
+        /// </summary>
         public static string ExecutableName => Path.GetFileName(Assembly.GetEntryAssembly()?.Location);
+
+        /// <summary>
+        /// Global storage for the Widevine decryption key
+        /// </summary>
         public static string DecryptionKey { get; set; } = @"";
+
+        /// <summary>
+        /// Global storage for the Disney+ Manifest URL
+        /// </summary>
         public static string ManifestURL { get; set; } = @"";
+
+        /// <summary>
+        /// Global storage for the remuxed file name
+        /// </summary>
         public static string OutFileName { get; set; } = @"decryptedDisney.mkv";
 
+        /// <summary>
+        /// Prints the 'help' text
+        /// </summary>
         private static void PrintUsage()
         {
             System.Console.WriteLine($@"usage: {ExecutableName} widevine_hex_key master_manifest_URL [output_file_name]");
@@ -26,6 +47,10 @@ namespace DisneyDown.Console
             System.Console.WriteLine(@"  output_file_name    - Name of the remuxed file in the .\output folder");
         }
 
+        /// <summary>
+        /// Entry point
+        /// </summary>
+        /// <param name="args"></param>
         private static void Main(string[] args)
         {
             //verify arguments
@@ -51,8 +76,15 @@ namespace DisneyDown.Console
             }
         }
 
+        /// <summary>
+        /// Verifies the existence of ffmpeg and bento4 mp4decrypt.
+        /// </summary>
+        /// <returns></returns>
         private static bool CheckRequiredExecutables() => File.Exists(@"ffmpeg.exe") && File.Exists(@"mp4decrypt.exe");
 
+        /// <summary>
+        /// Starts the entire process; this is where the magic happens.
+        /// </summary>
         private static void StartProcessor()
         {
             //executable validation

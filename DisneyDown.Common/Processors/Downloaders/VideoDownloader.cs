@@ -5,6 +5,9 @@ using System.IO;
 
 namespace DisneyDown.Common.Processors.Downloaders
 {
+    /// <summary>
+    /// Contains methods used for downloading and saving video data
+    /// </summary>
     public static class VideoDownloader
     {
         /// <summary>

@@ -5,8 +5,18 @@ using System.Text;
 
 namespace DisneyDown.Common.Net
 {
+    /// <summary>
+    /// Web client handler; processes web resources for download
+    /// </summary>
     public static class ResourceGrab
     {
+        /// <summary>
+        /// Downloads a web resource then transforms it into an ASCII/UTF-8 string
+        /// </summary>
+        /// <param name="uri"></param>
+        /// <param name="referrer"></param>
+        /// <param name="method"></param>
+        /// <returns></returns>
         public static string GrabString(string uri, string referrer = @"", string method = @"GET")
         {
             //download raw bytes
@@ -16,6 +26,13 @@ namespace DisneyDown.Common.Net
             return Encoding.Default.GetString(data);
         }
 
+        /// <summary>
+        /// Downloads a raw web resource with no transforms
+        /// </summary>
+        /// <param name="uri"></param>
+        /// <param name="referrer"></param>
+        /// <param name="method"></param>
+        /// <returns></returns>
         public static byte[] GrabBytes(string uri, string referrer = @"", string method = @"GET")
         {
             //request handler

@@ -2,6 +2,9 @@
 
 namespace DisneyDown.Common
 {
+    /// <summary>
+    /// Stores bandwidth rating information used for manifest quality sorting
+    /// </summary>
     public static class BandwidthDefinitions
     {
         public static Dictionary<int, string> VideoDefinitions { get; } = new Dictionary<int, string>

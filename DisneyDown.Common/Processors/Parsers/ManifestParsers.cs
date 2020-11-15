@@ -8,8 +8,16 @@ using System.Collections.Generic;
 
 namespace DisneyDown.Common.Processors.Parsers
 {
+    /// <summary>
+    /// Contains generic methods for parsing content manifests
+    /// </summary>
     public static class ManifestParsers
     {
+        /// <summary>
+        /// Verify if a manifest (master or content) is valid and conforms to the standard
+        /// </summary>
+        /// <param name="playlist"></param>
+        /// <returns></returns>
         public static bool ManifestValid(string playlist)
         {
             try
@@ -44,6 +52,11 @@ namespace DisneyDown.Common.Processors.Parsers
             return false;
         }
 
+        /// <summary>
+        /// Download a manifest from a URL (contains additional verification than simply using ResourceGrab)
+        /// </summary>
+        /// <param name="playlistUrl"></param>
+        /// <returns></returns>
         public static string DownloadManifest(string playlistUrl)
         {
             try
@@ -73,6 +86,11 @@ namespace DisneyDown.Common.Processors.Parsers
             return @"";
         }
 
+        /// <summary>
+        /// Fetches the manifest MPEG-4 map URL (MPEG-4 initialisation segment data)
+        /// </summary>
+        /// <param name="playlist"></param>
+        /// <returns></returns>
         public static string ManifestMapUrl(string playlist)
         {
             try

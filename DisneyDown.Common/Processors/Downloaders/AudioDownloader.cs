@@ -5,6 +5,9 @@ using System.IO;
 
 namespace DisneyDown.Common.Processors.Downloaders
 {
+    /// <summary>
+    /// Contains methods used for downloading and saving audio data
+    /// </summary>
     public static class AudioDownloader
     {
         /// <summary>

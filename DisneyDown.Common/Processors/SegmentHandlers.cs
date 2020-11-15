@@ -6,8 +6,16 @@ using System.IO;
 
 namespace DisneyDown.Common.Processors
 {
+    /// <summary>
+    /// Contains methods for handling segment manipulation and ordering
+    /// </summary>
     public static class SegmentHandlers
     {
+        /// <summary>
+        /// Writes a segment to a file; creates the file if it doesn't exist, otherwise it will append.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="bytes"></param>
         public static void WriteSegment(string path, byte[] bytes)
         {
             if (bytes != null)
@@ -19,6 +27,11 @@ namespace DisneyDown.Common.Processors
             }
         }
 
+        /// <summary>
+        /// Append bytes to an existing file; will fail if the file does not exist
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="bytes"></param>
         public static void AppendAllBytes(string path, byte[] bytes)
         {
             if (File.Exists(path) && bytes != null)
@@ -30,6 +43,13 @@ namespace DisneyDown.Common.Processors
             }
         }
 
+        /// <summary>
+        /// Download all valid segments in a manifest file (audio or video), then append them to a respective singular Widevine-protected file.
+        /// </summary>
+        /// <param name="playlist"></param>
+        /// <param name="baseUri"></param>
+        /// <param name="filePath"></param>
+        /// <param name="correctUrlComponent"></param>
         public static void DownloadAllSegments(string playlist, string baseUri, string filePath = @"segments.bin", string correctUrlComponent = @"-MAIN/")
         {
             try

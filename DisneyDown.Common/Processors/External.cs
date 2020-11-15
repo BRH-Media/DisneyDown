@@ -4,8 +4,18 @@ using System.IO;
 
 namespace DisneyDown.Common.Processors
 {
+    /// <summary>
+    /// External program wrappers for FFMPEG and bento4 mp4decrypt
+    /// </summary>
     public static class External
     {
+        /// <summary>
+        /// Bento4 mp4decrypt wrapper for decrypting singular files with a Widevine key
+        /// </summary>
+        /// <param name="inputFile"></param>
+        /// <param name="outputFile"></param>
+        /// <param name="key"></param>
+        /// <param name="forceOverwrite"></param>
         public static void DoDecrypt(string inputFile, string outputFile, string key, bool forceOverwrite = false)
         {
             try
@@ -44,6 +54,13 @@ namespace DisneyDown.Common.Processors
             }
         }
 
+        /// <summary>
+        /// FFMPEG wrapper for remuxing audio and video files
+        /// </summary>
+        /// <param name="audioFile"></param>
+        /// <param name="videoFile"></param>
+        /// <param name="outputFile"></param>
+        /// <param name="forceOverwrite"></param>
         public static void DoMux(string audioFile, string videoFile, string outputFile = @"content.mkv", bool forceOverwrite = false)
         {
             try

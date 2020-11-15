@@ -6,9 +6,17 @@ using System.Linq;
 
 namespace DisneyDown.Common.Processors.Parsers
 {
+    /// <summary>
+    /// Contains generic methods for parsing and handling master manifests from Disney+
+    /// </summary>
     public static class MasterParsers
     {
-        public static bool ValidAudioTrack(PlaylistTagItem audioTrack, string audioSearchGroup = @"")
+        /// <summary>
+        /// Verifies if an audio tag posses the correct attributes
+        /// </summary>
+        /// <param name="audioTrack"></param>
+        /// <returns></returns>
+        public static bool ValidAudioTrack(PlaylistTagItem audioTrack)
         {
             //tag constants
             const string audioName = @"English";
@@ -57,6 +65,12 @@ namespace DisneyDown.Common.Processors.Parsers
             return false;
         }
 
+        /// <summary>
+        /// Sorts the best quality playlist from a list of playlist URLs
+        /// </summary>
+        /// <param name="playlistUrls">List of URLs</param>
+        /// <param name="definitions">Use the BandwidthDefinitions class to handle this argument</param>
+        /// <returns></returns>
         public static string SortBestPlaylist(string[] playlistUrls, Dictionary<int, string> definitions)
         {
             try
@@ -107,6 +121,11 @@ namespace DisneyDown.Common.Processors.Parsers
             return @"";
         }
 
+        /// <summary>
+        /// Sort the best quality video playlist from a master manifest
+        /// </summary>
+        /// <param name="playlist"></param>
+        /// <returns></returns>
         public static string MasterVideoPlaylist(string playlist)
         {
             try
@@ -156,6 +175,11 @@ namespace DisneyDown.Common.Processors.Parsers
             return @"";
         }
 
+        /// <summary>
+        /// Sort the best quality audio playlist from a master manifest
+        /// </summary>
+        /// <param name="playlist"></param>
+        /// <returns></returns>
         public static string MasterAudioPlaylist(string playlist)
         {
             try
