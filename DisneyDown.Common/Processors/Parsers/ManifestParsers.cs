@@ -2,7 +2,7 @@
 using DisneyDown.Common.Processors.Parsers.HLSParser;
 using DisneyDown.Common.Processors.Parsers.HLSParser.Playlist;
 using System;
-using System.Collections.Generic;
+using System.Linq;
 
 // ReSharper disable RedundantIfElseBlock
 
@@ -93,6 +93,9 @@ namespace DisneyDown.Common.Processors.Parsers
         /// <returns></returns>
         public static string ManifestMapUrl(string playlist)
         {
+            //check value for verification
+            const string checkValue = @"-MAIN/";
+
             try
             {
                 //validation
@@ -105,7 +108,7 @@ namespace DisneyDown.Common.Processors.Parsers
                     if (p != null)
                     {
                         //playlist maps are stored temporarily
-                        var maps = new List<string>();
+                        var map = @"";
 
                         //go through each located tag
                         foreach (var i in p.Items)
@@ -117,7 +120,14 @@ namespace DisneyDown.Common.Processors.Parsers
 
                                 //verify map
                                 if (tag.Id == PlaylistTagId.EXT_X_MAP)
-                                    maps.Add(tag.Attributes[0].Value);
+                                    //find URI attribute and verify it against the match criteria
+                                    foreach (var a in tag.Attributes.Where(a
+                                        => a.Key == @"URI" && a.Value.Contains(checkValue)))
+                                    {
+                                        //assign the return value
+                                        map = a.Value;
+                                        break;
+                                    }
                             }
                             catch
                             {
@@ -125,8 +135,8 @@ namespace DisneyDown.Common.Processors.Parsers
                             }
                         }
 
-                        //Disney+ has a "BUMPER" section that is purely the intro, so we attempt to grab the second one if it exists
-                        return maps.Count > 1 ? maps[1] : maps[0];
+                        //return the result
+                        return map;
                     }
                     else
                         Console.WriteLine(@"Null playlist parse result; couldn't find map URL");
