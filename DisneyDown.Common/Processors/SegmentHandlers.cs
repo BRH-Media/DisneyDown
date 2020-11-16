@@ -67,7 +67,7 @@ namespace DisneyDown.Common.Processors
                         var counter = 0;
 
                         //report merge file
-                        Console.WriteLine($"Starting segment download on merge file: {filePath}\n");
+                        Console.WriteLine($"\nStarting segment download on merge file: {filePath}\n");
 
                         //go through each item in the playlist
                         foreach (var i in p.Items)
@@ -99,11 +99,11 @@ namespace DisneyDown.Common.Processors
                                             WriteSegment(filePath, segment);
 
                                             Console.WriteLine(
-                                                $"Segment {counter} ({segmentFileName}) downloaded and merged");
+                                                $"Segment {counter:D4} ({segmentFileName}) downloaded and merged");
                                         }
                                         else
                                             Console.WriteLine(
-                                                $"Segment {counter} ({segmentFileName}) download error: null result");
+                                                $"Segment {counter:D4} ({segmentFileName}) download error: null result");
 
                                         //incremented only on valid segment URL to keep count fluid
                                         counter++;

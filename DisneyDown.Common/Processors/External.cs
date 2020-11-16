@@ -33,7 +33,7 @@ namespace DisneyDown.Common.Processors
                             {
                                 FileName = fileName,
                                 WindowStyle = ProcessWindowStyle.Hidden,
-                                Arguments = $"--key 1:{key} --show-progress {inputFile} {outputFile}"
+                                Arguments = $"--key 1:{key} --show-progress \"{inputFile}\" \"{outputFile}\""
                             }
                         };
 
@@ -43,6 +43,8 @@ namespace DisneyDown.Common.Processors
                         //don't continue until the decrypter quits
                         p.WaitForExit();
                     }
+                    else
+                        Console.WriteLine(@"Decrypt failed; output file specified already exists");
                 }
                 else
                     Console.WriteLine($"Couldn't decrypt because {fileName} was not found");
@@ -78,7 +80,7 @@ namespace DisneyDown.Common.Processors
                             {
                                 FileName = fileName,
                                 WindowStyle = ProcessWindowStyle.Hidden,
-                                Arguments = $"-i {videoFile} -i {audioFile} -c copy {outputFile}"
+                                Arguments = $"-i \"{videoFile}\" -i \"{audioFile}\" -c copy \"{outputFile}\""
                             }
                         };
 
@@ -88,6 +90,8 @@ namespace DisneyDown.Common.Processors
                         //don't continue until FFMPEG quits
                         p.WaitForExit();
                     }
+                    else
+                        Console.WriteLine(@"Remux failed; output file specified already exists");
                 }
                 else
                     Console.WriteLine($"Couldn't remux because {fileName} was not found");

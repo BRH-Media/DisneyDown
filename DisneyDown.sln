@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisneyDown.Console", "Disne
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisneyDown.Common", "DisneyDown.Common\DisneyDown.Common.csproj", "{A121A22D-A229-4EB5-9D81-908E69EC95EE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisneyDown.Console.Dash", "DisneyDown.Console.Dash\DisneyDown.Console.Dash.csproj", "{5B34646D-0494-43FA-BC45-568D5A167A40}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{A121A22D-A229-4EB5-9D81-908E69EC95EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A121A22D-A229-4EB5-9D81-908E69EC95EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A121A22D-A229-4EB5-9D81-908E69EC95EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B34646D-0494-43FA-BC45-568D5A167A40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B34646D-0494-43FA-BC45-568D5A167A40}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B34646D-0494-43FA-BC45-568D5A167A40}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B34646D-0494-43FA-BC45-568D5A167A40}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
