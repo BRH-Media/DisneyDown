@@ -39,12 +39,12 @@
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BandwidthDefinitions.cs" />
-    <Compile Include="Extensions.cs" />
-    <Compile Include="Md5Helper.cs" />
-    <Compile Include="Methods.cs" />
+    <Compile Include="Net\BandwidthDefinitions.cs" />
+    <Compile Include="Util\Extensions.cs" />
+    <Compile Include="Security\Md5Helper.cs" />
+    <Compile Include="Util\Methods.cs" />
     <Compile Include="Net\ResourceGrab.cs" />
-    <Compile Include="Processor.cs" />
+    <Compile Include="Processors\MainProcessor.cs" />
     <Compile Include="Processors\Downloaders\AudioDownloader.cs" />
     <Compile Include="Processors\Downloaders\VideoDownloader.cs" />
     <Compile Include="Processors\External.cs" />
@@ -61,10 +61,11 @@
     <Compile Include="Processors\Parsers\MasterParsers.cs" />
     <Compile Include="Processors\SegmentHandlers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Timers.cs" />
+    <Compile Include="Util\Timers.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

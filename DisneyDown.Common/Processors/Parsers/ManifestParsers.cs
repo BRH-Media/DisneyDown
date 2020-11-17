@@ -2,8 +2,10 @@
 using DisneyDown.Common.Processors.Parsers.HLSParser;
 using DisneyDown.Common.Processors.Parsers.HLSParser.Playlist;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
+// ReSharper disable InvertIf
 // ReSharper disable RedundantIfElseBlock
 
 namespace DisneyDown.Common.Processors.Parsers
@@ -86,16 +88,22 @@ namespace DisneyDown.Common.Processors.Parsers
             return @"";
         }
 
+        private static bool ValidSegmentUrl(string urlSegment)
+        {
+            //check values for verification
+            var checkValues = new[] { @"-BUMPER/", @"DUB_CARD" };
+
+            //if there's any match, it's an instant false
+            return checkValues.All(s => !urlSegment.Contains(s));
+        }
+
         /// <summary>
-        /// Fetches the manifest MPEG-4 map URL (MPEG-4 initialisation segment data)
+        /// Lists all manifest MPEG-4 map URLs (MPEG-4 initialisation segment data)
         /// </summary>
         /// <param name="playlist"></param>
         /// <returns></returns>
-        public static string ManifestMapUrl(string playlist)
+        public static string[] ManifestAllMapUrls(string playlist)
         {
-            //check value for verification
-            const string checkValue = @"-MAIN/";
-
             try
             {
                 //validation
@@ -108,7 +116,7 @@ namespace DisneyDown.Common.Processors.Parsers
                     if (p != null)
                     {
                         //playlist maps are stored temporarily
-                        var map = @"";
+                        var mapList = new List<string>();
 
                         //go through each located tag
                         foreach (var i in p.Items)
@@ -122,10 +130,10 @@ namespace DisneyDown.Common.Processors.Parsers
                                 if (tag.Id == PlaylistTagId.EXT_X_MAP)
                                     //find URI attribute and verify it against the match criteria
                                     foreach (var a in tag.Attributes.Where(a
-                                        => a.Key == @"URI" && a.Value.Contains(checkValue)))
+                                        => a.Key == @"URI"))
                                     {
                                         //assign the return value
-                                        map = a.Value;
+                                        mapList.Add(a.Value);
                                         break;
                                     }
                             }
@@ -136,10 +144,45 @@ namespace DisneyDown.Common.Processors.Parsers
                         }
 
                         //return the result
-                        return map;
+                        return mapList.ToArray();
                     }
                     else
                         Console.WriteLine(@"Null playlist parse result; couldn't find map URL");
+                }
+                else
+                    Console.WriteLine(@"Null or empty playlist supplied; couldn't find list of map URLs");
+            }
+            catch (Exception ex)
+            {
+                //report error
+                Console.WriteLine($"Playlist parse error:\n\n{ex.Message}");
+            }
+
+            //default
+            return null;
+        }
+
+        /// <summary>
+        /// Fetches the manifest MPEG-4 map URL (MPEG-4 initialisation segment data)
+        /// </summary>
+        /// <param name="playlist"></param>
+        /// <returns></returns>
+        public static string ManifestMapUrl(string playlist)
+        {
+            try
+            {
+                //validation
+                if (!string.IsNullOrWhiteSpace(playlist))
+                {
+                    //get all map urls
+                    var mapList = ManifestAllMapUrls(playlist);
+
+                    //loop through each one and return the first correct match
+                    foreach (var m in mapList)
+                        //validate the URL
+                        if (ValidSegmentUrl(m))
+                            //return result if valid
+                            return m;
                 }
                 else
                     Console.WriteLine(@"Null or empty playlist supplied; couldn't find map URL");

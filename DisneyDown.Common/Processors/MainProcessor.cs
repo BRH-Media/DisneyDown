@@ -1,19 +1,37 @@
-﻿using DisneyDown.Common.Processors;
-using DisneyDown.Common.Processors.Downloaders;
+﻿using DisneyDown.Common.Processors.Downloaders;
 using DisneyDown.Common.Processors.Parsers;
+using DisneyDown.Common.Security;
+using DisneyDown.Common.Util;
 using System;
 using System.IO;
+using System.Linq;
 
 // ReSharper disable RedundantIfElseBlock
 // ReSharper disable InconsistentNaming
 
-namespace DisneyDown.Common
+namespace DisneyDown.Common.Processors
 {
-    public static class Processor
+    public static class MainProcessor
     {
+        /// <summary>
+        /// Global storage for the Disney+ Manifest URL
+        /// </summary>
         public static string ManifestURL { get; set; } = @"";
+
+        /// <summary>
+        /// Global storage for the Widevine decryption key
+        /// </summary>
         public static string DecryptionKey { get; set; } = @"";
+
+        /// <summary>
+        /// Global storage for the remuxed file name
+        /// </summary>
         public static string OutFileName { get; set; } = @"decryptedDisney.mkv";
+
+        /// <summary>
+        /// Whether or not the application should download and decrypt the Disney+ "Original" bumper
+        /// </summary>
+        public static bool DownloadBumperEnabled => Environment.GetCommandLineArgs().Contains(@"-b");
 
         /// <summary>
         /// Verifies the existence of ffmpeg and bento4 mp4decrypt.

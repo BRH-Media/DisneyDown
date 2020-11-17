@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace DisneyDown.Common
+namespace DisneyDown.Common.Security
 {
     public static class Md5Helper
     {

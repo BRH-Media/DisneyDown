@@ -1,7 +1,10 @@
 ﻿using DisneyDown.Common.Net;
 using DisneyDown.Common.Processors.Parsers;
+using DisneyDown.Common.Util;
 using System;
 using System.IO;
+
+// ReSharper disable RedundantIfElseBlock
 
 namespace DisneyDown.Common.Processors.Downloaders
 {
@@ -17,7 +20,8 @@ namespace DisneyDown.Common.Processors.Downloaders
         /// <param name="masterPlaylistUrl"></param>
         /// <param name="encryptedVideoFile"></param>
         /// <returns></returns>
-        public static string DownloadBestVideoFromMaster(string masterPlaylist, string masterPlaylistUrl, string encryptedVideoFile = "videoEncrypted.bin")
+        public static string DownloadBestVideoFromMaster(string masterPlaylist, string masterPlaylistUrl,
+            string encryptedVideoFile = "videoEncrypted.bin")
         {
             try
             {
@@ -54,32 +58,44 @@ namespace DisneyDown.Common.Processors.Downloaders
                             //get map URL
                             var videoBaseUri = Methods.GetBaseUrl(videoPlaylistUrl);
                             var videoMapPath = ManifestParsers.ManifestMapUrl(videoManifest);
-                            var videoMapUrl = $"{videoBaseUri}{videoMapPath}";
 
-                            //download map
-                            Console.WriteLine($@"Downloading MPEG-4 init segment: {videoMapUrl}");
-                            var videoMap = ResourceGrab.GrabBytes(videoMapUrl);
-
-                            //validation
-                            if (videoMap != null)
+                            //ensure the map URL is valid
+                            if (!string.IsNullOrWhiteSpace(videoMapPath))
                             {
-                                //write to file
-                                File.WriteAllBytes(encryptedVideoFile, videoMap);
+                                //construct full map URL
+                                var videoMapUrl = $"{videoBaseUri}{videoMapPath}";
 
-                                //start segments download
-                                Console.WriteLine(@"Init data saved successfully; starting segments download");
+                                //download map
+                                Console.WriteLine($@"Downloading MPEG-4 init segment: {videoMapUrl}");
+                                var videoMap = ResourceGrab.GrabBytes(videoMapUrl);
 
-                                //do download
-                                SegmentHandlers.DownloadAllSegments(videoManifest, videoBaseUri, encryptedVideoFile);
+                                //validation
+                                if (videoMap != null)
+                                {
+                                    //write to file
+                                    File.WriteAllBytes(encryptedVideoFile, videoMap);
 
-                                //report success
-                                Console.WriteLine($"\nSuccessfully downloaded video data to: {encryptedVideoFile}\n");
+                                    //start segments download
+                                    Console.WriteLine(@"Init data saved successfully; starting segments download");
 
-                                //return the saved file path
-                                return encryptedVideoFile;
+                                    //do download
+                                    SegmentHandlers.DownloadAllSegments(videoManifest, videoBaseUri,
+                                        encryptedVideoFile);
+
+                                    //report success
+                                    Console.WriteLine(
+                                        $"\nSuccessfully downloaded video data to: {encryptedVideoFile}\n");
+
+                                    //return the saved file path
+                                    return encryptedVideoFile;
+                                }
+                                else
+                                {
+                                    Console.WriteLine(@"Video download failed; video init segment data was null");
+                                }
                             }
-
-                            Console.WriteLine(@"Video download failed; init segment data was null");
+                            else
+                                Console.WriteLine(@"Video download failed; video init URL was invalid, null or empty result.");
                         }
                         else
                             Console.WriteLine(@"Video download failed; video manifest does not conform");

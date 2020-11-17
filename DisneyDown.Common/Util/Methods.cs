@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DisneyDown.Common
+namespace DisneyDown.Common.Util
 {
     /// <summary>
     /// Generic methods that are commonly accessed

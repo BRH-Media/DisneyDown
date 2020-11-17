@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DisneyDown.Common
+namespace DisneyDown.Common.Net
 {
     /// <summary>
     /// Stores bandwidth rating information used for manifest quality sorting
@@ -11,31 +11,31 @@ namespace DisneyDown.Common
         {
             {
                 6,
-                @"4250k"
+                @"4250"
             },
             {
                 5,
-                @"3000k"
+                @"3000"
             },
             {
                 4,
-                @"2400k"
+                @"2400"
             },
             {
                 3,
-                @"1800k"
+                @"1800"
             },
             {
                 2,
-                @"1200k"
+                @"1200"
             },
             {
                 1,
-                @"800k"
+                @"800"
             },
             {
                 0,
-                @"400k"
+                @"400"
             }
         };
 
@@ -43,23 +43,23 @@ namespace DisneyDown.Common
         {
             {
                 6,
-                @"640k"
+                @"640"
             },
             {
                 5,
-                @"512k"
+                @"512"
             },
             {
                 4,
-                @"400k"
+                @"400"
             },
             {
                 3,
-                @"300k"
+                @"300"
             },
             {
                 2,
-                @"256k"
+                @"256"
             },
             {
                 1,
@@ -67,7 +67,7 @@ namespace DisneyDown.Common
             },
             {
                 0,
-                @"64k"
+                @"64"
             }
         };
     }

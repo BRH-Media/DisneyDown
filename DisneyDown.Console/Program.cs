@@ -1,4 +1,5 @@
-﻿using DisneyDown.Common;
+﻿using DisneyDown.Common.Processors;
+using DisneyDown.Common.Util;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -84,18 +85,19 @@ namespace DisneyDown.Console
             else
             {
                 //set required globals
-                Processor.DecryptionKey = args[0];
-                Processor.ManifestURL = args[1];
+                MainProcessor.DecryptionKey = args[0];
+                MainProcessor.ManifestURL = args[1];
 
                 //optional output file name is the third parameter
                 if (args.Length > 2)
-                    Processor.OutFileName =
+                    MainProcessor.OutFileName =
                         args[2] != @"-t"
-                            ? args[2]
-                            : Processor.OutFileName;
+                            && args[2] != @"-b"
+                                ? args[2]
+                                : MainProcessor.OutFileName;
 
                 //begin
-                var outFile = Processor.StartProcessor();
+                var outFile = MainProcessor.StartProcessor();
 
                 //report finality
                 System.Console.WriteLine("\nDone! Play now? (y/n)");

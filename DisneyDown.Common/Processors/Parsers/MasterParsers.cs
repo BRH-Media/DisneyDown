@@ -1,4 +1,5 @@
-﻿using DisneyDown.Common.Processors.Parsers.HLSParser;
+﻿using DisneyDown.Common.Net;
+using DisneyDown.Common.Processors.Parsers.HLSParser;
 using DisneyDown.Common.Processors.Parsers.HLSParser.Playlist;
 using System;
 using System.Collections.Generic;

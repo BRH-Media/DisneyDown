@@ -1,7 +1,10 @@
 ﻿using DisneyDown.Common.Net;
 using DisneyDown.Common.Processors.Parsers;
+using DisneyDown.Common.Util;
 using System;
 using System.IO;
+
+// ReSharper disable RedundantIfElseBlock
 
 namespace DisneyDown.Common.Processors.Downloaders
 {
@@ -54,32 +57,42 @@ namespace DisneyDown.Common.Processors.Downloaders
                             //get map URL
                             var audioBaseUri = Methods.GetBaseUrl(audioPlaylistUrl);
                             var audioMapPath = ManifestParsers.ManifestMapUrl(audioManifest);
-                            var audioMapUrl = $"{audioBaseUri}{audioMapPath}";
 
-                            //download map
-                            Console.WriteLine($@"Downloading MPEG-4 init segment: {audioMapUrl}");
-                            var audioMap = ResourceGrab.GrabBytes(audioMapUrl);
-
-                            //validation
-                            if (audioMap != null)
+                            //ensure the map URL is valid
+                            if (!string.IsNullOrWhiteSpace(audioMapPath))
                             {
-                                //write to file
-                                File.WriteAllBytes(encryptedAudioFile, audioMap);
+                                //construct full map URL
+                                var audioMapUrl = $"{audioBaseUri}{audioMapPath}";
 
-                                //start segments download
-                                Console.WriteLine(@"Init data saved successfully; starting segments download");
+                                //download map
+                                Console.WriteLine($@"Downloading MPEG-4 init segment: {audioMapUrl}");
+                                var audioMap = ResourceGrab.GrabBytes(audioMapUrl);
 
-                                //do download
-                                SegmentHandlers.DownloadAllSegments(audioManifest, audioBaseUri, encryptedAudioFile);
+                                //validation
+                                if (audioMap != null)
+                                {
+                                    //write to file
+                                    File.WriteAllBytes(encryptedAudioFile, audioMap);
 
-                                //report success
-                                Console.WriteLine($"\nSuccessfully downloaded audio data to: {encryptedAudioFile}\n");
+                                    //start segments download
+                                    Console.WriteLine(@"Init data saved successfully; starting segments download");
 
-                                //return the saved file path
-                                return encryptedAudioFile;
+                                    //do download
+                                    SegmentHandlers.DownloadAllSegments(audioManifest, audioBaseUri,
+                                        encryptedAudioFile);
+
+                                    //report success
+                                    Console.WriteLine(
+                                        $"\nSuccessfully downloaded audio data to: {encryptedAudioFile}\n");
+
+                                    //return the saved file path
+                                    return encryptedAudioFile;
+                                }
+                                else
+                                    Console.WriteLine(@"Audio download failed; audio init segment data was null");
                             }
-
-                            Console.WriteLine(@"Audio download failed; init segment data was null");
+                            else
+                                Console.WriteLine(@"Audio download failed; audio init URL was invalid, null or empty result.");
                         }
                         else
                             Console.WriteLine(@"Audio download failed; audio manifest does not conform");
