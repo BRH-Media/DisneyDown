@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Net\BandwidthDefinitions.cs" />
+    <Compile Include="Security\Sha256Helper.cs" />
     <Compile Include="Util\Extensions.cs" />
     <Compile Include="Security\Md5Helper.cs" />
     <Compile Include="Util\Methods.cs" />

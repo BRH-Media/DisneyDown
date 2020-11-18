@@ -3,27 +3,27 @@ using System.Text;
 
 namespace DisneyDown.Common.Security
 {
-    public static class Md5Helper
+    public static class Sha256Helper
     {
-        public static string CalculateMd5Hash(string input)
+        public static string CalculateSha256Hash(string input)
         {
             var inputBytes = Encoding.ASCII.GetBytes(input);
-            var hash = CalculateMd5Hash(inputBytes);
+            var hash = CalculateSha256Hash(inputBytes);
 
             //convert byte array to hex string
-            var final = Md5ToHex(hash);
+            var final = Sha256ToHex(hash);
 
             return !string.IsNullOrEmpty(final) ? final : @"";
         }
 
-        public static byte[] CalculateMd5Hash(byte[] input)
+        public static byte[] CalculateSha256Hash(byte[] input)
         {
-            var md5 = MD5.Create();
-            var hash = md5.ComputeHash(input);
+            var sha256 = SHA256.Create();
+            var hash = sha256.ComputeHash(input);
             return hash;
         }
 
-        public static string Md5ToHex(byte[] hash)
+        public static string Sha256ToHex(byte[] hash)
         {
             var sb = new StringBuilder();
             foreach (var t in hash)

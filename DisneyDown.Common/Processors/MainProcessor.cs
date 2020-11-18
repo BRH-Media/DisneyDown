@@ -37,7 +37,7 @@ namespace DisneyDown.Common.Processors
         /// Verifies the existence of ffmpeg and bento4 mp4decrypt.
         /// </summary>
         /// <returns></returns>
-        private static bool CheckRequiredExecutables() => File.Exists(@"ffmpeg.exe") && File.Exists(@"mp4decrypt.exe");
+        public static bool CheckRequiredExecutables() => File.Exists(@"ffmpeg.exe") && File.Exists(@"mp4decrypt.exe");
 
         /// <summary>
         /// Downloads and decrypts an audio stream; returns the decrypted file path

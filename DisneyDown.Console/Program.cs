@@ -57,12 +57,15 @@ namespace DisneyDown.Console
         /// </summary>
         private static void PrintUsage()
         {
-            System.Console.WriteLine($@"usage: {ExecutableName} widevine_hex_key master_manifest_URL [output_file_name] [-t]");
+            System.Console.WriteLine(
+                $@"usage: {ExecutableName} widevine_hex_key master_manifest_URL [output_file_name] [-t]");
             System.Console.WriteLine(@" options:");
             System.Console.WriteLine(@"  widevine_hex_key    - 32 character content decryption key");
-            System.Console.WriteLine(@"  master_manifest_URL - m3u8 master manifest URL; do not input a locally available manifest");
+            System.Console.WriteLine(
+                @"  master_manifest_URL - m3u8 master manifest URL; do not input a locally available manifest");
             System.Console.WriteLine(@"  output_file_name    - Name of the remuxed file in the .\output folder");
-            System.Console.WriteLine(@"  -t                  - Enables execution timing; reports how long each operation took");
+            System.Console.WriteLine(
+                @"  -t                  - Enables execution timing; reports how long each operation took");
         }
 
         /// <summary>
@@ -84,41 +87,43 @@ namespace DisneyDown.Console
                 PrintUsage();
             else
             {
-                //set required globals
-                MainProcessor.DecryptionKey = args[0];
-                MainProcessor.ManifestURL = args[1];
+                {
+                    //set required globals
+                    MainProcessor.DecryptionKey = args[0];
+                    MainProcessor.ManifestURL = args[1];
 
-                //optional output file name is the third parameter
-                if (args.Length > 2)
-                    MainProcessor.OutFileName =
-                        args[2] != @"-t"
+                    //optional output file name is the third parameter
+                    if (args.Length > 2)
+                        MainProcessor.OutFileName =
+                            args[2] != @"-t"
                             && args[2] != @"-b"
                                 ? args[2]
                                 : MainProcessor.OutFileName;
 
-                //begin
-                var outFile = MainProcessor.StartProcessor();
+                    //begin
+                    var outFile = MainProcessor.StartProcessor();
 
-                //report finality
-                System.Console.WriteLine("\nDone! Play now? (y/n)");
+                    //report finality
+                    System.Console.WriteLine("\nDone! Play now? (y/n)");
 
-                //read the console line
-                var response = System.Console.ReadLine();
+                    //read the console line
+                    var response = System.Console.ReadLine();
 
-                //figure out the response
-                if (response == @"y")
-                    PlayContent(outFile);
+                    //figure out the response
+                    if (response == @"y")
+                        PlayContent(outFile);
+                }
+
+                //main execution timer stop
+                Timers.StopTimer(Timers.ExecutionTimer);
+
+                //line break for timings
+                if (Timers.TimersEnabled)
+                    System.Console.WriteLine();
+
+                //report all diagnostics timings
+                Timers.ReportTimers();
             }
-
-            //main execution timer stop
-            Timers.StopTimer(Timers.ExecutionTimer);
-
-            //line break for timings
-            if (Timers.TimersEnabled)
-                System.Console.WriteLine();
-
-            //report all diagnostics timings
-            Timers.ReportTimers();
         }
     }
 }
