@@ -3,6 +3,7 @@ using DisneyDown.Common.Processors.Parsers.HLSParser;
 using DisneyDown.Common.Processors.Parsers.HLSParser.Playlist;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace DisneyDown.Common.Processors.Parsers
@@ -12,6 +13,85 @@ namespace DisneyDown.Common.Processors.Parsers
     /// </summary>
     public static class MasterParsers
     {
+        public static string[] FilterLanguages(PlaylistTagItem[] playlists)
+        {
+            //default language
+            const string defaultLang = @"en";
+            const string langPriorityFile = @"langPriority.cfg";
+
+            try
+            {
+                //priority storage
+                var langPriority = new List<string>()
+                {
+                    defaultLang
+                };
+
+                //does the lang priority file exist?
+                if (File.Exists(langPriorityFile))
+                {
+                    //read the file into memory as text
+                    var tmpLangPriority = File.ReadAllText(langPriorityFile);
+
+                    //verification
+                    if (!string.IsNullOrWhiteSpace(tmpLangPriority))
+                    {
+                        //read the file into memory as lines
+                        langPriority = File.ReadAllLines(langPriorityFile).ToList();
+                    }
+                    else
+                        //overwrite it
+                        File.WriteAllText(langPriorityFile, defaultLang);
+                }
+                else
+                    //create it
+                    File.WriteAllText(langPriorityFile, defaultLang);
+
+                //store all playlist URLs here
+                var playlistUrls = new List<string>();
+
+                foreach (var l in langPriority)
+                {
+                    foreach (var t in playlists)
+                    {
+                        //temporary validation variable
+                        var langValid = false;
+
+                        //loop through and parse attributes
+                        foreach (var a in t.Attributes)
+                        {
+                            switch (a.Key)
+                            {
+                                //validate the attribute
+                                case @"LANGUAGE" when string.Equals(a.Value, l, StringComparison.CurrentCultureIgnoreCase):
+                                    langValid = true;
+                                    break;
+
+                                case @"URI" when langValid:
+                                    playlistUrls.Add(a.Value);
+                                    break;
+                            }
+                        }
+                    }
+
+                    //language priority found, no need to keep running
+                    if (playlistUrls.Count > 0)
+                        break;
+                }
+
+                //return the new list
+                return playlistUrls.ToArray();
+            }
+            catch (Exception ex)
+            {
+                //report error
+                Console.WriteLine($"Language priority error: {ex.Message}. Will use '{defaultLang}'.");
+            }
+
+            //default
+            return new string[] { };
+        }
+
         /// <summary>
         /// Verifies if an audio tag posses the correct attributes
         /// </summary>
@@ -20,7 +100,6 @@ namespace DisneyDown.Common.Processors.Parsers
         public static bool ValidAudioTrack(PlaylistTagItem audioTrack)
         {
             //tag constants
-            const string audioName = @"English";
             const string audioType = @"AUDIO";
 
             try
@@ -33,7 +112,6 @@ namespace DisneyDown.Common.Processors.Parsers
                         && audioTrack.Id == PlaylistTagId.EXT_X_MEDIA)
                     {
                         //final return values
-                        var nameValid = false;
                         var typeValid = false;
 
                         //loop through and parse attributes
@@ -45,15 +123,11 @@ namespace DisneyDown.Common.Processors.Parsers
                                 case @"TYPE" when a.Value == audioType:
                                     typeValid = true;
                                     break;
-
-                                case @"NAME" when a.Value == audioName:
-                                    nameValid = true;
-                                    break;
                             }
                         }
 
                         //verify
-                        return nameValid && typeValid;
+                        return typeValid;
                     }
                 }
             }
@@ -138,7 +212,7 @@ namespace DisneyDown.Common.Processors.Parsers
                     var p = new PlaylistParser().Parse(playlist);
 
                     //store all playlist URIs here
-                    var playlists = new List<string>();
+                    var playlistUrls = new List<string>();
 
                     //loop through each track
                     foreach (var t in p.Items)
@@ -152,8 +226,8 @@ namespace DisneyDown.Common.Processors.Parsers
                             if (uri != null)
                             {
                                 //add to the list if it's not already in there
-                                if (!playlists.Contains(uri.Uri))
-                                    playlists.Add(uri.Uri);
+                                if (!playlistUrls.Contains(uri.Uri))
+                                    playlistUrls.Add(uri.Uri);
                             }
                         }
                         catch
@@ -163,7 +237,7 @@ namespace DisneyDown.Common.Processors.Parsers
                     }
 
                     //return filtered result
-                    return SortBestPlaylist(playlists.ToArray(), BandwidthDefinitions.VideoDefinitions);
+                    return SortBestPlaylist(playlistUrls.ToArray(), BandwidthDefinitions.VideoDefinitions);
                 }
             }
             catch (Exception ex)
@@ -192,7 +266,8 @@ namespace DisneyDown.Common.Processors.Parsers
                     var p = new PlaylistParser().Parse(playlist);
 
                     //store all playlist URIs here
-                    var playlists = new List<string>();
+                    var playlistUrls = new List<string>();
+                    var playlistTags = new List<PlaylistTagItem>();
 
                     //loop through each track
                     foreach (var t in p.Items)
@@ -216,7 +291,10 @@ namespace DisneyDown.Common.Processors.Parsers
                                     {
                                         //verify if it's a URI tag
                                         if (a.Key == @"URI")
-                                            playlists.Add(a.Value);
+                                        {
+                                            playlistUrls.Add(a.Value);
+                                            playlistTags.Add(tag);
+                                        }
                                     }
                                 }
                             }
@@ -227,8 +305,11 @@ namespace DisneyDown.Common.Processors.Parsers
                         }
                     }
 
+                    //filter out unwanted languages
+                    var finalPlaylists = FilterLanguages(playlistTags.ToArray());
+
                     //return filtered result
-                    return SortBestPlaylist(playlists.ToArray(), BandwidthDefinitions.AudioDefinitions);
+                    return SortBestPlaylist(finalPlaylists, BandwidthDefinitions.AudioDefinitions);
                 }
             }
             catch (Exception ex)
