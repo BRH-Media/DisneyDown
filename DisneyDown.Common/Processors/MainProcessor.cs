@@ -3,6 +3,7 @@ using DisneyDown.Common.Processors.Parsers;
 using DisneyDown.Common.Security;
 using DisneyDown.Common.Util;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -252,7 +253,14 @@ namespace DisneyDown.Common.Processors
                                         Timers.StartTimer(Timers.RemuxTimer);
 
                                         //execute FFMPEG
-                                        External.DoMux(decryptedAudio, decryptedVideo, outputFile);
+                                        External.DoMux(new List<string>
+                                        {
+                                            //remuxed Audio
+                                            decryptedAudio,
+
+                                            //remuxed video
+                                            decryptedVideo
+                                        }, outputFile);
 
                                         //stop measuring remux time
                                         Timers.StopTimer(Timers.RemuxTimer);

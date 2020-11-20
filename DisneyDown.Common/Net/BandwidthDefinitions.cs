@@ -10,28 +10,32 @@ namespace DisneyDown.Common.Net
         public static Dictionary<int, string> VideoDefinitions { get; } = new Dictionary<int, string>
         {
             {
-                6,
+                7,
                 @"4250"
             },
             {
-                5,
+                6,
                 @"3000"
             },
             {
-                4,
+                5,
                 @"2400"
             },
             {
-                3,
+                4,
                 @"1800"
             },
             {
-                2,
+                3,
                 @"1200"
             },
             {
-                1,
+                2,
                 @"800"
+            },
+            {
+                1,
+                @"480"
             },
             {
                 0,
@@ -42,12 +46,16 @@ namespace DisneyDown.Common.Net
         public static Dictionary<int, string> AudioDefinitions { get; } = new Dictionary<int, string>
         {
             {
-                6,
+                7,
                 @"640"
             },
             {
-                5,
+                6,
                 @"512"
+            },
+            {
+                5,
+                @"480"
             },
             {
                 4,
@@ -63,7 +71,7 @@ namespace DisneyDown.Common.Net
             },
             {
                 1,
-                @"128K"
+                @"128"
             },
             {
                 0,

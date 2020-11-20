@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 
 namespace DisneyDown.Common.Processors
 {
@@ -59,11 +61,10 @@ namespace DisneyDown.Common.Processors
         /// <summary>
         /// FFMPEG wrapper for remuxing audio and video files
         /// </summary>
-        /// <param name="audioFile"></param>
-        /// <param name="videoFile"></param>
+        /// <param name="inputFiles"></param>
         /// <param name="outputFile"></param>
         /// <param name="forceOverwrite"></param>
-        public static void DoMux(string audioFile, string videoFile, string outputFile = @"content.mkv", bool forceOverwrite = false)
+        public static void DoMux(List<string> inputFiles, string outputFile = @"content.mkv", bool forceOverwrite = false)
         {
             try
             {
@@ -73,6 +74,9 @@ namespace DisneyDown.Common.Processors
                 {
                     if (!File.Exists(outputFile) || forceOverwrite)
                     {
+                        //loop through each input file to build the string
+                        var inputFileString = inputFiles.Aggregate(@"", (current, s) => current + $" -i \"{s}\"");
+
                         //declare FFMPEG executable startup
                         var p = new Process
                         {
@@ -80,7 +84,7 @@ namespace DisneyDown.Common.Processors
                             {
                                 FileName = fileName,
                                 WindowStyle = ProcessWindowStyle.Hidden,
-                                Arguments = $"-i \"{videoFile}\" -i \"{audioFile}\" -c copy \"{outputFile}\""
+                                Arguments = $"{inputFileString.TrimStart(' ')} -c copy \"{outputFile}\""
                             }
                         };
 
