@@ -65,7 +65,7 @@ namespace DisneyDown.Common.Processors.Downloaders
                                 var audioMapUrl = $"{audioBaseUri}{audioMapPath}";
 
                                 //download map
-                                Console.WriteLine($@"Downloading MPEG-4 init segment: {audioMapUrl}");
+                                Console.WriteLine($@"Downloading audio MPEG-4 init segment: {audioMapUrl}");
                                 var audioMap = ResourceGrab.GrabBytes(audioMapUrl);
 
                                 //validation
@@ -75,7 +75,7 @@ namespace DisneyDown.Common.Processors.Downloaders
                                     File.WriteAllBytes(encryptedAudioFile, audioMap);
 
                                     //start segments download
-                                    Console.WriteLine(@"Init data saved successfully; starting segments download");
+                                    Console.WriteLine(@"Audio init data saved successfully; starting segments download");
 
                                     //do download
                                     SegmentHandlers.DownloadAllSegments(audioManifest, audioBaseUri,

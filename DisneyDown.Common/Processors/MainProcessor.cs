@@ -35,6 +35,16 @@ namespace DisneyDown.Common.Processors
         public static bool DownloadBumperEnabled => Environment.GetCommandLineArgs().Contains(@"-b");
 
         /// <summary>
+        /// Whether or not the application should only download video (not audio)
+        /// </summary>
+        public static bool VideoOnlyMode => Environment.GetCommandLineArgs().Contains(@"-v");
+
+        /// <summary>
+        /// Whether or not the application should only download audio (not video)
+        /// </summary>
+        public static bool AudioOnlyMode => Environment.GetCommandLineArgs().Contains(@"-a");
+
+        /// <summary>
         /// Verifies the existence of ffmpeg and bento4 mp4decrypt.
         /// </summary>
         /// <returns></returns>
@@ -166,6 +176,21 @@ namespace DisneyDown.Common.Processors
             return @"";
         }
 
+        private static bool AllExistInList(IEnumerable<string> inputFiles)
+        {
+            try
+            {
+                return inputFiles.All(File.Exists);
+            }
+            catch
+            {
+                //nothing
+            }
+
+            //default
+            return false;
+        }
+
         public static string StartProcessor()
         {
             try
@@ -234,33 +259,41 @@ namespace DisneyDown.Common.Processors
                                     if (!Directory.Exists(workingDir))
                                         Directory.CreateDirectory(workingDir);
 
+                                    //decrypted outputs
+                                    var decryptedAudio = @"";
+                                    var decryptedVideo = @"";
+
                                     //do audio and video processes
-                                    var decryptedVideo = StartVideo(masterPlaylist, workingDir);
-                                    var decryptedAudio = StartAudio(masterPlaylist, workingDir);
+                                    if (!AudioOnlyMode)
+                                        decryptedVideo = StartVideo(masterPlaylist, workingDir);
+                                    if (!VideoOnlyMode)
+                                        decryptedAudio = StartAudio(masterPlaylist, workingDir);
 
                                     //report progress
                                     Console.WriteLine($"\nDecrypted video path: {decryptedVideo}");
                                     Console.WriteLine($"Decrypted audio path: {decryptedAudio}");
                                     Console.WriteLine($"Output path: {outputFile}\n");
 
+                                    //assemble input files list
+                                    var muxInput = new List<string>();
+
+                                    //add the files to remux
+                                    if (!string.IsNullOrWhiteSpace(decryptedAudio))
+                                        muxInput.Add(decryptedAudio);
+                                    if (!string.IsNullOrWhiteSpace(decryptedVideo))
+                                        muxInput.Add(decryptedVideo);
+
                                     //report progress
                                     Console.WriteLine("Attempting stream remux");
 
                                     //attempt mux audio and video together (only if the decryption succeeded)
-                                    if (File.Exists(decryptedVideo) && File.Exists(decryptedAudio))
+                                    if (AllExistInList(muxInput))
                                     {
                                         //start measuring remux time
                                         Timers.StartTimer(Timers.RemuxTimer);
 
                                         //execute FFMPEG
-                                        External.DoMux(new List<string>
-                                        {
-                                            //remuxed Audio
-                                            decryptedAudio,
-
-                                            //remuxed video
-                                            decryptedVideo
-                                        }, outputFile);
+                                        External.DoMux(muxInput, outputFile);
 
                                         //stop measuring remux time
                                         Timers.StopTimer(Timers.RemuxTimer);

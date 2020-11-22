@@ -1,6 +1,7 @@
 ﻿using DisneyDown.Common.Processors;
 using DisneyDown.Common.Util;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -53,12 +54,62 @@ namespace DisneyDown.Console
         }
 
         /// <summary>
+        /// Returns the output file name specified. If nothing was specified or it was invalid, it will return the default value.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        private static string GetOutputFileName(IReadOnlyList<string> args)
+        {
+            try
+            {
+                //validation
+                if (args.Count > 2)
+                {
+                    //grab the argument
+                    var outFileNameArg = args[2];
+
+                    //validate all arguments
+                    var invalidNames = new[]
+                    {
+                        @"-t",
+                        @"-h",
+                        @"-help",
+                        @"-?",
+                        @"-e",
+                        @"-b",
+                        @"-a",
+                        @"-v"
+                    };
+
+                    //valid name (not an argument)
+                    var validName = invalidNames.Any(n =>
+                        string.Equals(n, outFileNameArg, StringComparison.InvariantCultureIgnoreCase));
+
+                    //valid characters (not an illegal file name on Windows)
+                    var validPath = outFileNameArg.IndexOfAny(Path.GetInvalidFileNameChars()) < 0;
+
+                    //perform validation
+                    return validName && validPath
+                            ? MainProcessor.OutFileName
+                            : outFileNameArg;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine($"Output file name parse error: {ex.Message}");
+            }
+
+            //default
+            return MainProcessor.OutFileName;
+        }
+
+        /// <summary>
         /// Prints the 'help' text
         /// </summary>
         private static void PrintUsage()
         {
             System.Console.WriteLine(
-                $@"usage: {ExecutableName} widevine_hex_key master_manifest_URL [output_file_name] [-t]");
+                $@"usage: {ExecutableName} widevine_hex_key master_manifest_URL [output_file_name] [-t] [-a] [-v]");
             System.Console.WriteLine(@" options:");
             System.Console.WriteLine(@"  widevine_hex_key    - 32 character content decryption key");
             System.Console.WriteLine(
@@ -66,6 +117,10 @@ namespace DisneyDown.Console
             System.Console.WriteLine(@"  output_file_name    - Name of the remuxed file in the .\output folder");
             System.Console.WriteLine(
                 @"  -t                  - Enables execution timing; reports how long each operation took");
+            System.Console.WriteLine(
+                @"  -a                  - Forces the application to only download and decrypt audio");
+            System.Console.WriteLine(
+                @"  -v                  - Forces the application to only download and decrypt video");
         }
 
         /// <summary>
@@ -91,14 +146,7 @@ namespace DisneyDown.Console
                     //set required globals
                     MainProcessor.DecryptionKey = args[0];
                     MainProcessor.ManifestURL = args[1];
-
-                    //optional output file name is the third parameter
-                    if (args.Length > 2)
-                        MainProcessor.OutFileName =
-                            args[2] != @"-t"
-                            && args[2] != @"-b"
-                                ? args[2]
-                                : MainProcessor.OutFileName;
+                    MainProcessor.OutFileName = GetOutputFileName(args);
 
                     //begin
                     var outFile = MainProcessor.StartProcessor();

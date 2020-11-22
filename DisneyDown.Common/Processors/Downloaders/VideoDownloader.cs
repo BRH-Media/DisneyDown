@@ -66,7 +66,7 @@ namespace DisneyDown.Common.Processors.Downloaders
                                 var videoMapUrl = $"{videoBaseUri}{videoMapPath}";
 
                                 //download map
-                                Console.WriteLine($@"Downloading MPEG-4 init segment: {videoMapUrl}");
+                                Console.WriteLine($@"Downloading video MPEG-4 init segment: {videoMapUrl}");
                                 var videoMap = ResourceGrab.GrabBytes(videoMapUrl);
 
                                 //validation
@@ -76,7 +76,7 @@ namespace DisneyDown.Common.Processors.Downloaders
                                     File.WriteAllBytes(encryptedVideoFile, videoMap);
 
                                     //start segments download
-                                    Console.WriteLine(@"Init data saved successfully; starting segments download");
+                                    Console.WriteLine(@"Video init data saved successfully; starting segments download");
 
                                     //do download
                                     SegmentHandlers.DownloadAllSegments(videoManifest, videoBaseUri,
