@@ -27,7 +27,7 @@ namespace DisneyDown.Common.Processors.Parsers
             try
             {
                 //priority storage
-                var langPriority = new List<string>()
+                var langPriority = new List<string>
                 {
                     DEFAULT_LANG
                 };

@@ -9,5 +9,6 @@ namespace DisneyDown.Common.Util.Diagnostics
         public static Stopwatch BumperVideoDecryptTimer { get; } = new Stopwatch();
         public static Stopwatch BumperAudioDecryptTimer { get; } = new Stopwatch();
         public static Stopwatch BumperRemuxTimer { get; } = new Stopwatch();
+        public static Stopwatch BumperConcatTimer { get; } = new Stopwatch();
     }
 }

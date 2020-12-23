@@ -43,18 +43,12 @@ namespace DisneyDown.Common.Processors
                 //validation
                 if (!string.IsNullOrWhiteSpace(masterPlaylist))
                 {
-                    //start measuring audio download time
-                    Timers.StartTimer(MainTimers.AudioDownloadTimer);
-
                     //download audio where audioFile is the path of the saved data
                     var audioFile =
                         MainAudioDownloader.DownloadBestAudioFromMaster(
                             masterPlaylist,
                             Globals.ManifestUrl,
                             encryptedAudio);
-
-                    //stop measuring audio download time
-                    Timers.StopTimer(MainTimers.AudioDownloadTimer);
 
                     //report progress
                     Console.WriteLine(@"Attempting decryption on audio");
@@ -65,12 +59,18 @@ namespace DisneyDown.Common.Processors
                     //decrypt audio stream
                     External.DoDecrypt(audioFile, decryptedAudio, Globals.DecryptionKey);
 
+                    //stop measuring audio decrypt time
+                    Timers.StopTimer(MainTimers.AudioDecryptTimer);
+
+                    //start measuring bumper audio decrypt time
+                    Timers.StartTimer(BumperTimers.BumperAudioDecryptTimer);
+
                     //decrypt bumper (if enabled)
                     if (Globals.DownloadBumperEnabled)
                         External.DoDecrypt(encryptedBumper, decryptedBumper, Globals.DecryptionKey);
 
-                    //stop measuring audio decrypt time
-                    Timers.StopTimer(MainTimers.AudioDecryptTimer);
+                    //stop measuring bumper audio decrypt time
+                    Timers.StopTimer(BumperTimers.BumperAudioDecryptTimer);
 
                     //report progress
                     Console.WriteLine(@"Audio decryption finished");
@@ -118,18 +118,12 @@ namespace DisneyDown.Common.Processors
                 //validation
                 if (!string.IsNullOrWhiteSpace(masterPlaylist))
                 {
-                    //start measuring video download time
-                    Timers.StartTimer(MainTimers.VideoDownloadTimer);
-
                     //download video where videoFile is the path of the saved data
                     var videoFile =
                         MainVideoDownloader.DownloadBestVideoFromMaster(
                             masterPlaylist,
                             Globals.ManifestUrl,
                             encryptedVideo);
-
-                    //stop measuring video download time
-                    Timers.StopTimer(MainTimers.VideoDownloadTimer);
 
                     //report progress
                     Console.WriteLine(@"Attempting decryption on video");
@@ -140,12 +134,18 @@ namespace DisneyDown.Common.Processors
                     //decrypt video stream
                     External.DoDecrypt(videoFile, decryptedVideo, Globals.DecryptionKey);
 
+                    //stop measuring video decrypt time
+                    Timers.StopTimer(MainTimers.VideoDecryptTimer);
+
+                    //start measuring bumper video decrypt time
+                    Timers.StartTimer(BumperTimers.BumperVideoDecryptTimer);
+
                     //decrypt bumper (if enabled)
                     if (Globals.DownloadBumperEnabled)
                         External.DoDecrypt(encryptedBumper, decryptedBumper, Globals.DecryptionKey);
 
-                    //stop measuring video decrypt time
-                    Timers.StopTimer(MainTimers.VideoDecryptTimer);
+                    //start measuring bumper video decrypt time
+                    Timers.StopTimer(BumperTimers.BumperVideoDecryptTimer);
 
                     //report progress
                     Console.WriteLine(@"Video decryption finished");
@@ -309,8 +309,14 @@ namespace DisneyDown.Common.Processors
                                                 //report progress
                                                 Console.WriteLine("Attempting bumper stream remux");
 
+                                                //start measuring bumper remux time
+                                                Timers.StartTimer(BumperTimers.BumperRemuxTimer);
+
                                                 //combine bumper audio and video
                                                 External.DoMux(muxBumperInput, decryptedBumper);
+
+                                                //stop measuring bumper remux time
+                                                Timers.StopTimer(BumperTimers.BumperRemuxTimer);
 
                                                 //report progress
                                                 Console.WriteLine("Bumper stream remux process completed");
@@ -321,9 +327,15 @@ namespace DisneyDown.Common.Processors
                                                     //report progress
                                                     Console.WriteLine("Attempting main stream and bumper concatenation");
 
+                                                    //start measuring bumper concat time
+                                                    Timers.StartTimer(BumperTimers.BumperConcatTimer);
+
                                                     //perform concat operation
                                                     External.DoConcatMux(new List<string> { decryptedBumper, outputFile },
                                                         decryptedMerged);
+
+                                                    //stop measuring bumper concat time
+                                                    Timers.StopTimer(BumperTimers.BumperConcatTimer);
 
                                                     //report progress
                                                     Console.WriteLine("Main stream and bumper concatenation process completed");

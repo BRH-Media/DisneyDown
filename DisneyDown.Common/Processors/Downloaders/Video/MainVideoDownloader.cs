@@ -1,7 +1,7 @@
 ﻿using DisneyDown.Common.Net;
-using DisneyDown.Common.Processors.Downloaders.Audio;
 using DisneyDown.Common.Processors.Parsers;
 using DisneyDown.Common.Util;
+using DisneyDown.Common.Util.Diagnostics;
 using System;
 using System.IO;
 
@@ -83,6 +83,9 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
         {
             try
             {
+                //start measuring video download time
+                Timers.StartTimer(MainTimers.VideoDownloadTimer);
+
                 //validation
                 if (ManifestParsers.ManifestValid(videoManifest))
                 {
@@ -95,7 +98,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
 
                     //download the bumper if we're allowed to
                     if (Globals.DownloadBumperEnabled)
-                        BumperAudioDownloader.DownloadBumperAudioFromPlaylist(videoManifest,
+                        BumperVideoDownloader.DownloadBumperVideoFromPlaylist(videoManifest,
                             videoPlaylistUrl, bumperEncryptedFileName);
 
                     //ensure the map URL is valid
@@ -125,6 +128,9 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
                             Console.WriteLine(
                                 $"\nSuccessfully downloaded video data to: {encryptedVideoFile}\n");
 
+                            //stop measuring video download time
+                            Timers.StopTimer(MainTimers.VideoDownloadTimer);
+
                             //return the saved file path
                             return encryptedVideoFile;
                         }
@@ -143,6 +149,9 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
             {
                 //nothing
             }
+
+            //stop measuring video download time
+            Timers.StopTimer(MainTimers.VideoDownloadTimer);
 
             //default
             return @"";

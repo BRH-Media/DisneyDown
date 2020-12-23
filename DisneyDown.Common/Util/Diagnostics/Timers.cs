@@ -64,23 +64,31 @@ namespace DisneyDown.Common.Util.Diagnostics
                     var spaceAdd = MaxTimerStringLengthBorder(' ');
 
                     //write out the timings
-                    Console.WriteLine($"╔══════════════════════════{borderAdd}╗");
-                    Console.WriteLine($"║ Execution Timings        {spaceAdd}║");
-                    Console.WriteLine($"╠════════════════════════╦═{borderAdd}╣");
-                    Console.WriteLine($"║ Program Execution      ║ {FormatTimerLine(StopwatchMilliseconds(ExecutionTimer))} ║");
-                    Console.WriteLine($"╠════════════════════════╬═{borderAdd}╣");
-                    Console.WriteLine($"║ Remux Execution        ║ {FormatTimerLine(StopwatchMilliseconds(MainTimers.RemuxTimer))} ║");
-                    Console.WriteLine($"║ Audio Download         ║ {FormatTimerLine(StopwatchMilliseconds(MainTimers.AudioDownloadTimer))} ║");
-                    Console.WriteLine($"║ Video Download         ║ {FormatTimerLine(StopwatchMilliseconds(MainTimers.VideoDownloadTimer))} ║");
-                    Console.WriteLine($"║ Audio Decrypt          ║ {FormatTimerLine(StopwatchMilliseconds(MainTimers.AudioDecryptTimer))} ║");
-                    Console.WriteLine($"║ Video Decrypt          ║ {FormatTimerLine(StopwatchMilliseconds(MainTimers.VideoDecryptTimer))} ║");
-                    Console.WriteLine($"╠════════════════════════╬═{borderAdd}╣");
-                    Console.WriteLine($"║ Bumper Remux Execution ║ {FormatTimerLine(StopwatchMilliseconds(BumperTimers.BumperRemuxTimer))} ║");
-                    Console.WriteLine($"║ Bumper Audio Download  ║ {FormatTimerLine(StopwatchMilliseconds(BumperTimers.BumperAudioDownloadTimer))} ║");
-                    Console.WriteLine($"║ Bumper Video Download  ║ {FormatTimerLine(StopwatchMilliseconds(BumperTimers.BumperVideoDownloadTimer))} ║");
-                    Console.WriteLine($"║ Bumper Audio Decrypt   ║ {FormatTimerLine(StopwatchMilliseconds(BumperTimers.BumperAudioDecryptTimer))} ║");
-                    Console.WriteLine($"║ Bumper Video Decrypt   ║ {FormatTimerLine(StopwatchMilliseconds(BumperTimers.BumperVideoDecryptTimer))} ║");
-                    Console.WriteLine($"╚════════════════════════╩═{borderAdd}╝");
+                    Console.WriteLine($"╔═══════════════════════════{borderAdd}╗");
+                    Console.WriteLine($"║ Execution Timings         {spaceAdd}║");
+                    Console.WriteLine($"╠═════════════════════════╦═{borderAdd}╣");
+                    Console.WriteLine($"║ Program Execution       ║ {FormatTimerLine(StopwatchMilliseconds(ExecutionTimer))} ║");
+                    Console.WriteLine($"╠═════════════════════════╬═{borderAdd}╣");
+                    Console.WriteLine($"║ Remux Execution         ║ {FormatTimerLine(StopwatchMilliseconds(MainTimers.RemuxTimer))} ║");
+                    Console.WriteLine($"║ Audio Download          ║ {FormatTimerLine(StopwatchMilliseconds(MainTimers.AudioDownloadTimer))} ║");
+                    Console.WriteLine($"║ Video Download          ║ {FormatTimerLine(StopwatchMilliseconds(MainTimers.VideoDownloadTimer))} ║");
+                    Console.WriteLine($"║ Audio Decrypt           ║ {FormatTimerLine(StopwatchMilliseconds(MainTimers.AudioDecryptTimer))} ║");
+                    Console.WriteLine($"║ Video Decrypt           ║ {FormatTimerLine(StopwatchMilliseconds(MainTimers.VideoDecryptTimer))} ║");
+
+                    //print bumper timings only if enabled
+                    if (!Globals.DownloadBumperEnabled)
+                        Console.WriteLine($"╚═════════════════════════╩═{borderAdd}╝");
+                    else
+                    {
+                        Console.WriteLine($"╠═════════════════════════╬═{borderAdd}╣");
+                        Console.WriteLine($"║ Bumper Remux Execution  ║ {FormatTimerLine(StopwatchMilliseconds(BumperTimers.BumperRemuxTimer))} ║");
+                        Console.WriteLine($"║ Bumper Concat Execution ║ {FormatTimerLine(StopwatchMilliseconds(BumperTimers.BumperConcatTimer))} ║");
+                        Console.WriteLine($"║ Bumper Audio Download   ║ {FormatTimerLine(StopwatchMilliseconds(BumperTimers.BumperAudioDownloadTimer))} ║");
+                        Console.WriteLine($"║ Bumper Video Download   ║ {FormatTimerLine(StopwatchMilliseconds(BumperTimers.BumperVideoDownloadTimer))} ║");
+                        Console.WriteLine($"║ Bumper Audio Decrypt    ║ {FormatTimerLine(StopwatchMilliseconds(BumperTimers.BumperAudioDecryptTimer))} ║");
+                        Console.WriteLine($"║ Bumper Video Decrypt    ║ {FormatTimerLine(StopwatchMilliseconds(BumperTimers.BumperVideoDecryptTimer))} ║");
+                        Console.WriteLine($"╚═════════════════════════╩═{borderAdd}╝");
+                    }
                 }
             }
             catch

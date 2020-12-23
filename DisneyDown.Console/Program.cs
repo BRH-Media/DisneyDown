@@ -1,13 +1,12 @@
 ﻿using DisneyDown.Common;
 using DisneyDown.Common.Processors;
-using DisneyDown.Common.Util;
+using DisneyDown.Common.Util.Diagnostics;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using DisneyDown.Common.Util.Diagnostics;
 
 // ReSharper disable InconsistentNaming
 

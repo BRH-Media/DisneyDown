@@ -1,6 +1,7 @@
 ﻿using DisneyDown.Common.Net;
 using DisneyDown.Common.Processors.Parsers;
 using DisneyDown.Common.Util;
+using DisneyDown.Common.Util.Diagnostics;
 using System;
 using System.IO;
 
@@ -79,6 +80,9 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
         {
             try
             {
+                //start measuring audio download time
+                Timers.StartTimer(MainTimers.AudioDownloadTimer);
+
                 //validation
                 if (ManifestParsers.ManifestValid(audioManifest))
                 {
@@ -121,6 +125,9 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
                             Console.WriteLine(
                                 $"\nSuccessfully downloaded audio data to: {encryptedAudioFile}\n");
 
+                            //stop measuring audio download time
+                            Timers.StopTimer(MainTimers.AudioDownloadTimer);
+
                             //return the saved file path
                             return encryptedAudioFile;
                         }
@@ -137,6 +144,9 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
             {
                 //nothing
             }
+
+            //stop measuring audio download time
+            Timers.StopTimer(MainTimers.AudioDownloadTimer);
 
             //default
             return @"";

@@ -1,6 +1,7 @@
 ﻿using DisneyDown.Common.Net;
 using DisneyDown.Common.Processors.Parsers;
 using DisneyDown.Common.Util;
+using DisneyDown.Common.Util.Diagnostics;
 using System;
 using System.IO;
 
@@ -12,6 +13,9 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
         {
             try
             {
+                //start measuring bumper audio download time
+                Timers.StartTimer(BumperTimers.BumperAudioDownloadTimer);
+
                 //base URI for the audio playlist
                 var audioBaseUri = Methods.GetBaseUrl(playlistUri);
 
@@ -44,16 +48,22 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
                     Console.WriteLine(
                         $"\nSuccessfully downloaded bumper audio data to: {encryptedBumperAudioFile}\n");
 
+                    //stop measuring bumper audio download time
+                    Timers.StopTimer(BumperTimers.BumperAudioDownloadTimer);
+
                     //return the saved file path
                     return encryptedBumperAudioFile;
                 }
-                else
-                    Console.WriteLine(@"Bumper audio download failed; audio init segment data was null");
+
+                Console.WriteLine(@"Bumper audio download failed; audio init segment data was null");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Bumper audio download error: {ex}");
             }
+
+            //stop measuring bumper audio download time
+            Timers.StopTimer(BumperTimers.BumperAudioDownloadTimer);
 
             //default
             return @"";
