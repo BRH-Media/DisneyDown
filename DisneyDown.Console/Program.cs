@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using DisneyDown.Common.Util.Diagnostics;
 
 // ReSharper disable InconsistentNaming
 

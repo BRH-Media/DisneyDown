@@ -44,6 +44,8 @@
     <Compile Include="Processors\Downloaders\Audio\BumperAudioDownloader.cs" />
     <Compile Include="Processors\Downloaders\Video\BumperVideoDownloader.cs" />
     <Compile Include="Security\Sha256Helper.cs" />
+    <Compile Include="Util\Diagnostics\BumperTimers.cs" />
+    <Compile Include="Util\Diagnostics\MainTimers.cs" />
     <Compile Include="Util\Extensions.cs" />
     <Compile Include="Security\Md5Helper.cs" />
     <Compile Include="Util\Methods.cs" />
@@ -65,7 +67,7 @@
     <Compile Include="Processors\Parsers\MasterParsers.cs" />
     <Compile Include="Processors\SegmentHandlers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Util\Timers.cs" />
+    <Compile Include="Util\Diagnostics\Timers.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

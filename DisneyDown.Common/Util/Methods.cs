@@ -12,6 +12,7 @@ namespace DisneyDown.Common.Util
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
-        public static string GetBaseUrl(string url) => new Uri(new Uri(url), ".").OriginalString;
+        public static string GetBaseUrl(string url)
+            => new Uri(new Uri(url), ".").OriginalString;
     }
 }

@@ -2,7 +2,7 @@
 using DisneyDown.Common.Processors.Downloaders.Video;
 using DisneyDown.Common.Processors.Parsers;
 using DisneyDown.Common.Security;
-using DisneyDown.Common.Util;
+using DisneyDown.Common.Util.Diagnostics;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -44,7 +44,7 @@ namespace DisneyDown.Common.Processors
                 if (!string.IsNullOrWhiteSpace(masterPlaylist))
                 {
                     //start measuring audio download time
-                    Timers.StartTimer(Timers.AudioDownloadTimer);
+                    Timers.StartTimer(MainTimers.AudioDownloadTimer);
 
                     //download audio where audioFile is the path of the saved data
                     var audioFile =
@@ -54,13 +54,13 @@ namespace DisneyDown.Common.Processors
                             encryptedAudio);
 
                     //stop measuring audio download time
-                    Timers.StopTimer(Timers.AudioDownloadTimer);
+                    Timers.StopTimer(MainTimers.AudioDownloadTimer);
 
                     //report progress
                     Console.WriteLine(@"Attempting decryption on audio");
 
                     //start measuring audio decrypt time
-                    Timers.StartTimer(Timers.AudioDecryptTimer);
+                    Timers.StartTimer(MainTimers.AudioDecryptTimer);
 
                     //decrypt audio stream
                     External.DoDecrypt(audioFile, decryptedAudio, Globals.DecryptionKey);
@@ -70,7 +70,7 @@ namespace DisneyDown.Common.Processors
                         External.DoDecrypt(encryptedBumper, decryptedBumper, Globals.DecryptionKey);
 
                     //stop measuring audio decrypt time
-                    Timers.StopTimer(Timers.AudioDecryptTimer);
+                    Timers.StopTimer(MainTimers.AudioDecryptTimer);
 
                     //report progress
                     Console.WriteLine(@"Audio decryption finished");
@@ -119,7 +119,7 @@ namespace DisneyDown.Common.Processors
                 if (!string.IsNullOrWhiteSpace(masterPlaylist))
                 {
                     //start measuring video download time
-                    Timers.StartTimer(Timers.VideoDownloadTimer);
+                    Timers.StartTimer(MainTimers.VideoDownloadTimer);
 
                     //download video where videoFile is the path of the saved data
                     var videoFile =
@@ -129,13 +129,13 @@ namespace DisneyDown.Common.Processors
                             encryptedVideo);
 
                     //stop measuring video download time
-                    Timers.StopTimer(Timers.VideoDownloadTimer);
+                    Timers.StopTimer(MainTimers.VideoDownloadTimer);
 
                     //report progress
                     Console.WriteLine(@"Attempting decryption on video");
 
                     //start measuring video decrypt time
-                    Timers.StartTimer(Timers.VideoDecryptTimer);
+                    Timers.StartTimer(MainTimers.VideoDecryptTimer);
 
                     //decrypt video stream
                     External.DoDecrypt(videoFile, decryptedVideo, Globals.DecryptionKey);
@@ -145,7 +145,7 @@ namespace DisneyDown.Common.Processors
                         External.DoDecrypt(encryptedBumper, decryptedBumper, Globals.DecryptionKey);
 
                     //stop measuring video decrypt time
-                    Timers.StopTimer(Timers.VideoDecryptTimer);
+                    Timers.StopTimer(MainTimers.VideoDecryptTimer);
 
                     //report progress
                     Console.WriteLine(@"Video decryption finished");
@@ -290,7 +290,7 @@ namespace DisneyDown.Common.Processors
                                     if (AllExistInList(muxInput))
                                     {
                                         //start measuring remux time
-                                        Timers.StartTimer(Timers.RemuxTimer);
+                                        Timers.StartTimer(MainTimers.RemuxTimer);
 
                                         //report progress
                                         Console.WriteLine("Attempting main stream remux");
@@ -338,7 +338,7 @@ namespace DisneyDown.Common.Processors
                                         }
 
                                         //stop measuring remux time
-                                        Timers.StopTimer(Timers.RemuxTimer);
+                                        Timers.StopTimer(MainTimers.RemuxTimer);
 
                                         //report progress
                                         Console.WriteLine(@"Overall remux process completed");
