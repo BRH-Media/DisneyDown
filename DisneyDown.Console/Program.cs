@@ -1,4 +1,5 @@
-﻿using DisneyDown.Common.Processors;
+﻿using DisneyDown.Common;
+using DisneyDown.Common.Processors;
 using DisneyDown.Common.Util;
 using System;
 using System.Collections.Generic;
@@ -78,7 +79,8 @@ namespace DisneyDown.Console
                         @"-e",
                         @"-b",
                         @"-a",
-                        @"-v"
+                        @"-v",
+                        @"-e"
                     };
 
                     //valid name (not an argument)
@@ -90,7 +92,7 @@ namespace DisneyDown.Console
 
                     //perform validation
                     return validName && validPath
-                            ? MainProcessor.OutFileName
+                            ? Globals.OutFileName
                             : outFileNameArg;
                 }
             }
@@ -100,7 +102,7 @@ namespace DisneyDown.Console
             }
 
             //default
-            return MainProcessor.OutFileName;
+            return Globals.OutFileName;
         }
 
         /// <summary>
@@ -109,8 +111,8 @@ namespace DisneyDown.Console
         private static void PrintUsage()
         {
             System.Console.WriteLine(
-                $@"usage: {ExecutableName} widevine_hex_key master_manifest_URL [output_file_name] [-t] [-a] [-v]");
-            System.Console.WriteLine(@" options:");
+                $"{ExecutableName} widevine_hex_key master_manifest_URL [output_file_name] [-t] [-a] [-v] [-e]");
+            System.Console.WriteLine("\n options:");
             System.Console.WriteLine(@"  widevine_hex_key    - 32 character content decryption key");
             System.Console.WriteLine(
                 @"  master_manifest_URL - m3u8 master manifest URL; do not input a locally available manifest");
@@ -121,6 +123,8 @@ namespace DisneyDown.Console
                 @"  -a                  - Forces the application to only download and decrypt audio");
             System.Console.WriteLine(
                 @"  -v                  - Forces the application to only download and decrypt video");
+            System.Console.WriteLine(
+                @"  -e                  - Forces the application to avoid using the master parser; requires -v or -a.");
         }
 
         /// <summary>
@@ -142,35 +146,45 @@ namespace DisneyDown.Console
                 PrintUsage();
             else
             {
+                //make sure -a and -v are not used together
+                if (Globals.AudioOnlyMode && Globals.VideoOnlyMode)
+
+                    //alert the user to the problem
+                    System.Console.WriteLine("\n-a and -v flags cannot be combined; this would result in a null output.");
+                else
                 {
                     //set required globals
-                    MainProcessor.DecryptionKey = args[0];
-                    MainProcessor.ManifestURL = args[1];
-                    MainProcessor.OutFileName = GetOutputFileName(args);
+                    Globals.DecryptionKey = args[0];
+                    Globals.ManifestUrl = args[1];
+                    Globals.OutFileName = GetOutputFileName(args);
 
                     //begin
                     var outFile = MainProcessor.StartProcessor();
 
-                    //report finality
-                    System.Console.WriteLine("\nDone! Play now? (y/n)");
+                    //validation
+                    if (!string.IsNullOrWhiteSpace(outFile))
+                    {
+                        //report finality
+                        System.Console.WriteLine("\nDone! Play now? (y/n)");
 
-                    //read the console line
-                    var response = System.Console.ReadLine();
+                        //read the console line
+                        var response = System.Console.ReadLine();
 
-                    //figure out the response
-                    if (response == @"y")
-                        PlayContent(outFile);
+                        //figure out the response
+                        if (response == @"y")
+                            PlayContent(outFile);
+                    }
+
+                    //main execution timer stop
+                    Timers.StopTimer(Timers.ExecutionTimer);
+
+                    //line break for timings
+                    if (Timers.TimersEnabled)
+                        System.Console.WriteLine();
+
+                    //report all diagnostics timings
+                    Timers.ReportTimers();
                 }
-
-                //main execution timer stop
-                Timers.StopTimer(Timers.ExecutionTimer);
-
-                //line break for timings
-                if (Timers.TimersEnabled)
-                    System.Console.WriteLine();
-
-                //report all diagnostics timings
-                Timers.ReportTimers();
             }
         }
     }

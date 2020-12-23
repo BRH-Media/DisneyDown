@@ -39,15 +39,18 @@
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Globals.cs" />
     <Compile Include="Net\BandwidthDefinitions.cs" />
+    <Compile Include="Processors\Downloaders\Audio\BumperAudioDownloader.cs" />
+    <Compile Include="Processors\Downloaders\Video\BumperVideoDownloader.cs" />
     <Compile Include="Security\Sha256Helper.cs" />
     <Compile Include="Util\Extensions.cs" />
     <Compile Include="Security\Md5Helper.cs" />
     <Compile Include="Util\Methods.cs" />
     <Compile Include="Net\ResourceGrab.cs" />
     <Compile Include="Processors\MainProcessor.cs" />
-    <Compile Include="Processors\Downloaders\AudioDownloader.cs" />
-    <Compile Include="Processors\Downloaders\VideoDownloader.cs" />
+    <Compile Include="Processors\Downloaders\Audio\MainAudioDownloader.cs" />
+    <Compile Include="Processors\Downloaders\Video\MainVideoDownloader.cs" />
     <Compile Include="Processors\External.cs" />
     <Compile Include="Processors\Parsers\HLSParser\EnumParser.cs" />
     <Compile Include="Processors\Parsers\HLSParser\PlaylistGrammar.cs" />

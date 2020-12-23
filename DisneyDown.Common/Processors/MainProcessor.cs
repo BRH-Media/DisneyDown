@@ -1,4 +1,5 @@
-﻿using DisneyDown.Common.Processors.Downloaders;
+﻿using DisneyDown.Common.Processors.Downloaders.Audio;
+using DisneyDown.Common.Processors.Downloaders.Video;
 using DisneyDown.Common.Processors.Parsers;
 using DisneyDown.Common.Security;
 using DisneyDown.Common.Util;
@@ -15,55 +16,27 @@ namespace DisneyDown.Common.Processors
     public static class MainProcessor
     {
         /// <summary>
-        /// Global storage for the Disney+ Manifest URL
-        /// </summary>
-        public static string ManifestURL { get; set; } = @"";
-
-        /// <summary>
-        /// Global storage for the Widevine decryption key
-        /// </summary>
-        public static string DecryptionKey { get; set; } = @"";
-
-        /// <summary>
-        /// Global storage for the remuxed file name
-        /// </summary>
-        public static string OutFileName { get; set; } = @"decryptedDisney.mkv";
-
-        /// <summary>
-        /// Whether or not the application should download and decrypt the Disney+ "Original" bumper
-        /// </summary>
-        public static bool DownloadBumperEnabled => Environment.GetCommandLineArgs().Contains(@"-b");
-
-        /// <summary>
-        /// Whether or not the application should only download video (not audio)
-        /// </summary>
-        public static bool VideoOnlyMode => Environment.GetCommandLineArgs().Contains(@"-v");
-
-        /// <summary>
-        /// Whether or not the application should only download audio (not video)
-        /// </summary>
-        public static bool AudioOnlyMode => Environment.GetCommandLineArgs().Contains(@"-a");
-
-        /// <summary>
-        /// Verifies the existence of ffmpeg and bento4 mp4decrypt.
-        /// </summary>
-        /// <returns></returns>
-        public static bool CheckRequiredExecutables() => File.Exists(@"ffmpeg.exe") && File.Exists(@"mp4decrypt.exe");
-
-        /// <summary>
         /// Downloads and decrypts an audio stream; returns the decrypted file path
         /// </summary>
         /// <param name="masterPlaylist"></param>
         /// <param name="workingDir"></param>
         public static string StartAudio(string masterPlaylist, string workingDir)
         {
-            //file names
+            //main file names
             const string encryptedAudioFileName = @"audioEncrypted.bin";
             const string decryptedAudioFileName = @"audioDecrypted.mp4";
 
-            //file paths
+            //Disney+ intro (bumper) file names
+            const string encryptedBumperFileName = @"bumperAudioEncrypted.bin";
+            const string decryptedBumperFileName = @"bumperAudioDecrypted.mp4";
+
+            //main file paths
             var encryptedAudio = $@"{workingDir}\{encryptedAudioFileName}";
             var decryptedAudio = $@"{workingDir}\{decryptedAudioFileName}";
+
+            //Disney+ intro (bumper) file paths
+            var encryptedBumper = $@"{workingDir}\{encryptedBumperFileName}";
+            var decryptedBumper = $@"{workingDir}\{decryptedBumperFileName}";
 
             try
             {
@@ -75,9 +48,9 @@ namespace DisneyDown.Common.Processors
 
                     //download audio where audioFile is the path of the saved data
                     var audioFile =
-                        AudioDownloader.DownloadBestAudioFromMaster(
+                        MainAudioDownloader.DownloadBestAudioFromMaster(
                             masterPlaylist,
-                            ManifestURL,
+                            Globals.ManifestUrl,
                             encryptedAudio);
 
                     //stop measuring audio download time
@@ -90,7 +63,11 @@ namespace DisneyDown.Common.Processors
                     Timers.StartTimer(Timers.AudioDecryptTimer);
 
                     //decrypt audio stream
-                    External.DoDecrypt(audioFile, decryptedAudio, DecryptionKey);
+                    External.DoDecrypt(audioFile, decryptedAudio, Globals.DecryptionKey);
+
+                    //decrypt bumper (if enabled)
+                    if (Globals.DownloadBumperEnabled)
+                        External.DoDecrypt(encryptedBumper, decryptedBumper, Globals.DecryptionKey);
 
                     //stop measuring audio decrypt time
                     Timers.StopTimer(Timers.AudioDecryptTimer);
@@ -120,13 +97,21 @@ namespace DisneyDown.Common.Processors
         /// <param name="workingDir"></param>
         public static string StartVideo(string masterPlaylist, string workingDir)
         {
-            //file names
+            //main file names
             const string encryptedVideoFileName = @"videoEncrypted.bin";
             const string decryptedVideoFileName = @"videoDecrypted.mp4";
 
-            //file paths
+            //Disney+ intro (bumper) file names
+            const string encryptedBumperFileName = @"bumperVideoEncrypted.bin";
+            const string decryptedBumperFileName = @"bumperVideoDecrypted.mp4";
+
+            //main file paths
             var encryptedVideo = $@"{workingDir}\{encryptedVideoFileName}";
             var decryptedVideo = $@"{workingDir}\{decryptedVideoFileName}";
+
+            //Disney+ intro (bumper) file paths
+            var encryptedBumper = $@"{workingDir}\{encryptedBumperFileName}";
+            var decryptedBumper = $@"{workingDir}\{decryptedBumperFileName}";
 
             try
             {
@@ -138,9 +123,9 @@ namespace DisneyDown.Common.Processors
 
                     //download video where videoFile is the path of the saved data
                     var videoFile =
-                        VideoDownloader.DownloadBestVideoFromMaster(
+                        MainVideoDownloader.DownloadBestVideoFromMaster(
                             masterPlaylist,
-                            ManifestURL,
+                            Globals.ManifestUrl,
                             encryptedVideo);
 
                     //stop measuring video download time
@@ -153,7 +138,11 @@ namespace DisneyDown.Common.Processors
                     Timers.StartTimer(Timers.VideoDecryptTimer);
 
                     //decrypt video stream
-                    External.DoDecrypt(videoFile, decryptedVideo, DecryptionKey);
+                    External.DoDecrypt(videoFile, decryptedVideo, Globals.DecryptionKey);
+
+                    //decrypt bumper (if enabled)
+                    if (Globals.DownloadBumperEnabled)
+                        External.DoDecrypt(encryptedBumper, decryptedBumper, Globals.DecryptionKey);
 
                     //stop measuring video decrypt time
                     Timers.StopTimer(Timers.VideoDecryptTimer);
@@ -196,19 +185,19 @@ namespace DisneyDown.Common.Processors
             try
             {
                 //executable validation
-                if (!CheckRequiredExecutables())
+                if (!Globals.CheckRequiredExecutables())
                     Console.WriteLine(
                         @"Process failed; required executable ffmpeg.exe and/or mp4decrypt.exe was not present.");
                 else
                 {
                     //validation
-                    if (string.IsNullOrWhiteSpace(ManifestURL) || string.IsNullOrWhiteSpace(DecryptionKey))
+                    if (string.IsNullOrWhiteSpace(Globals.ManifestUrl) || string.IsNullOrWhiteSpace(Globals.DecryptionKey))
                         Console.WriteLine(@"Process failed; one or more arguments were incorrect");
                     else
                     {
                         //key validation information
                         const int correctKeyLength = 32;
-                        var actualKeyLength = DecryptionKey.Length;
+                        var actualKeyLength = Globals.DecryptionKey.Length;
 
                         //actual key validation
                         if (actualKeyLength != correctKeyLength)
@@ -217,7 +206,7 @@ namespace DisneyDown.Common.Processors
                         else
                         {
                             //ensure manifest URI is a valid URI and is a valid .m3u8 HLS manifest file
-                            var masterUriValid = Uri.TryCreate(ManifestURL, UriKind.Absolute, out var uriResult)
+                            var masterUriValid = Uri.TryCreate(Globals.ManifestUrl, UriKind.Absolute, out var uriResult)
                                                  && (uriResult.Scheme == Uri.UriSchemeHttp ||
                                                      uriResult.Scheme == Uri.UriSchemeHttps)
                                                  && (new FileInfo(uriResult.AbsolutePath).Extension.ToLower() == @".m3u8"
@@ -232,7 +221,7 @@ namespace DisneyDown.Common.Processors
                                 Console.WriteLine(@"Downloading master playlist");
 
                                 //download master
-                                var masterPlaylist = ManifestParsers.DownloadManifest(ManifestURL);
+                                var masterPlaylist = ManifestParsers.DownloadManifest(Globals.ManifestUrl);
 
                                 //check conformity
                                 if (ManifestParsers.ManifestValid(masterPlaylist))
@@ -242,14 +231,14 @@ namespace DisneyDown.Common.Processors
                                     const string baseWorkingDir = @"tmp";
 
                                     //unique hash for master manifest URL (MD5)
-                                    var masterManifestHash = Md5Helper.CalculateMd5Hash(ManifestURL);
+                                    var masterManifestHash = Md5Helper.CalculateMd5Hash(Globals.ManifestUrl);
 
                                     //actual working directory
                                     var workingDir = $@"{baseWorkingDir}\{masterManifestHash}";
                                     var outputDir = $@"{baseOutputDir}\{masterManifestHash}";
 
                                     //output file path
-                                    var outputFile = $@"{outputDir}\{OutFileName}";
+                                    var outputFile = $@"{outputDir}\{Globals.OutFileName}";
 
                                     //ensure the final output directory exists
                                     if (!Directory.Exists(outputDir))
@@ -264,10 +253,20 @@ namespace DisneyDown.Common.Processors
                                     var decryptedVideo = @"";
 
                                     //do audio and video processes
-                                    if (!AudioOnlyMode)
+                                    if (!Globals.AudioOnlyMode)
                                         decryptedVideo = StartVideo(masterPlaylist, workingDir);
-                                    if (!VideoOnlyMode)
+                                    if (!Globals.VideoOnlyMode)
                                         decryptedAudio = StartAudio(masterPlaylist, workingDir);
+
+                                    //decrypted video
+                                    var decryptedBumperVideo = $@"{Path.GetDirectoryName(decryptedVideo)}\bumperVideoDecrypted.mp4";
+
+                                    //decrypted audio
+                                    var decryptedBumperAudio = $@"{Path.GetDirectoryName(decryptedAudio)}\bumperAudioDecrypted.mp4";
+
+                                    //decrypted bumper to be saved
+                                    var decryptedBumper = $@"{outputDir}\decryptedBumper.mkv";
+                                    var decryptedMerged = $@"{outputDir}\decryptedMerged.mkv";
 
                                     //report progress
                                     Console.WriteLine($"\nDecrypted video path: {decryptedVideo}");
@@ -276,15 +275,16 @@ namespace DisneyDown.Common.Processors
 
                                     //assemble input files list
                                     var muxInput = new List<string>();
+                                    var muxBumperInput = new List<string> { decryptedBumperAudio, decryptedBumperVideo };
 
                                     //add the files to remux
+                                    //audio
                                     if (!string.IsNullOrWhiteSpace(decryptedAudio))
                                         muxInput.Add(decryptedAudio);
+
+                                    //video
                                     if (!string.IsNullOrWhiteSpace(decryptedVideo))
                                         muxInput.Add(decryptedVideo);
-
-                                    //report progress
-                                    Console.WriteLine("Attempting stream remux");
 
                                     //attempt mux audio and video together (only if the decryption succeeded)
                                     if (AllExistInList(muxInput))
@@ -292,21 +292,63 @@ namespace DisneyDown.Common.Processors
                                         //start measuring remux time
                                         Timers.StartTimer(Timers.RemuxTimer);
 
+                                        //report progress
+                                        Console.WriteLine("Attempting main stream remux");
+
                                         //execute FFMPEG
                                         External.DoMux(muxInput, outputFile);
+
+                                        //report progress
+                                        Console.WriteLine("Main stream remux process completed");
+
+                                        //mux the bumper if allowed
+                                        if (Globals.DownloadBumperEnabled)
+                                        {
+                                            if (AllExistInList(muxBumperInput))
+                                            {
+                                                //report progress
+                                                Console.WriteLine("Attempting bumper stream remux");
+
+                                                //combine bumper audio and video
+                                                External.DoMux(muxBumperInput, decryptedBumper);
+
+                                                //report progress
+                                                Console.WriteLine("Bumper stream remux process completed");
+
+                                                //combine the bumper and main content (if bumper mux succeeded)
+                                                if (File.Exists(decryptedBumper))
+                                                {
+                                                    //report progress
+                                                    Console.WriteLine("Attempting main stream and bumper concatenation");
+
+                                                    //perform concat operation
+                                                    External.DoConcatMux(new List<string> { decryptedBumper, outputFile },
+                                                        decryptedMerged);
+
+                                                    //report progress
+                                                    Console.WriteLine("Main stream and bumper concatenation process completed");
+                                                }
+                                                else
+                                                    Console.WriteLine(
+                                                        @"FFMPEG bumper concat mux failed because the decrypted bumper was not available; check your key and try again.");
+                                            }
+                                            else
+                                                Console.WriteLine(
+                                                    @"FFMPEG bumper mux failed because one or more decrypted files were not available; check your key and try again.");
+                                        }
 
                                         //stop measuring remux time
                                         Timers.StopTimer(Timers.RemuxTimer);
 
                                         //report progress
-                                        Console.WriteLine(@"Remux process completed");
+                                        Console.WriteLine(@"Overall remux process completed");
 
                                         //return output file
                                         return outputFile;
                                     }
                                     else
                                         Console.WriteLine(
-                                            @"FFMPEG Mux failed because one or more decrypted files were not available; check your key and try again.");
+                                            @"FFMPEG main stream mux failed because one or more decrypted files were not available; check your key and try again.");
                                 }
                                 else
                                     Console.WriteLine(

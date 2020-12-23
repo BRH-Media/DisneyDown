@@ -43,11 +43,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\Extensions.cs" />
+    <Compile Include="Common\Protection\ProtectionId.cs" />
+    <Compile Include="Common\Protection\ProtectionSchemes.cs" />
+    <Compile Include="Common\Protection\ProtectionUUID.cs" />
+    <Compile Include="PrimeMPD\Globals.cs" />
+    <Compile Include="PrimeMPD\XmlObjects\AdaptationSet.cs" />
+    <Compile Include="PrimeMPD\XmlObjects\AudioChannelConfiguration.cs" />
+    <Compile Include="PrimeMPD\XmlObjects\ContentProtection.cs" />
+    <Compile Include="PrimeMPD\XmlObjects\Initialization.cs" />
+    <Compile Include="PrimeMPD\XmlObjects\Role.cs" />
+    <Compile Include="PrimeMPD\XmlObjects\MarlinContentIds.cs" />
+    <Compile Include="PrimeMPD\XmlObjects\Manifest.cs" />
+    <Compile Include="PrimeMPD\XmlObjects\Period.cs" />
+    <Compile Include="PrimeMPD\XmlObjects\Representation.cs" />
+    <Compile Include="PrimeMPD\XmlObjects\RepresentationIndex.cs" />
+    <Compile Include="PrimeMPD\XmlObjects\SegmentBase.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

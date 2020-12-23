@@ -1,10 +1,15 @@
 ﻿using DisneyDown.Common.Net;
 using DisneyDown.Common.Processors.Parsers.HLSParser;
 using DisneyDown.Common.Processors.Parsers.HLSParser.Playlist;
+using DisneyDown.Common.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+
+// ReSharper disable ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
+// ReSharper disable ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
+// ReSharper disable InvertIf
 
 namespace DisneyDown.Common.Processors.Parsers
 {
@@ -16,36 +21,37 @@ namespace DisneyDown.Common.Processors.Parsers
         public static string[] FilterLanguages(PlaylistTagItem[] playlists)
         {
             //default language
-            const string defaultLang = @"en";
-            const string langPriorityFile = @"langPriority.cfg";
+            const string DEFAULT_LANG = @"en";
+            const string LANG_PRIORITY_FILE = @"langPriority.cfg";
 
             try
             {
                 //priority storage
                 var langPriority = new List<string>()
                 {
-                    defaultLang
+                    DEFAULT_LANG
                 };
 
                 //does the lang priority file exist?
-                if (File.Exists(langPriorityFile))
+                if (File.Exists(LANG_PRIORITY_FILE))
                 {
                     //read the file into memory as text
-                    var tmpLangPriority = File.ReadAllText(langPriorityFile);
+                    var tmpLangPriority = File.ReadAllText(LANG_PRIORITY_FILE);
 
                     //verification
                     if (!string.IsNullOrWhiteSpace(tmpLangPriority))
-                    {
+
                         //read the file into memory as lines
-                        langPriority = File.ReadAllLines(langPriorityFile).ToList();
-                    }
+                        langPriority = File.ReadAllLines(LANG_PRIORITY_FILE).ToList();
                     else
+
                         //overwrite it
-                        File.WriteAllText(langPriorityFile, defaultLang);
+                        File.WriteAllText(LANG_PRIORITY_FILE, DEFAULT_LANG);
                 }
                 else
+
                     //create it
-                    File.WriteAllText(langPriorityFile, defaultLang);
+                    File.WriteAllText(LANG_PRIORITY_FILE, DEFAULT_LANG);
 
                 //store all playlist URLs here
                 var playlistUrls = new List<string>();
@@ -85,7 +91,7 @@ namespace DisneyDown.Common.Processors.Parsers
             catch (Exception ex)
             {
                 //report error
-                Console.WriteLine($"Language priority error: {ex.Message}. Will use '{defaultLang}'.");
+                Console.WriteLine($"Language priority error: {ex.Message}. Will use '{DEFAULT_LANG}'.");
             }
 
             //default
@@ -100,13 +106,13 @@ namespace DisneyDown.Common.Processors.Parsers
         public static bool ValidAudioTrack(PlaylistTagItem audioTrack)
         {
             //tag constants
-            const string audioType = @"AUDIO";
+            const string AUDIO_TYPE = @"AUDIO";
 
             try
             {
                 //validation
                 if (audioTrack != null)
-                {
+
                     //validation
                     if (audioTrack.Attributes.Count > 0
                         && audioTrack.Id == PlaylistTagId.EXT_X_MEDIA)
@@ -116,20 +122,19 @@ namespace DisneyDown.Common.Processors.Parsers
 
                         //loop through and parse attributes
                         foreach (var a in audioTrack.Attributes)
-                        {
+
+                            //case the type information
                             switch (a.Key)
                             {
                                 //validate the attribute
-                                case @"TYPE" when a.Value == audioType:
+                                case @"TYPE" when a.Value == AUDIO_TYPE:
                                     typeValid = true;
                                     break;
                             }
-                        }
 
                         //verify
                         return typeValid;
                     }
-                }
             }
             catch
             {
@@ -160,21 +165,21 @@ namespace DisneyDown.Common.Processors.Parsers
                     foreach (var url in playlistUrls)
                     {
                         //validation
-                        if (string.IsNullOrWhiteSpace(url)) continue;
+                        if (string.IsNullOrWhiteSpace(url))
+                            continue;
 
                         //the matched quality
                         var q = 0;
 
                         //try and match a quality level
                         foreach (var def in definitions)
-                        {
+
                             //check the current quality against the URL
                             if (url.Contains(def.Value))
                             {
                                 q = def.Key;
                                 break;
                             }
-                        }
 
                         //apply the quality to the list
                         qualityDict.Add(new Tuple<int, string>(q, url));
@@ -196,12 +201,102 @@ namespace DisneyDown.Common.Processors.Parsers
             return @"";
         }
 
+        public static string MasterAudioPlaylist(string playlist, string masterPlaylistUrl)
+        {
+            try
+            {
+                //exclusive mode will return the playlist as-is
+                if (Globals.ExclusiveMode)
+                    return playlist;
+
+                //find best video playlist
+                var bestAudioPlaylist = MasterAudioPlaylistUri(playlist);
+
+                //validation
+                if (!string.IsNullOrWhiteSpace(bestAudioPlaylist))
+                {
+                    //report progress
+                    Console.WriteLine($"Found best audio quality manifest: {bestAudioPlaylist}");
+
+                    //create fully-qualified URL for the playlist
+                    var masterBaseUri = Methods.GetBaseUrl(masterPlaylistUrl);
+                    var audioPlaylistUrl = $"{masterBaseUri}{bestAudioPlaylist}";
+
+                    //report progress
+                    Console.WriteLine(@"Downloading audio manifest");
+
+                    //do the download
+                    var audioManifest = ManifestParsers.DownloadManifest(audioPlaylistUrl);
+
+                    //validation
+                    if (ManifestParsers.ManifestValid(audioManifest))
+                        return playlist;
+
+                    //fail-safe error message
+                    Console.WriteLine(@"Audio playlist does not conform as is therefore invalid.");
+                }
+            }
+            catch (Exception ex)
+            {
+                //report error
+                Console.WriteLine($"Parse master video playlist error:\n\n{ex.Message}");
+            }
+
+            //default
+            return @"";
+        }
+
+        public static string MasterVideoPlaylist(string playlist, string masterPlaylistUrl)
+        {
+            try
+            {
+                //exclusive mode will return the playlist as-is
+                if (Globals.ExclusiveMode)
+                    return playlist;
+
+                //find best video playlist
+                var bestVideoPlaylist = MasterVideoPlaylistUri(playlist);
+
+                //validation
+                if (!string.IsNullOrWhiteSpace(bestVideoPlaylist))
+                {
+                    //report progress
+                    Console.WriteLine($"Found best video quality manifest: {bestVideoPlaylist}");
+
+                    //create fully-qualified URL for the playlist
+                    var masterBaseUri = Methods.GetBaseUrl(masterPlaylistUrl);
+                    var videoPlaylistUrl = $"{masterBaseUri}{bestVideoPlaylist}";
+
+                    //report progress
+                    Console.WriteLine(@"Downloading video manifest");
+
+                    //do the download
+                    var videoManifest = ManifestParsers.DownloadManifest(videoPlaylistUrl);
+
+                    //validation
+                    if (ManifestParsers.ManifestValid(videoManifest))
+                        return playlist;
+
+                    //fail-safe error message
+                    Console.WriteLine(@"Video playlist does not conform as is therefore invalid.");
+                }
+            }
+            catch (Exception ex)
+            {
+                //report error
+                Console.WriteLine($"Parse master video playlist error:\n\n{ex.Message}");
+            }
+
+            //default
+            return @"";
+        }
+
         /// <summary>
         /// Sort the best quality video playlist from a master manifest
         /// </summary>
         /// <param name="playlist"></param>
         /// <returns></returns>
-        public static string MasterVideoPlaylist(string playlist)
+        public static string MasterVideoPlaylistUri(string playlist)
         {
             try
             {
@@ -224,11 +319,10 @@ namespace DisneyDown.Common.Processors.Parsers
 
                             //validation
                             if (uri != null)
-                            {
+
                                 //add to the list if it's not already in there
                                 if (!playlistUrls.Contains(uri.Uri))
                                     playlistUrls.Add(uri.Uri);
-                            }
                         }
                         catch
                         {
@@ -243,7 +337,7 @@ namespace DisneyDown.Common.Processors.Parsers
             catch (Exception ex)
             {
                 //report error
-                Console.WriteLine($"Parse master error:\n\n{ex.Message}");
+                Console.WriteLine($"Parse master video URI error:\n\n{ex.Message}");
             }
 
             //default
@@ -255,7 +349,7 @@ namespace DisneyDown.Common.Processors.Parsers
         /// </summary>
         /// <param name="playlist"></param>
         /// <returns></returns>
-        public static string MasterAudioPlaylist(string playlist)
+        public static string MasterAudioPlaylistUri(string playlist)
         {
             try
             {
@@ -266,7 +360,6 @@ namespace DisneyDown.Common.Processors.Parsers
                     var p = new PlaylistParser().Parse(playlist);
 
                     //store all playlist URIs here
-                    var playlistUrls = new List<string>();
                     var playlistTags = new List<PlaylistTagItem>();
 
                     //loop through each track
@@ -285,18 +378,15 @@ namespace DisneyDown.Common.Processors.Parsers
 
                                 //return the URI of the tag if it's valid
                                 if (trackValid)
-                                {
+
                                     //attempt to parse out the URI
                                     foreach (var a in tag.Attributes)
-                                    {
+
                                         //verify if it's a URI tag
                                         if (a.Key == @"URI")
-                                        {
-                                            playlistUrls.Add(a.Value);
+
+                                            //store the verified URI tag
                                             playlistTags.Add(tag);
-                                        }
-                                    }
-                                }
                             }
                         }
                         catch
@@ -315,7 +405,7 @@ namespace DisneyDown.Common.Processors.Parsers
             catch (Exception ex)
             {
                 //report error
-                Console.WriteLine($"Parse master error:\n\n{ex.Message}");
+                Console.WriteLine($"Parse master audio URI error:\n\n{ex.Message}");
             }
 
             //default

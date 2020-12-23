@@ -29,7 +29,7 @@ namespace DisneyDown.Common.Security
             foreach (var t in hash)
                 sb.Append(t.ToString("X2"));
 
-            return sb.ToString().ToLower();
+            return sb.ToString();
         }
     }
 }

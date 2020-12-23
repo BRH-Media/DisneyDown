@@ -4,6 +4,8 @@ using DisneyDown.Common.Processors.Parsers.HLSParser.Playlist;
 using System;
 using System.IO;
 
+// ReSharper disable InvertIf
+
 namespace DisneyDown.Common.Processors
 {
     /// <summary>
@@ -19,12 +21,11 @@ namespace DisneyDown.Common.Processors
         public static void WriteSegment(string path, byte[] bytes)
         {
             if (bytes != null)
-            {
+
                 if (File.Exists(path))
                     AppendAllBytes(path, bytes);
                 else
                     File.WriteAllBytes(path, bytes);
-            }
         }
 
         /// <summary>
@@ -35,12 +36,11 @@ namespace DisneyDown.Common.Processors
         public static void AppendAllBytes(string path, byte[] bytes)
         {
             if (File.Exists(path) && bytes != null)
-            {
+
                 using (var stream = new FileStream(path, FileMode.Append))
                 {
                     stream.Write(bytes, 0, bytes.Length);
                 }
-            }
         }
 
         /// <summary>

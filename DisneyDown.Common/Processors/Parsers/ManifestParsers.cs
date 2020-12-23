@@ -167,7 +167,7 @@ namespace DisneyDown.Common.Processors.Parsers
         /// </summary>
         /// <param name="playlist"></param>
         /// <returns></returns>
-        public static string ManifestMapUrl(string playlist)
+        public static string ManifestMainMapUrl(string playlist)
         {
             try
             {
@@ -179,13 +179,52 @@ namespace DisneyDown.Common.Processors.Parsers
 
                     //loop through each one and return the first correct match
                     foreach (var m in mapList)
+
                         //validate the URL
                         if (ValidSegmentUrl(m))
+
                             //return result if valid
                             return m;
                 }
                 else
                     Console.WriteLine(@"Null or empty playlist supplied; couldn't find map URL");
+            }
+            catch (Exception ex)
+            {
+                //report error
+                Console.WriteLine($"Playlist parse error:\n\n{ex.Message}");
+            }
+
+            //default
+            return @"";
+        }
+
+        /// <summary>
+        /// Fetches the manifest MPEG-4 Disney+ intro (bumper) map URL (MPEG-4 initialisation segment data)
+        /// </summary>
+        /// <param name="playlist"></param>
+        /// <returns></returns>
+        public static string ManifestBumperMapUrl(string playlist)
+        {
+            try
+            {
+                //validation
+                if (!string.IsNullOrWhiteSpace(playlist))
+                {
+                    //get all map urls
+                    var mapList = ManifestAllMapUrls(playlist);
+
+                    //loop through each one and return the first correct match
+                    foreach (var m in mapList)
+
+                        //validate the URL
+                        if (m.Contains(@"-BUMPER/"))
+
+                            //return result if valid
+                            return m;
+                }
+                else
+                    Console.WriteLine(@"Null or empty playlist supplied; couldn't find Disney+ intro map URL");
             }
             catch (Exception ex)
             {
