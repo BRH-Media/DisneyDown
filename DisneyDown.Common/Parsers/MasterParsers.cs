@@ -1,6 +1,6 @@
 ﻿using DisneyDown.Common.Net;
-using DisneyDown.Common.Processors.Parsers.HLSParser;
-using DisneyDown.Common.Processors.Parsers.HLSParser.Playlist;
+using DisneyDown.Common.Parsers.HLS;
+using DisneyDown.Common.Parsers.HLS.Playlist;
 using DisneyDown.Common.Util;
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ using System.Linq;
 // ReSharper disable ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
 // ReSharper disable InvertIf
 
-namespace DisneyDown.Common.Processors.Parsers
+namespace DisneyDown.Common.Parsers
 {
     /// <summary>
     /// Contains generic methods for parsing and handling master manifests from Disney+

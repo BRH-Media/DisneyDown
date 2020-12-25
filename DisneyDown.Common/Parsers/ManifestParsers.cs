@@ -1,6 +1,6 @@
 ﻿using DisneyDown.Common.Net;
-using DisneyDown.Common.Processors.Parsers.HLSParser;
-using DisneyDown.Common.Processors.Parsers.HLSParser.Playlist;
+using DisneyDown.Common.Parsers.HLS;
+using DisneyDown.Common.Parsers.HLS.Playlist;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Linq;
 // ReSharper disable InvertIf
 // ReSharper disable RedundantIfElseBlock
 
-namespace DisneyDown.Common.Processors.Parsers
+namespace DisneyDown.Common.Parsers
 {
     /// <summary>
     /// Contains generic methods for parsing content manifests

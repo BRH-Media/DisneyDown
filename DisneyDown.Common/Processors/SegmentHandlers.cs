@@ -1,6 +1,6 @@
 ﻿using DisneyDown.Common.Net;
-using DisneyDown.Common.Processors.Parsers.HLSParser;
-using DisneyDown.Common.Processors.Parsers.HLSParser.Playlist;
+using DisneyDown.Common.Parsers.HLS;
+using DisneyDown.Common.Parsers.HLS.Playlist;
 using System;
 using System.IO;
 

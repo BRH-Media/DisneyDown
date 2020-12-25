@@ -4,17 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{5B34646D-0494-43FA-BC45-568D5A167A40}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>DisneyDown.Console.Dash</RootNamespace>
-    <AssemblyName>DisneyDown.Console.Dash</AssemblyName>
+    <ProjectGuid>{B8EC69B9-BD80-4E7C-AAD5-7E6B7CBEF153}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DisneyDown.Common.HLSParser</RootNamespace>
+    <AssemblyName>DisneyDown.Common.HLSParser</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +23,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -35,31 +33,9 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\Extensions.cs" />
-    <Compile Include="Common\Protection\ProtectionId.cs" />
-    <Compile Include="Common\Protection\ProtectionSchemes.cs" />
-    <Compile Include="Common\Protection\ProtectionUUID.cs" />
-    <Compile Include="PrimeMPD\Globals.cs" />
-    <Compile Include="PrimeMPD\XmlObjects\AdaptationSet.cs" />
-    <Compile Include="PrimeMPD\XmlObjects\AudioChannelConfiguration.cs" />
-    <Compile Include="PrimeMPD\XmlObjects\ContentProtection.cs" />
-    <Compile Include="PrimeMPD\XmlObjects\Initialization.cs" />
-    <Compile Include="PrimeMPD\XmlObjects\Role.cs" />
-    <Compile Include="PrimeMPD\XmlObjects\MarlinContentIds.cs" />
-    <Compile Include="PrimeMPD\XmlObjects\Manifest.cs" />
-    <Compile Include="PrimeMPD\XmlObjects\Period.cs" />
-    <Compile Include="PrimeMPD\XmlObjects\Representation.cs" />
-    <Compile Include="PrimeMPD\XmlObjects\RepresentationIndex.cs" />
-    <Compile Include="PrimeMPD\XmlObjects\SegmentBase.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

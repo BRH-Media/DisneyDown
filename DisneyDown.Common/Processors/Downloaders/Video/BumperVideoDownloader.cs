@@ -1,5 +1,5 @@
 ﻿using DisneyDown.Common.Net;
-using DisneyDown.Common.Processors.Parsers;
+using DisneyDown.Common.Parsers;
 using DisneyDown.Common.Util;
 using DisneyDown.Common.Util.Diagnostics;
 using System;

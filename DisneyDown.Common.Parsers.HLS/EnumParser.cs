@@ -2,7 +2,7 @@ using Sprache;
 using System;
 using System.Linq;
 
-namespace DisneyDown.Common.Processors.Parsers.HLSParser
+namespace DisneyDown.Common.Parsers.HLS
 {
     public static class EnumParser<T>
     {

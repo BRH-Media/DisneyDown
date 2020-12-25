@@ -1,11 +1,11 @@
-﻿using DisneyDown.Common.Processors.Parsers.HLSParser.Playlist;
+﻿using DisneyDown.Common.Parsers.HLS.Playlist;
 using Sprache;
 using System.Collections.Generic;
 using System.Linq;
 
 // ReSharper disable UnusedMember.Global
 
-namespace DisneyDown.Common.Processors.Parsers.HLSParser
+namespace DisneyDown.Common.Parsers.HLS
 {
     public class PlaylistGrammar
     {

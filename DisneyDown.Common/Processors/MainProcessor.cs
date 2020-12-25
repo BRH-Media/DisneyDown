@@ -1,6 +1,6 @@
-﻿using DisneyDown.Common.Processors.Downloaders.Audio;
+﻿using DisneyDown.Common.Parsers;
+using DisneyDown.Common.Processors.Downloaders.Audio;
 using DisneyDown.Common.Processors.Downloaders.Video;
-using DisneyDown.Common.Processors.Parsers;
 using DisneyDown.Common.Security;
 using DisneyDown.Common.Util.Diagnostics;
 using System;
