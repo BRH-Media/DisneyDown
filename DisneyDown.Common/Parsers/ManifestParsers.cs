@@ -1,4 +1,5 @@
-﻿using DisneyDown.Common.Net;
+﻿using DisneyDown.Common.Globals;
+using DisneyDown.Common.Net;
 using DisneyDown.Common.Parsers.HLS;
 using DisneyDown.Common.Parsers.HLS.Playlist;
 using System;
@@ -91,7 +92,7 @@ namespace DisneyDown.Common.Parsers
         private static bool ValidSegmentUrl(string urlSegment)
         {
             //check values for verification
-            var checkValues = new[] { @"-BUMPER/", @"DUB_CARD" };
+            var checkValues = new[] { Verification.BumperIntro, Verification.DubCard };
 
             //if there's any match, it's an instant false
             return checkValues.All(s => !urlSegment.Contains(s));
@@ -218,7 +219,7 @@ namespace DisneyDown.Common.Parsers
                     foreach (var m in mapList)
 
                         //validate the URL
-                        if (m.Contains(@"-BUMPER/"))
+                        if (m.Contains(Verification.BumperIntro))
 
                             //return result if valid
                             return m;

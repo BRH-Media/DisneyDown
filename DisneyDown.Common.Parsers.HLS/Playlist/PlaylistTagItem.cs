@@ -14,17 +14,7 @@ namespace DisneyDown.Common.Parsers.HLS.Playlist
         public PlaylistTagId Id { get; }
         public List<PlaylistTagAttribute> Attributes { get; }
 
-        public string Value
-        {
-            get
-            {
-                if (HasValue())
-                {
-                    return Attributes[0].Key;
-                }
-                return string.Empty;
-            }
-        }
+        public string Value => HasValue() ? Attributes[0].Key : string.Empty;
 
         public string RawValue { get; set; }
 

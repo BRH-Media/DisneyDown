@@ -1,3 +1,7 @@
+// ReSharper disable UnusedMember.Global
+// ReSharper disable IdentifierTypo
+// ReSharper disable InconsistentNaming
+
 namespace DisneyDown.Common.Parsers.HLS.Playlist
 {
     public enum PlaylistTagId

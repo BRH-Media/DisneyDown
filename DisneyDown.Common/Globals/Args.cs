@@ -2,25 +2,10 @@
 using System.IO;
 using System.Linq;
 
-namespace DisneyDown.Common
+namespace DisneyDown.Common.Globals
 {
-    public static class Globals
+    public static class Args
     {
-        /// <summary>
-        /// Global storage for the Disney+ Manifest URL
-        /// </summary>
-        public static string ManifestUrl { get; set; } = @"";
-
-        /// <summary>
-        /// Global storage for the Widevine decryption key
-        /// </summary>
-        public static string DecryptionKey { get; set; } = @"";
-
-        /// <summary>
-        /// Global storage for the remuxed file name
-        /// </summary>
-        public static string OutFileName { get; set; } = @"decryptedDisney.mkv";
-
         /// <summary>
         /// Whether or not the application should download and decrypt the Disney+ "Original" bumper
         /// </summary>
@@ -50,7 +35,8 @@ namespace DisneyDown.Common
         /// Verifies the existence of ffmpeg and bento4 mp4decrypt.
         /// </summary>
         /// <returns></returns>
-        public static bool CheckRequiredExecutables() =>
-            File.Exists(@"ffmpeg.exe") && File.Exists(@"mp4decrypt.exe");
+        public static bool CheckRequiredExecutables
+            => File.Exists(@"ffmpeg.exe")
+               && File.Exists(@"mp4decrypt.exe");
     }
 }

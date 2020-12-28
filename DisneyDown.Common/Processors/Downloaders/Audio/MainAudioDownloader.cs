@@ -1,4 +1,5 @@
-﻿using DisneyDown.Common.Net;
+﻿using DisneyDown.Common.Globals;
+using DisneyDown.Common.Net;
 using DisneyDown.Common.Parsers;
 using DisneyDown.Common.Util;
 using DisneyDown.Common.Util.Diagnostics;
@@ -35,7 +36,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
                         return encryptedAudioFile;
                     }
 
-                    if (!Globals.ExclusiveMode)
+                    if (!Args.ExclusiveMode)
                     {
                         //find best audio playlist
                         var bestAudioPlaylist = MasterParsers.MasterAudioPlaylistUri(masterPlaylist);
@@ -55,14 +56,15 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
                             var audioManifest = ManifestParsers.DownloadManifest(audioPlaylistUrl);
 
                             //download processor
-                            PerformDownload(audioManifest, audioPlaylistUrl, encryptedAudioFile);
+                            return PerformDownload(audioManifest, audioPlaylistUrl, encryptedAudioFile);
                         }
                         else
                             Console.WriteLine(@"Audio download failed; audio playlist URL was null");
                     }
                     else
+
                         //do the download
-                        PerformDownload(masterPlaylist, masterPlaylistUrl, encryptedAudioFile);
+                        return PerformDownload(masterPlaylist, masterPlaylistUrl, encryptedAudioFile);
                 }
                 else
                     Console.WriteLine(@"Audio download failed; master playlist does not conform");
@@ -94,7 +96,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
                     var bumperEncryptedFileName = $@"{Path.GetDirectoryName(encryptedAudioFile)}\bumperAudioEncrypted.bin";
 
                     //download the bumper if we're allowed to
-                    if (Globals.DownloadBumperEnabled)
+                    if (Args.DownloadBumperEnabled)
                         BumperAudioDownloader.DownloadBumperAudioFromPlaylist(audioManifest,
                             audioPlaylistUrl, bumperEncryptedFileName);
 
@@ -119,7 +121,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
 
                             //do download
                             SegmentHandlers.DownloadAllSegments(audioManifest, audioBaseUri,
-                                encryptedAudioFile);
+                                Verification.MainContent, encryptedAudioFile);
 
                             //report success
                             Console.WriteLine(

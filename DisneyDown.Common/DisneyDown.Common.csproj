@@ -36,7 +36,9 @@
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Globals.cs" />
+    <Compile Include="Globals\Strings.cs" />
+    <Compile Include="Globals\Args.cs" />
+    <Compile Include="Globals\Verification.cs" />
     <Compile Include="Net\BandwidthDefinitions.cs" />
     <Compile Include="Processors\Downloaders\Audio\BumperAudioDownloader.cs" />
     <Compile Include="Processors\Downloaders\Video\BumperVideoDownloader.cs" />
@@ -63,5 +65,6 @@
       <Name>DisneyDown.Common.Parsers.HLS</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

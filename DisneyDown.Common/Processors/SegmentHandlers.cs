@@ -2,6 +2,7 @@
 using DisneyDown.Common.Parsers.HLS;
 using DisneyDown.Common.Parsers.HLS.Playlist;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 // ReSharper disable InvertIf
@@ -38,9 +39,52 @@ namespace DisneyDown.Common.Processors
             if (File.Exists(path) && bytes != null)
 
                 using (var stream = new FileStream(path, FileMode.Append))
-                {
                     stream.Write(bytes, 0, bytes.Length);
+        }
+
+        private static List<PlaylistUriItem> FilterUrlItems(List<PlaylistItem> items, string filter)
+        {
+            try
+            {
+                //ensure we were provided with valid items
+                if (items != null && !string.IsNullOrWhiteSpace(filter))
+                {
+                    //store all filtered segments here
+                    var segments = new List<PlaylistUriItem>();
+
+                    //go through each item and perform the filter
+                    foreach (var s in items)
+
+                        try
+                        {
+                            //try cast to URI
+                            var uri = ((PlaylistUriItem)s).Uri;
+
+                            //ensure the cast URI is valid
+                            if (!string.IsNullOrWhiteSpace(uri))
+
+                                //ensure a valid match
+                                if (uri.Contains(filter))
+
+                                    //add it to the list of valid segments
+                                    segments.Add((PlaylistUriItem)s);
+                        }
+                        catch (InvalidCastException)
+                        {
+                            //nothing
+                        }
+
+                    //return the filled list
+                    return segments;
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Playlist segment filter error: {ex.Message}");
+            }
+
+            //default
+            return new List<PlaylistUriItem>();
         }
 
         /// <summary>
@@ -50,7 +94,7 @@ namespace DisneyDown.Common.Processors
         /// <param name="baseUri"></param>
         /// <param name="filePath"></param>
         /// <param name="correctUrlComponent"></param>
-        public static void DownloadAllSegments(string playlist, string baseUri, string filePath = @"segments.bin", string correctUrlComponent = @"-MAIN/")
+        public static void DownloadAllSegments(string playlist, string baseUri, string correctUrlComponent, string filePath = @"segments.bin")
         {
             try
             {
@@ -66,57 +110,54 @@ namespace DisneyDown.Common.Processors
                         //current item counter
                         var counter = 0;
 
+                        //filter out any unnecessary segments (only get the MAIN segments, for example)
+                        var filteredSegments = FilterUrlItems(p.Items, correctUrlComponent);
+
+                        //total amount of segments
+                        var totalSegments = filteredSegments.Count;
+
                         //report merge file
                         Console.WriteLine($"\nStarting segment download on merge file: {filePath}\n");
 
                         //go through each item in the playlist
-                        foreach (var i in p.Items)
+                        foreach (var i in filteredSegments)
                         {
                             try
                             {
-                                //try cast to URI
-                                var uri = ((PlaylistUriItem)i).Uri;
+                                //fully-qualified segment URL
+                                var segmentUrl = $"{baseUri}{i.Uri}";
+
+                                //try download of segment
+                                var segment = ResourceGrab.GrabBytes(segmentUrl);
+
+                                //segment file name from URL
+                                var segmentFileName = Path.GetFileName(new Uri(segmentUrl).LocalPath);
+
+                                //% completion
+                                var progress = decimal.Divide(counter + 1, totalSegments);
 
                                 //validation
-                                if (!string.IsNullOrWhiteSpace(uri))
+                                if (segment != null)
                                 {
-                                    //fully-qualified segment URL
-                                    var segmentUrl = $"{baseUri}{uri}";
+                                    //flush to file
+                                    WriteSegment(filePath, segment);
 
-                                    //validate it using the 'MAIN' audio component check
-                                    if (segmentUrl.Contains(correctUrlComponent))
-                                    {
-                                        //segment file name from URL
-                                        var segmentFileName = Path.GetFileName(new Uri(segmentUrl).LocalPath);
-
-                                        //try download of segment
-                                        var segment = ResourceGrab.GrabBytes(segmentUrl);
-
-                                        //validation
-                                        if (segment != null)
-                                        {
-                                            //flush to file
-                                            WriteSegment(filePath, segment);
-
-                                            Console.WriteLine(
-                                                $"Segment {counter:D4} ({segmentFileName}) downloaded and merged");
-                                        }
-                                        else
-                                            Console.WriteLine(
-                                                $"Segment {counter:D4} ({segmentFileName}) download error: null result");
-
-                                        //incremented only on valid segment URL to keep count fluid
-                                        counter++;
-                                    }
+                                    //report success
+                                    Console.WriteLine(
+                                        $"Segment {counter + 1:D4}/{totalSegments:D4} ({segmentFileName}) downloaded and merged | {progress:P2}");
                                 }
-                            }
-                            catch (InvalidCastException)
-                            {
-                                //nothing
+                                else
+
+                                    //report failure
+                                    Console.WriteLine(
+                                        $"Segment {counter + 1:D4}/{totalSegments:D4} ({segmentFileName}) download error: null result | {progress:P2}");
+
+                                //incremented only on valid segment URL to keep count fluid
+                                counter++;
                             }
                             catch (Exception ex)
                             {
-                                Console.WriteLine($"Segment {counter} download error: {ex.Message}");
+                                Console.WriteLine($"Segment {counter + 1:D4}/{totalSegments:D4} download error: {ex.Message}");
                             }
                         }
                     }

@@ -1,9 +1,12 @@
-﻿using DisneyDown.Common.Net;
+﻿using DisneyDown.Common.Globals;
+using DisneyDown.Common.Net;
 using DisneyDown.Common.Parsers;
 using DisneyDown.Common.Util;
 using DisneyDown.Common.Util.Diagnostics;
 using System;
 using System.IO;
+
+// ReSharper disable RedundantIfElseBlock
 
 namespace DisneyDown.Common.Processors.Downloaders.Audio
 {
@@ -16,46 +19,56 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
                 //start measuring bumper audio download time
                 Timers.StartTimer(BumperTimers.BumperAudioDownloadTimer);
 
-                //base URI for the audio playlist
-                var audioBaseUri = Methods.GetBaseUrl(playlistUri);
-
-                //bumper map
-                var audioMapPath = ManifestParsers.ManifestBumperMapUrl(playlist);
-
-                //construct full map URL
-                var audioMapUrl = $"{audioBaseUri}{audioMapPath}";
-
-                //report status
-                Console.WriteLine($@"Downloading bumper audio MPEG-4 init segment: {audioMapUrl}");
-
-                //download the bumper audio map
-                var audioMap = ResourceGrab.GrabBytes(audioMapUrl);
-
-                //validation
-                if (audioMap != null)
+                //ensure there is a bumper to download
+                if (playlist.Contains(Verification.BumperIntro))
                 {
-                    //write to file
-                    File.WriteAllBytes(encryptedBumperAudioFile, audioMap);
+                    //base URI for the audio playlist
+                    var audioBaseUri = Methods.GetBaseUrl(playlistUri);
 
-                    //start segments download
-                    Console.WriteLine(@"Audio bumper init data saved successfully; starting segments download");
+                    //bumper map
+                    var audioMapPath = ManifestParsers.ManifestBumperMapUrl(playlist);
 
-                    //do download
-                    SegmentHandlers.DownloadAllSegments(playlist, audioBaseUri,
-                        encryptedBumperAudioFile, @"-BUMPER/");
+                    //construct full map URL
+                    var audioMapUrl = $"{audioBaseUri}{audioMapPath}";
 
-                    //report success
-                    Console.WriteLine(
-                        $"\nSuccessfully downloaded bumper audio data to: {encryptedBumperAudioFile}\n");
+                    //report status
+                    Console.WriteLine($@"Downloading bumper audio MPEG-4 init segment: {audioMapUrl}");
 
-                    //stop measuring bumper audio download time
-                    Timers.StopTimer(BumperTimers.BumperAudioDownloadTimer);
+                    //download the bumper audio map
+                    var audioMap = ResourceGrab.GrabBytes(audioMapUrl);
 
-                    //return the saved file path
-                    return encryptedBumperAudioFile;
+                    //validation
+                    if (audioMap != null)
+                    {
+                        //write to file
+                        File.WriteAllBytes(encryptedBumperAudioFile, audioMap);
+
+                        //start segments download
+                        Console.WriteLine(@"Audio bumper init data saved successfully; starting segments download");
+
+                        //do download
+                        SegmentHandlers.DownloadAllSegments(playlist, audioBaseUri,
+                            Verification.BumperIntro, encryptedBumperAudioFile);
+
+                        //report success
+                        Console.WriteLine(
+                            $"\nSuccessfully downloaded bumper audio data to: {encryptedBumperAudioFile}\n");
+
+                        //stop measuring bumper audio download time
+                        Timers.StopTimer(BumperTimers.BumperAudioDownloadTimer);
+
+                        //return the saved file path
+                        return encryptedBumperAudioFile;
+                    }
+                    else
+
+                        //map file was null
+                        Console.WriteLine(@"Bumper audio download failed; audio init segment data was null");
                 }
+                else
 
-                Console.WriteLine(@"Bumper audio download failed; audio init segment data was null");
+                    //no bumper media detected
+                    Console.WriteLine(@"Bumper audio download failed; content does not contain the Disney+ bumper intro");
             }
             catch (Exception ex)
             {

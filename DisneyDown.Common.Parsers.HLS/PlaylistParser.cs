@@ -13,10 +13,10 @@ namespace DisneyDown.Common.Parsers.HLS
             {
                 var playListItems = new List<PlaylistItem>();
                 string line;
+
                 while ((line = stringReader.ReadLine()) != null)
-                {
                     playListItems.Add(PlaylistGrammar.PlaylistParser.Parse(line));
-                }
+
                 return new Playlist.Playlist(playListItems);
             }
         }

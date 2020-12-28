@@ -1,4 +1,5 @@
-﻿using DisneyDown.Common.Net;
+﻿using DisneyDown.Common.Globals;
+using DisneyDown.Common.Net;
 using DisneyDown.Common.Parsers;
 using DisneyDown.Common.Util;
 using DisneyDown.Common.Util.Diagnostics;
@@ -36,7 +37,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
                         return encryptedVideoFile;
                     }
 
-                    if (!Globals.ExclusiveMode)
+                    if (!Args.ExclusiveMode)
                     {
                         //find best video playlist
                         var bestVideoPlaylistUri = MasterParsers.MasterVideoPlaylistUri(masterPlaylist);
@@ -58,14 +59,15 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
                             var videoManifest = ManifestParsers.DownloadManifest(videoPlaylistUrl);
 
                             //download processor
-                            PerformDownload(videoManifest, videoPlaylistUrl, encryptedVideoFile);
+                            return PerformDownload(videoManifest, videoPlaylistUrl, encryptedVideoFile);
                         }
                         else
                             Console.WriteLine(@"Video download failed; video playlist URL was null");
                     }
                     else
+
                         //do the download
-                        PerformDownload(masterPlaylist, masterPlaylistUrl, encryptedVideoFile);
+                        return PerformDownload(masterPlaylist, masterPlaylistUrl, encryptedVideoFile);
                 }
                 else
                     Console.WriteLine(@"Video download failed; master playlist does not conform");
@@ -97,7 +99,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
                     var bumperEncryptedFileName = $@"{Path.GetDirectoryName(encryptedVideoFile)}\bumperVideoEncrypted.bin";
 
                     //download the bumper if we're allowed to
-                    if (Globals.DownloadBumperEnabled)
+                    if (Args.DownloadBumperEnabled)
                         BumperVideoDownloader.DownloadBumperVideoFromPlaylist(videoManifest,
                             videoPlaylistUrl, bumperEncryptedFileName);
 
@@ -122,7 +124,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
 
                             //do download
                             SegmentHandlers.DownloadAllSegments(videoManifest, videoBaseUri,
-                                encryptedVideoFile);
+                                Verification.MainContent, encryptedVideoFile);
 
                             //report success
                             Console.WriteLine(

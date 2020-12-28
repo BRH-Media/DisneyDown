@@ -1,4 +1,5 @@
-﻿using DisneyDown.Common.Net;
+﻿using DisneyDown.Common.Globals;
+using DisneyDown.Common.Net;
 using DisneyDown.Common.Parsers.HLS;
 using DisneyDown.Common.Parsers.HLS.Playlist;
 using DisneyDown.Common.Util;
@@ -206,7 +207,7 @@ namespace DisneyDown.Common.Parsers
             try
             {
                 //exclusive mode will return the playlist as-is
-                if (Globals.ExclusiveMode)
+                if (Args.ExclusiveMode)
                     return playlist;
 
                 //find best video playlist
@@ -251,7 +252,7 @@ namespace DisneyDown.Common.Parsers
             try
             {
                 //exclusive mode will return the playlist as-is
-                if (Globals.ExclusiveMode)
+                if (Args.ExclusiveMode)
                     return playlist;
 
                 //find best video playlist

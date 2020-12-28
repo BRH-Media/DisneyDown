@@ -1,4 +1,4 @@
-﻿using DisneyDown.Common;
+﻿using DisneyDown.Common.Globals;
 using DisneyDown.Common.Processors;
 using DisneyDown.Common.Util.Diagnostics;
 using System;
@@ -92,7 +92,7 @@ namespace DisneyDown.Console
 
                     //perform validation
                     return validName && validPath
-                            ? Globals.OutFileName
+                            ? Strings.OutFileName
                             : outFileNameArg;
                 }
             }
@@ -102,7 +102,7 @@ namespace DisneyDown.Console
             }
 
             //default
-            return Globals.OutFileName;
+            return Strings.OutFileName;
         }
 
         /// <summary>
@@ -147,16 +147,16 @@ namespace DisneyDown.Console
             else
             {
                 //make sure -a and -v are not used together
-                if (Globals.AudioOnlyMode && Globals.VideoOnlyMode)
+                if (Args.AudioOnlyMode && Args.VideoOnlyMode)
 
                     //alert the user to the problem
                     System.Console.WriteLine("\n-a and -v flags cannot be combined; this would result in a null output.");
                 else
                 {
                     //set required globals
-                    Globals.DecryptionKey = args[0];
-                    Globals.ManifestUrl = args[1];
-                    Globals.OutFileName = GetOutputFileName(args);
+                    Strings.DecryptionKey = args[0];
+                    Strings.ManifestUrl = args[1];
+                    Strings.OutFileName = GetOutputFileName(args);
 
                     //begin
                     var outFile = MainProcessor.StartProcessor();

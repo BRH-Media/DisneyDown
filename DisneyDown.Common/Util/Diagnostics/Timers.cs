@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DisneyDown.Common.Globals;
+using System;
 using System.Diagnostics;
 using System.Linq;
 
@@ -76,7 +77,7 @@ namespace DisneyDown.Common.Util.Diagnostics
                     Console.WriteLine($"║ Video Decrypt           ║ {FormatTimerLine(StopwatchMilliseconds(MainTimers.VideoDecryptTimer))} ║");
 
                     //print bumper timings only if enabled
-                    if (!Globals.DownloadBumperEnabled)
+                    if (!Args.DownloadBumperEnabled)
                         Console.WriteLine($"╚═════════════════════════╩═{borderAdd}╝");
                     else
                     {

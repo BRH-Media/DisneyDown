@@ -1,9 +1,12 @@
-﻿using DisneyDown.Common.Net;
+﻿using DisneyDown.Common.Globals;
+using DisneyDown.Common.Net;
 using DisneyDown.Common.Parsers;
 using DisneyDown.Common.Util;
 using DisneyDown.Common.Util.Diagnostics;
 using System;
 using System.IO;
+
+// ReSharper disable RedundantIfElseBlock
 
 namespace DisneyDown.Common.Processors.Downloaders.Video
 {
@@ -16,50 +19,60 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
                 //start measuring bumper video download time
                 Timers.StartTimer(BumperTimers.BumperVideoDownloadTimer);
 
-                //base URI for the video playlist
-                var videoBaseUri = Methods.GetBaseUrl(playlistUri);
-
-                //bumper map
-                var videoMapPath = ManifestParsers.ManifestBumperMapUrl(playlist);
-
-                //construct full map URL
-                var videoMapUrl = $"{videoBaseUri}{videoMapPath}";
-
-                //report status
-                Console.WriteLine($@"Downloading bumper video MPEG-4 init segment: {videoMapUrl}");
-
-                //download the bumper video map
-                var videoMap = ResourceGrab.GrabBytes(videoMapUrl);
-
-                //validation
-                if (videoMap != null)
+                //ensure there is a bumper to download
+                if (playlist.Contains(Verification.BumperIntro))
                 {
-                    //write to file
-                    File.WriteAllBytes(encryptedBumperVideoFile, videoMap);
+                    //base URI for the video playlist
+                    var videoBaseUri = Methods.GetBaseUrl(playlistUri);
 
-                    //start segments download
-                    Console.WriteLine(@"Video bumper init data saved successfully; starting segments download");
+                    //bumper map
+                    var videoMapPath = ManifestParsers.ManifestBumperMapUrl(playlist);
 
-                    //do download
-                    SegmentHandlers.DownloadAllSegments(playlist, videoBaseUri,
-                        encryptedBumperVideoFile, @"-BUMPER/");
+                    //construct full map URL
+                    var videoMapUrl = $"{videoBaseUri}{videoMapPath}";
 
-                    //report success
-                    Console.WriteLine(
-                        $"\nSuccessfully downloaded bumper video data to: {encryptedBumperVideoFile}\n");
+                    //report status
+                    Console.WriteLine($@"Downloading bumper video MPEG-4 init segment: {videoMapUrl}");
 
-                    //stop measuring bumper video download time
-                    Timers.StopTimer(BumperTimers.BumperVideoDownloadTimer);
+                    //download the bumper video map
+                    var videoMap = ResourceGrab.GrabBytes(videoMapUrl);
 
-                    //return the saved file path
-                    return encryptedBumperVideoFile;
+                    //validation
+                    if (videoMap != null)
+                    {
+                        //write to file
+                        File.WriteAllBytes(encryptedBumperVideoFile, videoMap);
+
+                        //start segments download
+                        Console.WriteLine(@"Video bumper init data saved successfully; starting segments download");
+
+                        //do download
+                        SegmentHandlers.DownloadAllSegments(playlist, videoBaseUri,
+                            Verification.BumperIntro, encryptedBumperVideoFile);
+
+                        //report success
+                        Console.WriteLine(
+                            $"\nSuccessfully downloaded bumper video data to: {encryptedBumperVideoFile}\n");
+
+                        //stop measuring bumper video download time
+                        Timers.StopTimer(BumperTimers.BumperVideoDownloadTimer);
+
+                        //return the saved file path
+                        return encryptedBumperVideoFile;
+                    }
+                    else
+
+                        //map file was null
+                        Console.WriteLine(@"Bumper video download failed; video init segment data was null");
                 }
+                else
 
-                Console.WriteLine(@"Bumper video download failed; audio init segment data was null");
+                    //no bumper media detected
+                    Console.WriteLine(@"Bumper video download failed; content does not contain the Disney+ bumper intro");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Bumper audio download error: {ex}");
+                Console.WriteLine($"Bumper video download error: {ex}");
             }
 
             //stop measuring bumper video download time
