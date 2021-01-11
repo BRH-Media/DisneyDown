@@ -265,7 +265,7 @@ namespace DisneyDown.Common.Processors
 
                                     //report success
                                     Console.WriteLine(
-                                        $@"Segment {counter + 1:D4}/{totalSegments:D4} ({segmentFileName}) downloaded and merged | {progress:P2}");
+                                        $@"Segment {counter + 1:D4}/{totalSegments:D4} ({segmentFileName}) downloaded | {progress:P2}");
                                 }
                                 else
 
