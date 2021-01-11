@@ -3,6 +3,21 @@
     public static class Strings
     {
         /// <summary>
+        /// Default language for audio tracks
+        /// </summary>
+        public static string DefaultLang { get; set; } = @"en";
+
+        /// <summary>
+        /// Default language priority file for audio tracks
+        /// </summary>
+        public static string AudioLangPriorityFile { get; set; } = @"cfg\audioLangPriority.cfg";
+
+        /// <summary>
+        /// Default language priority file for subtitle tracks
+        /// </summary>
+        public static string SubtitleLangPriorityFile { get; set; } = @"cfg\subtitleLangPriority.cfg";
+
+        /// <summary>
         /// Global storage for the Disney+ Manifest URL
         /// </summary>
         public static string ManifestUrl { get; set; } = @"";

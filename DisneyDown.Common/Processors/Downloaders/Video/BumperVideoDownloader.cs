@@ -17,7 +17,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
             try
             {
                 //start measuring bumper video download time
-                Timers.StartTimer(BumperTimers.BumperVideoDownloadTimer);
+                Timers.StartTimer(Timers.Bumper.BumperVideoDownloadTimer);
 
                 //ensure there is a bumper to download
                 if (playlist.Contains(Verification.BumperIntro))
@@ -47,7 +47,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
                         Console.WriteLine(@"Video bumper init data saved successfully; starting segments download");
 
                         //do download
-                        SegmentHandlers.DownloadAllSegments(playlist, videoBaseUri,
+                        SegmentHandlers.DownloadAllMpegSegments(playlist, videoBaseUri,
                             Verification.BumperIntro, encryptedBumperVideoFile);
 
                         //report success
@@ -55,7 +55,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
                             $"\nSuccessfully downloaded bumper video data to: {encryptedBumperVideoFile}\n");
 
                         //stop measuring bumper video download time
-                        Timers.StopTimer(BumperTimers.BumperVideoDownloadTimer);
+                        Timers.StopTimer(Timers.Bumper.BumperVideoDownloadTimer);
 
                         //return the saved file path
                         return encryptedBumperVideoFile;
@@ -72,11 +72,12 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
             }
             catch (Exception ex)
             {
+                //report error
                 Console.WriteLine($"Bumper video download error: {ex}");
             }
 
             //stop measuring bumper video download time
-            Timers.StopTimer(BumperTimers.BumperVideoDownloadTimer);
+            Timers.StopTimer(Timers.Bumper.BumperVideoDownloadTimer);
 
             //default
             return @"";

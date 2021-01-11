@@ -6,6 +6,7 @@ using DisneyDown.Common.Util.Diagnostics;
 using System;
 using System.IO;
 
+// ReSharper disable LocalizableElement
 // ReSharper disable RedundantIfElseBlock
 
 namespace DisneyDown.Common.Processors.Downloaders.Video
@@ -33,7 +34,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
                     //if the file already exists, simply return it and don't try and re-download it
                     if (File.Exists(encryptedVideoFile))
                     {
-                        Console.WriteLine($"Using existing {encryptedVideoFile}; download skipped");
+                        Console.WriteLine($@"Using existing {encryptedVideoFile}; download skipped");
                         return encryptedVideoFile;
                     }
 
@@ -46,7 +47,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
                         if (!string.IsNullOrWhiteSpace(bestVideoPlaylistUri))
                         {
                             //report progress
-                            Console.WriteLine($"Found best video quality manifest: {bestVideoPlaylistUri}");
+                            Console.WriteLine($@"Found best video quality manifest: {bestVideoPlaylistUri}");
 
                             //create fully-qualified URL for the playlist
                             var masterBaseUri = Methods.GetBaseUrl(masterPlaylistUrl);
@@ -74,7 +75,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Video download error: {ex.Message}");
+                Console.WriteLine($@"Video download error: {ex.Message}");
             }
 
             //default
@@ -86,7 +87,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
             try
             {
                 //start measuring video download time
-                Timers.StartTimer(MainTimers.VideoDownloadTimer);
+                Timers.StartTimer(Timers.Generic.VideoDownloadTimer);
 
                 //validation
                 if (ManifestParsers.ManifestValid(videoManifest))
@@ -123,7 +124,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
                             Console.WriteLine(@"Video init data saved successfully; starting segments download");
 
                             //do download
-                            SegmentHandlers.DownloadAllSegments(videoManifest, videoBaseUri,
+                            SegmentHandlers.DownloadAllMpegSegments(videoManifest, videoBaseUri,
                                 Verification.MainContent, encryptedVideoFile);
 
                             //report success
@@ -131,7 +132,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
                                 $"\nSuccessfully downloaded video data to: {encryptedVideoFile}\n");
 
                             //stop measuring video download time
-                            Timers.StopTimer(MainTimers.VideoDownloadTimer);
+                            Timers.StopTimer(Timers.Generic.VideoDownloadTimer);
 
                             //return the saved file path
                             return encryptedVideoFile;
@@ -153,7 +154,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
             }
 
             //stop measuring video download time
-            Timers.StopTimer(MainTimers.VideoDownloadTimer);
+            Timers.StopTimer(Timers.Generic.VideoDownloadTimer);
 
             //default
             return @"";

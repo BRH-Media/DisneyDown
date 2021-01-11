@@ -6,6 +6,7 @@ using DisneyDown.Common.Util.Diagnostics;
 using System;
 using System.IO;
 
+// ReSharper disable LocalizableElement
 // ReSharper disable RedundantIfElseBlock
 
 namespace DisneyDown.Common.Processors.Downloaders.Audio
@@ -32,7 +33,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
                     //if the file already exists, simply return it and don't try and re-download it
                     if (File.Exists(encryptedAudioFile))
                     {
-                        Console.WriteLine($"Using existing {encryptedAudioFile}; download skipped");
+                        Console.WriteLine($@"Using existing {encryptedAudioFile}; download skipped");
                         return encryptedAudioFile;
                     }
 
@@ -45,7 +46,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
                         if (!string.IsNullOrWhiteSpace(bestAudioPlaylist))
                         {
                             //report progress
-                            Console.WriteLine($"Found best audio quality manifest: {bestAudioPlaylist}");
+                            Console.WriteLine($@"Found best audio quality manifest: {bestAudioPlaylist}");
 
                             //create fully-qualified URL for the playlist
                             var masterBaseUri = Methods.GetBaseUrl(masterPlaylistUrl);
@@ -71,7 +72,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Audio download error: {ex.Message}");
+                Console.WriteLine($@"Audio download error: {ex.Message}");
             }
 
             //default
@@ -83,7 +84,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
             try
             {
                 //start measuring audio download time
-                Timers.StartTimer(MainTimers.AudioDownloadTimer);
+                Timers.StartTimer(Timers.Generic.AudioDownloadTimer);
 
                 //validation
                 if (ManifestParsers.ManifestValid(audioManifest))
@@ -120,7 +121,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
                             Console.WriteLine(@"Audio init data saved successfully; starting segments download");
 
                             //do download
-                            SegmentHandlers.DownloadAllSegments(audioManifest, audioBaseUri,
+                            SegmentHandlers.DownloadAllMpegSegments(audioManifest, audioBaseUri,
                                 Verification.MainContent, encryptedAudioFile);
 
                             //report success
@@ -128,7 +129,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
                                 $"\nSuccessfully downloaded audio data to: {encryptedAudioFile}\n");
 
                             //stop measuring audio download time
-                            Timers.StopTimer(MainTimers.AudioDownloadTimer);
+                            Timers.StopTimer(Timers.Generic.AudioDownloadTimer);
 
                             //return the saved file path
                             return encryptedAudioFile;
@@ -148,7 +149,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
             }
 
             //stop measuring audio download time
-            Timers.StopTimer(MainTimers.AudioDownloadTimer);
+            Timers.StopTimer(Timers.Generic.AudioDownloadTimer);
 
             //default
             return @"";

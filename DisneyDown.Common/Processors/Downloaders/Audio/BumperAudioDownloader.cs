@@ -17,7 +17,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
             try
             {
                 //start measuring bumper audio download time
-                Timers.StartTimer(BumperTimers.BumperAudioDownloadTimer);
+                Timers.StartTimer(Timers.Bumper.BumperAudioDownloadTimer);
 
                 //ensure there is a bumper to download
                 if (playlist.Contains(Verification.BumperIntro))
@@ -47,7 +47,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
                         Console.WriteLine(@"Audio bumper init data saved successfully; starting segments download");
 
                         //do download
-                        SegmentHandlers.DownloadAllSegments(playlist, audioBaseUri,
+                        SegmentHandlers.DownloadAllMpegSegments(playlist, audioBaseUri,
                             Verification.BumperIntro, encryptedBumperAudioFile);
 
                         //report success
@@ -55,7 +55,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
                             $"\nSuccessfully downloaded bumper audio data to: {encryptedBumperAudioFile}\n");
 
                         //stop measuring bumper audio download time
-                        Timers.StopTimer(BumperTimers.BumperAudioDownloadTimer);
+                        Timers.StopTimer(Timers.Bumper.BumperAudioDownloadTimer);
 
                         //return the saved file path
                         return encryptedBumperAudioFile;
@@ -72,11 +72,12 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
             }
             catch (Exception ex)
             {
+                //report error
                 Console.WriteLine($"Bumper audio download error: {ex}");
             }
 
             //stop measuring bumper audio download time
-            Timers.StopTimer(BumperTimers.BumperAudioDownloadTimer);
+            Timers.StopTimer(Timers.Bumper.BumperAudioDownloadTimer);
 
             //default
             return @"";

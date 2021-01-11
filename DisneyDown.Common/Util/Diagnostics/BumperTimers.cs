@@ -2,13 +2,36 @@
 
 namespace DisneyDown.Common.Util.Diagnostics
 {
-    public static class BumperTimers
+    public class BumperTimers
     {
-        public static Stopwatch BumperVideoDownloadTimer { get; } = new Stopwatch();
-        public static Stopwatch BumperAudioDownloadTimer { get; } = new Stopwatch();
-        public static Stopwatch BumperVideoDecryptTimer { get; } = new Stopwatch();
-        public static Stopwatch BumperAudioDecryptTimer { get; } = new Stopwatch();
-        public static Stopwatch BumperRemuxTimer { get; } = new Stopwatch();
-        public static Stopwatch BumperConcatTimer { get; } = new Stopwatch();
+        /// <summary>
+        /// Time it takes to download the bumper video stream
+        /// </summary>
+        public Stopwatch BumperVideoDownloadTimer { get; } = new Stopwatch();
+
+        /// <summary>
+        /// Time it takes to download the bumper audio stream
+        /// </summary>
+        public Stopwatch BumperAudioDownloadTimer { get; } = new Stopwatch();
+
+        /// <summary>
+        /// Time it takes to decrypt the bumper video stream
+        /// </summary>
+        public Stopwatch BumperVideoDecryptTimer { get; } = new Stopwatch();
+
+        /// <summary>
+        /// Time it takes to decrypt the bumper audio stream
+        /// </summary>
+        public Stopwatch BumperAudioDecryptTimer { get; } = new Stopwatch();
+
+        /// <summary>
+        /// Time it takes to merge the separate bumper streams using FFMPEG
+        /// </summary>
+        public Stopwatch BumperRemuxTimer { get; } = new Stopwatch();
+
+        /// <summary>
+        /// Time it takes to concatenate the main content with the bumper
+        /// </summary>
+        public Stopwatch BumperConcatTimer { get; } = new Stopwatch();
     }
 }

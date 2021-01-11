@@ -4,7 +4,9 @@ using DisneyDown.Common.Parsers.HLS.Playlist;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
+// ReSharper disable LocalizableElement
 // ReSharper disable InvertIf
 
 namespace DisneyDown.Common.Processors
@@ -19,15 +21,33 @@ namespace DisneyDown.Common.Processors
         /// </summary>
         /// <param name="path"></param>
         /// <param name="bytes"></param>
-        public static void WriteSegment(string path, byte[] bytes)
+        /// <param name="append"></param>
+        public static void WriteSegment(string path, byte[] bytes, bool append = true)
         {
+            //null validation
             if (bytes != null)
 
-                if (File.Exists(path))
+                //if the file exists (and we're allowed to append to it)
+                if (File.Exists(path) && append)
+
+                    //append to the already existing file instead of overwriting it
                     AppendAllBytes(path, bytes);
                 else
+
+                    //create the new file/overwrite the existing file
                     File.WriteAllBytes(path, bytes);
         }
+
+        /// <summary>
+        /// Writes a segment to a file; creates the file if it doesn't exist, otherwise it will append.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="contents"></param>
+        /// <param name="append"></param>
+        public static void WriteSegment(string path, string contents, bool append = true)
+
+            //use the existing segment writer but convert the string contents into bytes first
+            => WriteSegment(path, Encoding.Default.GetBytes(contents), append);
 
         /// <summary>
         /// Append bytes to an existing file; will fail if the file does not exist
@@ -36,13 +56,18 @@ namespace DisneyDown.Common.Processors
         /// <param name="bytes"></param>
         public static void AppendAllBytes(string path, byte[] bytes)
         {
+            //the file to append to must exist,
+            //and the supplied contents must not be null
             if (File.Exists(path) && bytes != null)
 
+                //open a new FileStream in append (a) mode
                 using (var stream = new FileStream(path, FileMode.Append))
+
+                    //write all bytes to the end of the file
                     stream.Write(bytes, 0, bytes.Length);
         }
 
-        private static List<PlaylistUriItem> FilterUrlItems(List<PlaylistItem> items, string filter)
+        private static List<PlaylistUriItem> FilterUrlItems(IReadOnlyCollection<PlaylistItem> items, string filter)
         {
             try
             {
@@ -80,7 +105,7 @@ namespace DisneyDown.Common.Processors
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Playlist segment filter error: {ex.Message}");
+                Console.WriteLine($@"Playlist segment filter error: {ex.Message}");
             }
 
             //default
@@ -88,13 +113,13 @@ namespace DisneyDown.Common.Processors
         }
 
         /// <summary>
-        /// Download all valid segments in a manifest file (audio or video), then append them to a respective singular Widevine-protected file.
+        /// Download all valid MPEG-4 segments in a manifest file (audio or video), then append them to a respective singular Widevine-protected file.
         /// </summary>
         /// <param name="playlist"></param>
         /// <param name="baseUri"></param>
         /// <param name="filePath"></param>
         /// <param name="correctUrlComponent"></param>
-        public static void DownloadAllSegments(string playlist, string baseUri, string correctUrlComponent, string filePath = @"segments.bin")
+        public static void DownloadAllMpegSegments(string playlist, string baseUri, string correctUrlComponent, string filePath = @"segments.bin")
         {
             try
             {
@@ -144,20 +169,20 @@ namespace DisneyDown.Common.Processors
 
                                     //report success
                                     Console.WriteLine(
-                                        $"Segment {counter + 1:D4}/{totalSegments:D4} ({segmentFileName}) downloaded and merged | {progress:P2}");
+                                        $@"Segment {counter + 1:D4}/{totalSegments:D4} ({segmentFileName}) downloaded and merged | {progress:P2}");
                                 }
                                 else
 
                                     //report failure
                                     Console.WriteLine(
-                                        $"Segment {counter + 1:D4}/{totalSegments:D4} ({segmentFileName}) download error: null result | {progress:P2}");
+                                        $@"Segment {counter + 1:D4}/{totalSegments:D4} ({segmentFileName}) download error: null result | {progress:P2}");
 
                                 //incremented only on valid segment URL to keep count fluid
                                 counter++;
                             }
                             catch (Exception ex)
                             {
-                                Console.WriteLine($"Segment {counter + 1:D4}/{totalSegments:D4} download error: {ex.Message}");
+                                Console.WriteLine($@"Segment {counter + 1:D4}/{totalSegments:D4} download error: {ex.Message}");
                             }
                         }
                     }
@@ -166,8 +191,110 @@ namespace DisneyDown.Common.Processors
             catch (Exception ex)
             {
                 //report error
-                Console.WriteLine($"Playlist download error:\n\n{ex.Message}");
+                Console.WriteLine($"MPEG-4 playlist download error:\n\n{ex.Message}");
             }
+        }
+
+        /// <summary>
+        /// Download all valid subtitles segments in a manifest file, and return the directory where they are located
+        /// </summary>
+        /// <param name="playlist"></param>
+        /// <param name="baseUri"></param>
+        /// <param name="filePath"></param>
+        /// <param name="correctUrlComponent"></param>
+        public static string DownloadAllSubtitlesSegments(string playlist, string baseUri, string correctUrlComponent, string filePath = @"subtitles.srt")
+        {
+            try
+            {
+                //validation
+                if (!string.IsNullOrWhiteSpace(playlist))
+                {
+                    //parse playlist
+                    var p = new PlaylistParser().Parse(playlist);
+
+                    //validation
+                    if (p != null)
+                    {
+                        //current item counter
+                        var counter = 0;
+
+                        //where to save downloaded subs (they won't get merged; just dumped here)
+                        var subtitlesDirectory = $"{filePath}.tmp";
+
+                        //delete the entire directory if it already exists
+                        if (Directory.Exists(subtitlesDirectory))
+                            Directory.Delete(subtitlesDirectory, true);
+
+                        //create the directory
+                        Directory.CreateDirectory(subtitlesDirectory);
+
+                        //filter out any unnecessary segments (only get the MAIN segments, for example)
+                        var filteredSegments = FilterUrlItems(p.Items, correctUrlComponent);
+
+                        //total amount of segments
+                        var totalSegments = filteredSegments.Count;
+
+                        //report merge file
+                        Console.WriteLine($"\nStarting subtitle download on merge directory: {subtitlesDirectory}\n");
+
+                        //go through each item in the playlist
+                        foreach (var i in filteredSegments)
+                        {
+                            try
+                            {
+                                //fully-qualified segment URL
+                                var segmentUrl = $"{baseUri}{i.Uri}";
+
+                                //try download of segment
+                                var segment = ResourceGrab.GrabBytes(segmentUrl);
+
+                                //segment file name from URL
+                                var segmentFileName = Path.GetFileName(new Uri(segmentUrl).LocalPath);
+
+                                //where to save the individual segment
+                                var segmentSavePath = $@"{subtitlesDirectory}\{segmentFileName}";
+
+                                //% completion
+                                var progress = decimal.Divide(counter + 1, totalSegments);
+
+                                //validation
+                                if (segment != null)
+                                {
+                                    //flush to file
+                                    WriteSegment(segmentSavePath, segment, false);
+
+                                    //report success
+                                    Console.WriteLine(
+                                        $@"Segment {counter + 1:D4}/{totalSegments:D4} ({segmentFileName}) downloaded and merged | {progress:P2}");
+                                }
+                                else
+
+                                    //report failure
+                                    Console.WriteLine(
+                                        $@"Segment {counter + 1:D4}/{totalSegments:D4} ({segmentFileName}) download error: null result | {progress:P2}");
+
+                                //incremented only on valid segment URL to keep count fluid
+                                counter++;
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($@"Segment {counter + 1:D4}/{totalSegments:D4} download error: {ex.Message}");
+                            }
+                        }
+
+                        //return the directory of the saved subtitle segments
+                        return subtitlesDirectory;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                //report error
+                Console.WriteLine($"Subtitles playlist download error:\n\n{ex.Message}");
+            }
+
+            //default
+            return @"";
         }
     }
 }

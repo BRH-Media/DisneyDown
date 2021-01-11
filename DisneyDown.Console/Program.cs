@@ -134,7 +134,7 @@ namespace DisneyDown.Console
         private static void Main(string[] args)
         {
             //main execution timer start
-            Timers.StartTimer(Timers.ExecutionTimer);
+            Timers.StartTimer(Timers.Generic.ExecutionTimer);
 
             //verify arguments
             if (args.Length < 2
@@ -176,7 +176,7 @@ namespace DisneyDown.Console
                     }
 
                     //main execution timer stop
-                    Timers.StopTimer(Timers.ExecutionTimer);
+                    Timers.StopTimer(Timers.Generic.ExecutionTimer);
 
                     //line break for timings
                     if (Timers.TimersEnabled)

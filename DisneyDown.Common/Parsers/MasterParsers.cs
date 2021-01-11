@@ -2,12 +2,12 @@
 using DisneyDown.Common.Net;
 using DisneyDown.Common.Parsers.HLS;
 using DisneyDown.Common.Parsers.HLS.Playlist;
-using DisneyDown.Common.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
+// ReSharper disable LocalizableElement
 // ReSharper disable ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
 // ReSharper disable ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
 // ReSharper disable InvertIf
@@ -19,71 +19,159 @@ namespace DisneyDown.Common.Parsers
     /// </summary>
     public static class MasterParsers
     {
-        public static string[] FilterLanguages(PlaylistTagItem[] playlists)
+        public static string[] LangPriority(string langPriorityFile)
         {
-            //default language
-            const string DEFAULT_LANG = @"en";
-            const string LANG_PRIORITY_FILE = @"langPriority.cfg";
-
             try
             {
                 //priority storage
                 var langPriority = new List<string>
                 {
-                    DEFAULT_LANG
+                    //ensure the default language is first in the stack to make sure it still gets selected
+                    //if nothing is found in the priority file
+                    Strings.DefaultLang
                 };
 
                 //does the lang priority file exist?
-                if (File.Exists(LANG_PRIORITY_FILE))
+                if (File.Exists(langPriorityFile))
                 {
                     //read the file into memory as text
-                    var tmpLangPriority = File.ReadAllText(LANG_PRIORITY_FILE);
+                    var tmpLangPriority = File.ReadAllText(langPriorityFile);
 
                     //verification
                     if (!string.IsNullOrWhiteSpace(tmpLangPriority))
 
                         //read the file into memory as lines
-                        langPriority = File.ReadAllLines(LANG_PRIORITY_FILE).ToList();
+                        langPriority = File.ReadAllLines(langPriorityFile).ToList();
                     else
 
                         //overwrite it
-                        File.WriteAllText(LANG_PRIORITY_FILE, DEFAULT_LANG);
+                        File.WriteAllText(langPriorityFile, Strings.DefaultLang);
                 }
                 else
+                {
+                    //directory of language priority file
+                    var langDir = Path.GetDirectoryName(langPriorityFile);
 
-                    //create it
-                    File.WriteAllText(LANG_PRIORITY_FILE, DEFAULT_LANG);
+                    //verify the language priority file directory value
+                    if (!string.IsNullOrWhiteSpace(langDir))
 
+                        //does the directory that it will sit in exist?
+                        if (!Directory.Exists(langDir))
+
+                            //it doesn't; create a new directory
+                            Directory.CreateDirectory(langDir);
+
+                    //create the new language priority file
+                    File.WriteAllText(langPriorityFile, Strings.DefaultLang);
+                }
+
+                //return final priority
+                return langPriority.ToArray();
+            }
+            catch (Exception ex)
+            {
+                //report error
+                Console.Write($@"Language priority file read error: {ex.Message}");
+            }
+
+            //default
+            return new string[] { };
+        }
+
+        public static string[] FilterLanguages(PlaylistTagItem[] playlistTags, string langPriorityFile)
+        {
+            try
+            {
                 //store all playlist URLs here
                 var playlistUrls = new List<string>();
 
+                //fetch priority from file
+                var langPriority = LangPriority(langPriorityFile);
+
+                //each line in the language priority file
                 foreach (var l in langPriority)
                 {
-                    foreach (var t in playlists)
+                    //line verification
+                    if (!string.IsNullOrWhiteSpace(l))
                     {
-                        //temporary validation variable
-                        var langValid = false;
+                        //options
+                        var langOptions = l.Split(':');
 
-                        //loop through and parse attributes
-                        foreach (var a in t.Attributes)
+                        //there must be at least one entry in the language priority options
+                        if (langOptions.Length > 0)
                         {
-                            switch (a.Key)
-                            {
-                                //validate the attribute
-                                case @"LANGUAGE" when string.Equals(a.Value, l, StringComparison.CurrentCultureIgnoreCase):
-                                    langValid = true;
-                                    break;
+                            //language is first entry
+                            var langCode = langOptions[0];
 
-                                case @"URI" when langValid:
-                                    playlistUrls.Add(a.Value);
-                                    break;
+                            //language subtitle forced is second entry
+                            var langForced = langOptions.Length > 1
+                                ? langOptions[1]
+                                : @"";
+
+                            //go through each provided playlist tag element
+                            foreach (var t in playlistTags)
+                            {
+                                //temporary validation variable
+                                var langValid = false;
+
+                                //loop through and parse attributes
+                                foreach (var a in t.Attributes)
+                                {
+                                    //check what key matches; actions will vary depending
+                                    switch (a.Key)
+                                    {
+                                        //validate the "LANGUAGE" code attribute (e.g. "en" or "de")
+                                        case @"LANGUAGE" when
+
+                                            //was a "LANGUAGE" code attribute supplied?
+                                            !string.IsNullOrWhiteSpace(langCode) &&
+
+                                            //and in addition, does the "LANGUAGE" code attribute match that of the current tag?
+                                            string.Equals(langCode, a.Value,
+                                                StringComparison.CurrentCultureIgnoreCase):
+
+                                            //enable language valid since the correct language code was matched
+                                            langValid = true;
+
+                                            //exit conditional
+                                            break;
+
+                                        //validate the subtitle forced attribute (e.g. "YES" or "NO")
+                                        case @"FORCED" when
+
+                                            //was a "FORCED" attribute supplied?
+                                            !string.IsNullOrWhiteSpace(langForced) &&
+
+                                            //and in addition, does the "FORCED" attribute not match that of the current tag?
+                                            !string.Equals(langForced, a.Value,
+                                                StringComparison.CurrentCultureIgnoreCase):
+
+                                            //disable language valid, since an incorrect subtitle force value was encountered
+                                            langValid = false;
+
+                                            //exit conditional
+                                            break;
+
+                                        //only add the URI if the language priority has been reached
+                                        case @"URI" when
+
+                                            //master condition
+                                            langValid:
+
+                                            //add it to the total playlists list; all prior conditions satisfied
+                                            playlistUrls.Add(a.Value);
+
+                                            //exit conditional
+                                            break;
+                                    }
+                                }
                             }
+
+                            //language priority found, no need to keep running
+                            if (playlistUrls.Count > 0)
+                                break;
                         }
                     }
-
-                    //language priority found, no need to keep running
-                    if (playlistUrls.Count > 0)
-                        break;
                 }
 
                 //return the new list
@@ -92,7 +180,7 @@ namespace DisneyDown.Common.Parsers
             catch (Exception ex)
             {
                 //report error
-                Console.WriteLine($"Language priority error: {ex.Message}. Will use '{DEFAULT_LANG}'.");
+                Console.WriteLine($@"Language priority error: {ex.Message}. Will use '{Strings.DefaultLang}'.");
             }
 
             //default
@@ -100,35 +188,33 @@ namespace DisneyDown.Common.Parsers
         }
 
         /// <summary>
-        /// Verifies if an audio tag posses the correct attributes
+        /// Verifies a track against its ID string
         /// </summary>
-        /// <param name="audioTrack"></param>
+        /// <param name="track">Track to verify</param>
+        /// <param name="correctTagType">ID string</param>
         /// <returns></returns>
-        public static bool ValidAudioTrack(PlaylistTagItem audioTrack)
+        public static bool ValidTrack(PlaylistTagItem track, string correctTagType)
         {
-            //tag constants
-            const string AUDIO_TYPE = @"AUDIO";
-
             try
             {
                 //validation
-                if (audioTrack != null)
+                if (track != null)
 
                     //validation
-                    if (audioTrack.Attributes.Count > 0
-                        && audioTrack.Id == PlaylistTagId.EXT_X_MEDIA)
+                    if (track.Attributes.Count > 0
+                        && track.Id == PlaylistTagId.EXT_X_MEDIA)
                     {
                         //final return values
                         var typeValid = false;
 
                         //loop through and parse attributes
-                        foreach (var a in audioTrack.Attributes)
+                        foreach (var a in track.Attributes)
 
                             //case the type information
                             switch (a.Key)
                             {
                                 //validate the attribute
-                                case @"TYPE" when a.Value == AUDIO_TYPE:
+                                case @"TYPE" when a.Value == correctTagType:
                                     typeValid = true;
                                     break;
                             }
@@ -145,6 +231,22 @@ namespace DisneyDown.Common.Parsers
             //default
             return false;
         }
+
+        /// <summary>
+        /// Verifies if an audio tag possesses the correct attributes
+        /// </summary>
+        /// <param name="audioTrack"></param>
+        /// <returns></returns>
+        public static bool ValidAudioTrack(PlaylistTagItem audioTrack)
+            => ValidTrack(audioTrack, @"AUDIO");
+
+        /// <summary>
+        /// Verifies if a subtitle tag possesses the correct attributes
+        /// </summary>
+        /// <param name="subtitleTrack"></param>
+        /// <returns></returns>
+        public static bool ValidSubtitleTrack(PlaylistTagItem subtitleTrack)
+            => ValidTrack(subtitleTrack, @"SUBTITLES");
 
         /// <summary>
         /// Sorts the best quality playlist from a list of playlist URLs
@@ -169,8 +271,8 @@ namespace DisneyDown.Common.Parsers
                         if (string.IsNullOrWhiteSpace(url))
                             continue;
 
-                        //the matched quality
-                        var q = 0;
+                        //the matched quality index
+                        var qualityIndex = 0;
 
                         //try and match a quality level
                         foreach (var def in definitions)
@@ -178,12 +280,12 @@ namespace DisneyDown.Common.Parsers
                             //check the current quality against the URL
                             if (url.Contains(def.Value))
                             {
-                                q = def.Key;
+                                qualityIndex = def.Key;
                                 break;
                             }
 
                         //apply the quality to the list
-                        qualityDict.Add(new Tuple<int, string>(q, url));
+                        qualityDict.Add(new Tuple<int, string>(qualityIndex, url));
                     }
 
                     //get the first item that's of the highest quality rating
@@ -196,96 +298,6 @@ namespace DisneyDown.Common.Parsers
             catch
             {
                 //nothing
-            }
-
-            //default
-            return @"";
-        }
-
-        public static string MasterAudioPlaylist(string playlist, string masterPlaylistUrl)
-        {
-            try
-            {
-                //exclusive mode will return the playlist as-is
-                if (Args.ExclusiveMode)
-                    return playlist;
-
-                //find best video playlist
-                var bestAudioPlaylist = MasterAudioPlaylistUri(playlist);
-
-                //validation
-                if (!string.IsNullOrWhiteSpace(bestAudioPlaylist))
-                {
-                    //report progress
-                    Console.WriteLine($"Found best audio quality manifest: {bestAudioPlaylist}");
-
-                    //create fully-qualified URL for the playlist
-                    var masterBaseUri = Methods.GetBaseUrl(masterPlaylistUrl);
-                    var audioPlaylistUrl = $"{masterBaseUri}{bestAudioPlaylist}";
-
-                    //report progress
-                    Console.WriteLine(@"Downloading audio manifest");
-
-                    //do the download
-                    var audioManifest = ManifestParsers.DownloadManifest(audioPlaylistUrl);
-
-                    //validation
-                    if (ManifestParsers.ManifestValid(audioManifest))
-                        return playlist;
-
-                    //fail-safe error message
-                    Console.WriteLine(@"Audio playlist does not conform as is therefore invalid.");
-                }
-            }
-            catch (Exception ex)
-            {
-                //report error
-                Console.WriteLine($"Parse master video playlist error:\n\n{ex.Message}");
-            }
-
-            //default
-            return @"";
-        }
-
-        public static string MasterVideoPlaylist(string playlist, string masterPlaylistUrl)
-        {
-            try
-            {
-                //exclusive mode will return the playlist as-is
-                if (Args.ExclusiveMode)
-                    return playlist;
-
-                //find best video playlist
-                var bestVideoPlaylist = MasterVideoPlaylistUri(playlist);
-
-                //validation
-                if (!string.IsNullOrWhiteSpace(bestVideoPlaylist))
-                {
-                    //report progress
-                    Console.WriteLine($"Found best video quality manifest: {bestVideoPlaylist}");
-
-                    //create fully-qualified URL for the playlist
-                    var masterBaseUri = Methods.GetBaseUrl(masterPlaylistUrl);
-                    var videoPlaylistUrl = $"{masterBaseUri}{bestVideoPlaylist}";
-
-                    //report progress
-                    Console.WriteLine(@"Downloading video manifest");
-
-                    //do the download
-                    var videoManifest = ManifestParsers.DownloadManifest(videoPlaylistUrl);
-
-                    //validation
-                    if (ManifestParsers.ManifestValid(videoManifest))
-                        return playlist;
-
-                    //fail-safe error message
-                    Console.WriteLine(@"Video playlist does not conform as is therefore invalid.");
-                }
-            }
-            catch (Exception ex)
-            {
-                //report error
-                Console.WriteLine($"Parse master video playlist error:\n\n{ex.Message}");
             }
 
             //default
@@ -397,7 +409,7 @@ namespace DisneyDown.Common.Parsers
                     }
 
                     //filter out unwanted languages
-                    var finalPlaylists = FilterLanguages(playlistTags.ToArray());
+                    var finalPlaylists = FilterLanguages(playlistTags.ToArray(), Strings.AudioLangPriorityFile);
 
                     //return filtered result
                     return SortBestPlaylist(finalPlaylists, BandwidthDefinitions.AudioDefinitions);
@@ -407,6 +419,76 @@ namespace DisneyDown.Common.Parsers
             {
                 //report error
                 Console.WriteLine($"Parse master audio URI error:\n\n{ex.Message}");
+            }
+
+            //default
+            return @"";
+        }
+
+        /// <summary>
+        /// Sort the highest priority subtitle playlist from a master manifest
+        /// </summary>
+        /// <param name="playlist"></param>
+        /// <returns></returns>
+        public static string MasterSubtitleUrl(string playlist)
+        {
+            try
+            {
+                //validation
+                if (!string.IsNullOrWhiteSpace(playlist))
+                {
+                    //parse playlist
+                    var p = new PlaylistParser().Parse(playlist);
+
+                    //store all playlist URIs here
+                    var playlistTags = new List<PlaylistTagItem>();
+
+                    //loop through each track
+                    foreach (var t in p.Items)
+                    {
+                        try
+                        {
+                            //try cast to tag
+                            var tag = (PlaylistTagItem)t;
+
+                            //validation
+                            if (tag != null)
+                            {
+                                //verify valid subtitle
+                                var trackValid = ValidSubtitleTrack(tag);
+
+                                //return the URI of the tag if it's valid
+                                if (trackValid)
+
+                                    //attempt to parse out the URI
+                                    foreach (var a in tag.Attributes)
+
+                                        //verify if it's a URI tag
+                                        if (a.Key == @"URI")
+
+                                            //store the verified URI tag
+                                            playlistTags.Add(tag);
+                            }
+                        }
+                        catch
+                        {
+                            //ignore
+                        }
+                    }
+
+                    //filter out unwanted languages
+                    var finalPlaylists = FilterLanguages(playlistTags.ToArray(), Strings.SubtitleLangPriorityFile);
+
+                    //return first filtered result by default
+                    return finalPlaylists.Length > 0
+                        ? finalPlaylists[0]
+                        : @"";
+                }
+            }
+            catch (Exception ex)
+            {
+                //report error
+                Console.WriteLine($"Parse master subtitle URI error:\n\n{ex.Message}");
             }
 
             //default
