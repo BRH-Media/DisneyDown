@@ -165,7 +165,7 @@ namespace DisneyDown.Common.Processors
                             {
                                 FileName = FILE_NAME,
                                 WindowStyle = ProcessWindowStyle.Hidden,
-                                Arguments = $"-f concat -safe 0 -i \"{tmpListFile}\" -c copy \"{outputFile}\""
+                                Arguments = $"-f concat -safe 0 -i \"{tmpListFile}\" c copy -scodec copy \"{outputFile}\""
                             }
                         };
 

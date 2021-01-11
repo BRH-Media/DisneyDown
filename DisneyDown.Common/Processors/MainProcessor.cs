@@ -51,9 +51,31 @@ namespace DisneyDown.Common.Processors
                     //start measuring subtitles parse and merge time
                     Timers.StartTimer(Timers.Generic.SubtitlesParseTimer);
 
-                    /////////////////////////
-                    /////////////////////////
-                    /////////////////////////
+                    //total lines
+                    var subtitles = new List<string>();
+
+                    //go through each subtitle file in the directory
+                    foreach (var f in Directory.GetFiles(subtitlesDirectory))
+                    {
+                        //extension of the file
+                        var ext = Path.GetExtension(f);
+
+                        //make sure it's WebVTT
+                        if (ext == @".vtt")
+
+                            //append
+                            subtitles.AddRange(File.ReadAllLines(f));
+                    }
+
+                    //check if there are lines
+                    if (subtitles.Count > 0)
+                    {
+                        //conversion
+                        var convertedSubs = SubtitleProcessor.ConvertToSrt(subtitles);
+
+                        //export to the merge file
+                        File.WriteAllLines(subtitleMergeFile, convertedSubs);
+                    }
 
                     //stop measuring audio decrypt time
                     Timers.StopTimer(Timers.Generic.SubtitlesParseTimer);
@@ -385,6 +407,14 @@ namespace DisneyDown.Common.Processors
                                     //video
                                     if (!string.IsNullOrWhiteSpace(decryptedVideo))
                                         muxInput.Add(decryptedVideo);
+
+                                    //subtitles
+                                    if (!string.IsNullOrWhiteSpace(mergedSubtitles))
+
+                                        //don't add subtitles if they don't exist; this avoids the later check
+                                        //that will crash the main application processor
+                                        if (File.Exists(mergedSubtitles))
+                                            muxInput.Add(mergedSubtitles);
 
                                     //attempt mux audio and video together (only if the decryption succeeded)
                                     if (AllExistInList(muxInput))
