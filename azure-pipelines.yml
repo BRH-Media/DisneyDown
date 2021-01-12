@@ -11,8 +11,8 @@ pool:
 
 variables:
   solution: '**/*.sln'
-  buildPlatform: 'x86'
-  buildConfiguration: 'Release'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Debug'
 
 #run at midnight
 schedules:
