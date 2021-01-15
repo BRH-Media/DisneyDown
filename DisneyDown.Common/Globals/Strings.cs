@@ -13,6 +13,11 @@
         public static string AudioLangPriorityFile { get; set; } = @"cfg\audioLangPriority.cfg";
 
         /// <summary>
+        /// Default audio group priority file
+        /// </summary>
+        public static string AudioGroupPriorityFile { get; set; } = @"cfg\audioGroupPriority.cfg";
+
+        /// <summary>
         /// Default language priority file for subtitle tracks
         /// </summary>
         public static string SubtitleLangPriorityFile { get; set; } = @"cfg\subtitleLangPriority.cfg";

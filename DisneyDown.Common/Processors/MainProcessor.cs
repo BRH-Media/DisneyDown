@@ -45,6 +45,16 @@ namespace DisneyDown.Common.Processors
                             Strings.ManifestUrl,
                             subtitleMergeFile);
 
+                    //the downloader will return the merged file if it already exists; make sure to check for this
+                    if (File.Exists(subtitlesDirectory))
+                    {
+                        //stop measuring subtitle parse and merge time
+                        Timers.StopTimer(Timers.Generic.SubtitlesParseTimer);
+
+                        //return the already existing file and do not attempt extra processing
+                        return subtitleMergeFile;
+                    }
+
                     //report progress
                     Console.WriteLine(@"Attempting subtitles parse and merge");
 
@@ -77,7 +87,7 @@ namespace DisneyDown.Common.Processors
                         File.WriteAllLines(subtitleMergeFile, convertedSubs);
                     }
 
-                    //stop measuring audio decrypt time
+                    //stop measuring subtitle parse and merge time
                     Timers.StopTimer(Timers.Generic.SubtitlesParseTimer);
 
                     //report progress
@@ -96,6 +106,9 @@ namespace DisneyDown.Common.Processors
                 //report error
                 Console.WriteLine($@"Subtitles process error: {ex.Message}");
             }
+
+            //stop measuring subtitle parse and merge time
+            Timers.StopTimer(Timers.Generic.SubtitlesParseTimer);
 
             //default
             return @"";
@@ -175,6 +188,12 @@ namespace DisneyDown.Common.Processors
                 Console.WriteLine($@"Audio process error: {ex.Message}");
             }
 
+            //stop measuring audio decrypt time
+            Timers.StopTimer(Timers.Generic.AudioDecryptTimer);
+
+            //stop measuring bumper audio decrypt time
+            Timers.StopTimer(Timers.Bumper.BumperAudioDecryptTimer);
+
             //default
             return @"";
         }
@@ -252,6 +271,12 @@ namespace DisneyDown.Common.Processors
                 //report error
                 Console.WriteLine($@"Video process error: {ex.Message}");
             }
+
+            //stop measuring video decrypt time
+            Timers.StopTimer(Timers.Generic.VideoDecryptTimer);
+
+            //start measuring bumper video decrypt time
+            Timers.StopTimer(Timers.Bumper.BumperVideoDecryptTimer);
 
             //default
             return @"";

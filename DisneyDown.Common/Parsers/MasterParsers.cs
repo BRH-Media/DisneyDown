@@ -1,5 +1,4 @@
 ﻿using DisneyDown.Common.Globals;
-using DisneyDown.Common.Net;
 using DisneyDown.Common.Parsers.HLS;
 using DisneyDown.Common.Parsers.HLS.Playlist;
 using System;

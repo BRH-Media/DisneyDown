@@ -63,6 +63,8 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
                             return PerformDownload(videoManifest, videoPlaylistUrl, encryptedVideoFile);
                         }
                         else
+
+                            //report error
                             Console.WriteLine(@"Video download failed; video playlist URL was null");
                     }
                     else
@@ -125,7 +127,8 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
 
                             //do download
                             SegmentHandlers.DownloadAllMpegSegments(videoManifest, videoBaseUri,
-                                Verification.MainContent, encryptedVideoFile);
+                                Verification.MainContent, encryptedVideoFile,
+                                @"[Main Video]");
 
                             //report success
                             Console.WriteLine(
@@ -138,14 +141,18 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
                             return encryptedVideoFile;
                         }
                         else
-                        {
+
+                            //report error
                             Console.WriteLine(@"Video download failed; video init segment data was null");
-                        }
                     }
                     else
+
+                        //report error
                         Console.WriteLine(@"Video download failed; video init URL was invalid, null or empty result.");
                 }
                 else
+
+                    //report error
                     Console.WriteLine(@"Video download failed; video manifest does not conform");
             }
             catch

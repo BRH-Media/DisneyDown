@@ -48,7 +48,8 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
 
                         //do download
                         SegmentHandlers.DownloadAllMpegSegments(playlist, audioBaseUri,
-                            Verification.BumperIntro, encryptedBumperAudioFile);
+                            Verification.BumperIntro, encryptedBumperAudioFile,
+                            @"[Bumper Audio]");
 
                         //report success
                         Console.WriteLine(

@@ -96,7 +96,8 @@ namespace DisneyDown.Common.Processors.Downloaders.Subtitles
 
                     //do download
                     var savedDirectory = SegmentHandlers.DownloadAllSubtitlesSegments(subtitlesManifest, audioBaseUri,
-                        Verification.MainContent, subtitlesMergeFile);
+                        Verification.MainContent, subtitlesMergeFile,
+                        @"[Subtitles]");
 
                     //report success
                     Console.WriteLine(

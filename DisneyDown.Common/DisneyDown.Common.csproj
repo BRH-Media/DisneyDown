@@ -39,7 +39,7 @@
     <Compile Include="Globals\Strings.cs" />
     <Compile Include="Globals\Args.cs" />
     <Compile Include="Globals\Verification.cs" />
-    <Compile Include="Net\BandwidthDefinitions.cs" />
+    <Compile Include="Globals\BandwidthDefinitions.cs" />
     <Compile Include="Processors\Downloaders\Audio\BumperAudioDownloader.cs" />
     <Compile Include="Processors\Downloaders\Subtitles\MainSubtitlesDownloader.cs" />
     <Compile Include="Processors\Downloaders\Video\BumperVideoDownloader.cs" />

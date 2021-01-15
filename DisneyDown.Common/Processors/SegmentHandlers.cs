@@ -119,7 +119,7 @@ namespace DisneyDown.Common.Processors
         /// <param name="baseUri"></param>
         /// <param name="filePath"></param>
         /// <param name="correctUrlComponent"></param>
-        public static void DownloadAllMpegSegments(string playlist, string baseUri, string correctUrlComponent, string filePath = @"segments.bin")
+        public static void DownloadAllMpegSegments(string playlist, string baseUri, string correctUrlComponent, string filePath = @"segments.bin", string displayPrefix = @"")
         {
             try
             {
@@ -169,20 +169,24 @@ namespace DisneyDown.Common.Processors
 
                                     //report success
                                     Console.WriteLine(
-                                        $@"Segment {counter + 1:D4}/{totalSegments:D4} ({segmentFileName}) downloaded and merged | {progress:P2}");
+                                        $"{(!string.IsNullOrWhiteSpace(displayPrefix) ? $"{displayPrefix} " : @"")}" +
+                                        $"Segment {counter + 1:D4}/{totalSegments:D4} ({segmentFileName}) downloaded and merged | {progress:P2}");
                                 }
                                 else
 
                                     //report failure
                                     Console.WriteLine(
-                                        $@"Segment {counter + 1:D4}/{totalSegments:D4} ({segmentFileName}) download error: null result | {progress:P2}");
+                                        $"{(!string.IsNullOrWhiteSpace(displayPrefix) ? $"{displayPrefix} " : @"")}" +
+                                        $"Segment {counter + 1:D4}/{totalSegments:D4} ({segmentFileName}) download error: null result | {progress:P2}");
 
                                 //incremented only on valid segment URL to keep count fluid
                                 counter++;
                             }
                             catch (Exception ex)
                             {
-                                Console.WriteLine($@"Segment {counter + 1:D4}/{totalSegments:D4} download error: {ex.Message}");
+                                Console.WriteLine(
+                                    $"{(!string.IsNullOrWhiteSpace(displayPrefix) ? $"{displayPrefix} " : @"")}" +
+                                    $"Segment {counter + 1:D4}/{totalSegments:D4} download error: {ex.Message}");
                             }
                         }
                     }
@@ -202,7 +206,7 @@ namespace DisneyDown.Common.Processors
         /// <param name="baseUri"></param>
         /// <param name="filePath"></param>
         /// <param name="correctUrlComponent"></param>
-        public static string DownloadAllSubtitlesSegments(string playlist, string baseUri, string correctUrlComponent, string filePath = @"subtitles.srt")
+        public static string DownloadAllSubtitlesSegments(string playlist, string baseUri, string correctUrlComponent, string filePath = @"subtitles.srt", string displayPrefix = @"")
         {
             try
             {
@@ -265,20 +269,24 @@ namespace DisneyDown.Common.Processors
 
                                     //report success
                                     Console.WriteLine(
-                                        $@"Segment {counter + 1:D4}/{totalSegments:D4} ({segmentFileName}) downloaded | {progress:P2}");
+                                        $"{(!string.IsNullOrWhiteSpace(displayPrefix) ? $"{displayPrefix} " : @"")}" +
+                                        $"Segment {counter + 1:D4}/{totalSegments:D4} ({segmentFileName}) downloaded and merged | {progress:P2}");
                                 }
                                 else
 
                                     //report failure
                                     Console.WriteLine(
-                                        $@"Segment {counter + 1:D4}/{totalSegments:D4} ({segmentFileName}) download error: null result | {progress:P2}");
+                                        $"{(!string.IsNullOrWhiteSpace(displayPrefix) ? $"{displayPrefix} " : @"")}" +
+                                        $"Segment {counter + 1:D4}/{totalSegments:D4} ({segmentFileName}) download error: null result | {progress:P2}");
 
                                 //incremented only on valid segment URL to keep count fluid
                                 counter++;
                             }
                             catch (Exception ex)
                             {
-                                Console.WriteLine($@"Segment {counter + 1:D4}/{totalSegments:D4} download error: {ex.Message}");
+                                Console.WriteLine(
+                                    $"{(!string.IsNullOrWhiteSpace(displayPrefix) ? $"{displayPrefix} " : @"")}" +
+                                    $"Segment {counter + 1:D4}/{totalSegments:D4} download error: {ex.Message}");
                             }
                         }
 

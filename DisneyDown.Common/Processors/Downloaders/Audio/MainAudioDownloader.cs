@@ -60,6 +60,8 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
                             return PerformDownload(audioManifest, audioPlaylistUrl, encryptedAudioFile);
                         }
                         else
+
+                            //report error
                             Console.WriteLine(@"Audio download failed; audio playlist URL was null");
                     }
                     else
@@ -122,7 +124,8 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
 
                             //do download
                             SegmentHandlers.DownloadAllMpegSegments(audioManifest, audioBaseUri,
-                                Verification.MainContent, encryptedAudioFile);
+                                Verification.MainContent, encryptedAudioFile,
+                                @"[Main Audio]");
 
                             //report success
                             Console.WriteLine(
@@ -135,12 +138,18 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
                             return encryptedAudioFile;
                         }
                         else
+
+                            //report error
                             Console.WriteLine(@"Audio download failed; audio init segment data was null");
                     }
                     else
+
+                        //report error
                         Console.WriteLine(@"Audio download failed; audio init URL was invalid, null or empty result.");
                 }
                 else
+
+                    //report error
                     Console.WriteLine(@"Audio download failed; audio manifest does not conform");
             }
             catch

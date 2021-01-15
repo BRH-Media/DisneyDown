@@ -48,7 +48,8 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
 
                         //do download
                         SegmentHandlers.DownloadAllMpegSegments(playlist, videoBaseUri,
-                            Verification.BumperIntro, encryptedBumperVideoFile);
+                            Verification.BumperIntro, encryptedBumperVideoFile,
+                            @"[Bumper Video]");
 
                         //report success
                         Console.WriteLine(
