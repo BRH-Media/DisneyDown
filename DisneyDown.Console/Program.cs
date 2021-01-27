@@ -70,22 +70,9 @@ namespace DisneyDown.Console
                     //grab the argument
                     var outFileNameArg = args[2];
 
-                    //validate all arguments
-                    var invalidNames = new[]
-                    {
-                        @"-help",
-                        @"-h",
-                        @"-?",
-                        @"-t",
-                        @"-e",
-                        @"-b",
-                        @"-a",
-                        @"-v",
-                    };
-
                     //valid name (not an argument)
-                    var validName = invalidNames.Any(n =>
-                        string.Equals(n, outFileNameArg, StringComparison.InvariantCultureIgnoreCase));
+                    var validName = Args.Definitions.Any(n =>
+                        string.Equals(n.Key, outFileNameArg, StringComparison.InvariantCultureIgnoreCase));
 
                     //valid characters (not an illegal file name on Windows)
                     var validPath = outFileNameArg.IndexOfAny(Path.GetInvalidFileNameChars()) < 0;
