@@ -20,7 +20,8 @@ namespace DisneyDown.Console
         /// <summary>
         /// Name of the the executable (used in-case the user renames it)
         /// </summary>
-        public static string ExecutableName => Path.GetFileName(Assembly.GetEntryAssembly()?.Location);
+        public static string ExecutableName
+            => Path.GetFileName(Assembly.GetEntryAssembly()?.Location);
 
         /// <summary>
         /// Launches default program to play the media file
@@ -72,15 +73,14 @@ namespace DisneyDown.Console
                     //validate all arguments
                     var invalidNames = new[]
                     {
-                        @"-t",
-                        @"-h",
                         @"-help",
+                        @"-h",
                         @"-?",
+                        @"-t",
                         @"-e",
                         @"-b",
                         @"-a",
                         @"-v",
-                        @"-e"
                     };
 
                     //valid name (not an argument)
@@ -98,6 +98,7 @@ namespace DisneyDown.Console
             }
             catch (Exception ex)
             {
+                //report errorm
                 System.Console.WriteLine($"Output file name parse error: {ex.Message}");
             }
 
@@ -110,21 +111,51 @@ namespace DisneyDown.Console
         /// </summary>
         private static void PrintUsage()
         {
+            //square-bracket list of all arguments
+            var argumentList = @"";
+
+            //generate the argument square-bracket list
+            foreach (var a in Args.Definitions)
+            {
+                //argument format
+                var argument = $"[{a.Key}]";
+
+                //append the argument
+                argumentList += $"{argument} ";
+            }
+
+            //trim any trailing spaces
+            argumentList = argumentList.TrimEnd(' ');
+
+            //program name and argument summary
             System.Console.WriteLine(
-                $"{ExecutableName} widevine_hex_key master_manifest_URL [output_file_name] [-t] [-a] [-v] [-e]");
+                $"{ExecutableName}\n\nwidevine_hex_key master_manifest_URL [output_file_name] {argumentList}");
             System.Console.WriteLine("\n options:");
-            System.Console.WriteLine(@"  widevine_hex_key    - 32 character content decryption key");
+
+            //print hard-coded parameter definitions
+            System.Console.WriteLine(
+                @"  widevine_hex_key    - 32 character content decryption key");
             System.Console.WriteLine(
                 @"  master_manifest_URL - m3u8 master manifest URL; do not input a locally available manifest");
-            System.Console.WriteLine(@"  output_file_name    - Name of the remuxed file in the .\output folder");
             System.Console.WriteLine(
-                @"  -t                  - Enables execution timing; reports how long each operation took");
-            System.Console.WriteLine(
-                @"  -a                  - Forces the application to only download and decrypt audio");
-            System.Console.WriteLine(
-                @"  -v                  - Forces the application to only download and decrypt video");
-            System.Console.WriteLine(
-                @"  -e                  - Forces the application to avoid using the master parser; requires -v or -a.");
+                @"  output_file_name    - Name of the remuxed file in the .\output folder");
+
+            //hard-coded line length of each argument name
+            const int lineLength = 19;
+
+            //go through each argument definition
+            foreach (var a in Args.Definitions)
+            {
+                //whitespace to append
+                var whitespace = new string(' ', lineLength - a.Key.Length);
+
+                //argument name line to prepend
+                var argumentLine = $@"{a.Key}{whitespace}";
+
+                //print the argument itself and its description
+                System.Console.WriteLine(
+                    $@"  {argumentLine} - {a.Value}");
+            }
         }
 
         /// <summary>
