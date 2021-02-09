@@ -60,6 +60,7 @@
     <Compile Include="Processors\SegmentHandlers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\Diagnostics\Timers.cs" />
+    <Compile Include="Util\ToolGrab\FFMpegGrab.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DisneyDown.Common.Parsers.HLS\DisneyDown.Common.Parsers.HLS.csproj">
@@ -70,5 +71,6 @@
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
