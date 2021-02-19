@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using DisneyDown.Common.Parsers;
+using System.Collections.Generic;
 
 namespace DisneyDown.Common.Globals
 {
@@ -7,91 +8,91 @@ namespace DisneyDown.Common.Globals
     /// </summary>
     public static class BandwidthDefinitions
     {
-        public static Dictionary<int, string> VideoDefinitions { get; } = new Dictionary<int, string>
+        public static Dictionary<int, QualityRating> VideoDefinitions { get; } = new Dictionary<int, QualityRating>
         {
             {
                 10,
-                @"8500k"
+                new QualityRating(@"8500k",@"")
             },
             {
                 9,
-                @"7000k"
+                new QualityRating(@"7000k",@"")
             },
             {
                 8,
-                @"5500k"
+                new QualityRating(@"5500k",@"1920x1080 FHD-HDR")
             },
             {
                 7,
-                @"4250k"
+                new QualityRating(@"4250k",@"1280x720 HD-SDR")
             },
             {
                 6,
-                @"3000k"
+                new QualityRating(@"3000k",@"1280x720 HD-SDR")
             },
             {
                 5,
-                @"2400k"
+                new QualityRating(@"2400k",@"1280x720 HD-SDR")
             },
             {
                 4,
-                @"1800k"
+                new QualityRating(@"1800k",@"854x480 SD-SDR")
             },
             {
                 3,
-                @"1200k"
+                new QualityRating(@"1200k",@"854x480 nHD-SDR")
             },
             {
                 2,
-                @"800k"
+                new QualityRating(@"800k",@"640x360 nHD-SDR")
             },
             {
                 1,
-                @"480k"
+                new QualityRating(@"480k",@"640x360 nHD-SDR")
             },
             {
                 0,
-                @"400k"
+                new QualityRating(@"400k",@"640x360 nHD-SDR")
             }
         };
 
-        public static Dictionary<int, string> AudioDefinitions { get; } = new Dictionary<int, string>
+        public static Dictionary<int, QualityRating> AudioDefinitions { get; } = new Dictionary<int, QualityRating>
         {
             {
                 8,
-                @"1000k"
+                new QualityRating(@"1000k",@"1Mbps")
             },
             {
                 7,
-                @"640k"
+                new QualityRating(@"640k",@"640kbps")
             },
             {
                 6,
-                @"512k"
+                new QualityRating(@"512k",@"512kbps")
             },
             {
                 5,
-                @"480k"
+                new QualityRating(@"480k",@"480kbps")
             },
             {
                 4,
-                @"400k"
+                new QualityRating(@"400k",@"400kbps")
             },
             {
                 3,
-                @"300k"
+                new QualityRating(@"300k",@"300kbps")
             },
             {
                 2,
-                @"256k"
+                new QualityRating(@"256k",@"256kbps")
             },
             {
                 1,
-                @"128k"
+                new QualityRating(@"128k",@"128kbps")
             },
             {
                 0,
-                @"64k"
+                new QualityRating(@"64k",@"64kbps")
             }
         };
     }

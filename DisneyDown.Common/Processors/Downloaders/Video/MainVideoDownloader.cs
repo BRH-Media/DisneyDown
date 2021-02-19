@@ -41,17 +41,17 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
                     if (!Args.ExclusiveMode)
                     {
                         //find best video playlist
-                        var bestVideoPlaylistUri = MasterParsers.MasterVideoPlaylistUri(masterPlaylist);
+                        var (bestVideoPlaylistPath, qualityRating) = MasterParsers.MasterVideoPlaylistUri(masterPlaylist);
 
                         //validation
-                        if (!string.IsNullOrWhiteSpace(bestVideoPlaylistUri))
+                        if (!string.IsNullOrWhiteSpace(bestVideoPlaylistPath))
                         {
                             //report progress
-                            Console.WriteLine($@"Found best video quality manifest: {bestVideoPlaylistUri}");
+                            Console.WriteLine($@"Found best video quality manifest: {qualityRating.QualityName}");
 
                             //create fully-qualified URL for the playlist
                             var masterBaseUri = Methods.GetBaseUrl(masterPlaylistUrl);
-                            var videoPlaylistUrl = $"{masterBaseUri}{bestVideoPlaylistUri}";
+                            var videoPlaylistUrl = $"{masterBaseUri}{bestVideoPlaylistPath}";
 
                             //report progress
                             Console.WriteLine(@"Downloading video manifest");

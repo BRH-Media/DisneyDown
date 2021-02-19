@@ -109,7 +109,7 @@ namespace DisneyDown.Common.Processors
             }
         }
 
-        private static void WriteMergeList(string filePath, List<string> files)
+        private static void WriteMergeList(string filePath, IReadOnlyCollection<string> files)
         {
             try
             {
@@ -165,7 +165,7 @@ namespace DisneyDown.Common.Processors
                             {
                                 FileName = FILE_NAME,
                                 WindowStyle = ProcessWindowStyle.Hidden,
-                                Arguments = $"-f concat -safe 0 -i \"{tmpListFile}\" c copy -scodec copy \"{outputFile}\""
+                                Arguments = $"-f concat -safe 0 -i \"{tmpListFile}\" -c copy \"{outputFile}\""
                             }
                         };
 

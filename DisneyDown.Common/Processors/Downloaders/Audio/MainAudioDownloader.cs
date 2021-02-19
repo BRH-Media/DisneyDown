@@ -40,17 +40,17 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
                     if (!Args.ExclusiveMode)
                     {
                         //find best audio playlist
-                        var bestAudioPlaylist = MasterParsers.MasterAudioPlaylistUri(masterPlaylist);
+                        var (bestAudioPlaylistPath, qualityRating) = MasterParsers.MasterAudioPlaylistUri(masterPlaylist);
 
                         //validation
-                        if (!string.IsNullOrWhiteSpace(bestAudioPlaylist))
+                        if (!string.IsNullOrWhiteSpace(bestAudioPlaylistPath))
                         {
                             //report progress
-                            Console.WriteLine($@"Found best audio quality manifest: {bestAudioPlaylist}");
+                            Console.WriteLine($@"Found best audio quality manifest: {qualityRating.QualityName}");
 
                             //create fully-qualified URL for the playlist
                             var masterBaseUri = Methods.GetBaseUrl(masterPlaylistUrl);
-                            var audioPlaylistUrl = $"{masterBaseUri}{bestAudioPlaylist}";
+                            var audioPlaylistUrl = $"{masterBaseUri}{bestAudioPlaylistPath}";
 
                             //do the download
                             Console.WriteLine(@"Downloading audio manifest");

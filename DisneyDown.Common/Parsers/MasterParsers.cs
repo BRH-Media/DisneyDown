@@ -253,14 +253,14 @@ namespace DisneyDown.Common.Parsers
         /// <param name="playlistUrls">List of URLs</param>
         /// <param name="definitions">Use the BandwidthDefinitions class to handle this argument</param>
         /// <returns></returns>
-        public static string SortBestPlaylist(string[] playlistUrls, Dictionary<int, string> definitions)
+        public static Tuple<string, QualityRating> SortBestPlaylist(string[] playlistUrls, Dictionary<int, QualityRating> definitions)
         {
             try
             {
                 //validate
                 if (playlistUrls != null)
                 {
-                    //here we assign each URL an integer which describes its quality level from 0-6
+                    //here we assign each URL an integer which describes its quality level
                     var qualityDict = new List<Tuple<int, string>>();
 
                     //loop through each URL
@@ -277,8 +277,9 @@ namespace DisneyDown.Common.Parsers
                         foreach (var def in definitions)
 
                             //check the current quality against the URL
-                            if (url.Contains(def.Value))
+                            if (url.Contains(def.Value.SearchCriteria))
                             {
+                                //index of the current matched quality
                                 qualityIndex = def.Key;
                                 break;
                             }
@@ -288,10 +289,10 @@ namespace DisneyDown.Common.Parsers
                     }
 
                     //get the first item that's of the highest quality rating
-                    var maxQuality = qualityDict.OrderByDescending(x => x.Item1).First();
+                    var (qualityLevel, matchedUrl) = qualityDict.OrderByDescending(x => x.Item1).First();
 
                     //return the result
-                    return maxQuality.Item2;
+                    return new Tuple<string, QualityRating>(matchedUrl, definitions[qualityLevel]);
                 }
             }
             catch
@@ -300,7 +301,7 @@ namespace DisneyDown.Common.Parsers
             }
 
             //default
-            return @"";
+            return null;
         }
 
         /// <summary>
@@ -308,7 +309,7 @@ namespace DisneyDown.Common.Parsers
         /// </summary>
         /// <param name="playlist"></param>
         /// <returns></returns>
-        public static string MasterVideoPlaylistUri(string playlist)
+        public static Tuple<string, QualityRating> MasterVideoPlaylistUri(string playlist)
         {
             try
             {
@@ -353,7 +354,7 @@ namespace DisneyDown.Common.Parsers
             }
 
             //default
-            return @"";
+            return null;
         }
 
         /// <summary>
@@ -361,7 +362,7 @@ namespace DisneyDown.Common.Parsers
         /// </summary>
         /// <param name="playlist"></param>
         /// <returns></returns>
-        public static string MasterAudioPlaylistUri(string playlist)
+        public static Tuple<string, QualityRating> MasterAudioPlaylistUri(string playlist)
         {
             try
             {
@@ -421,7 +422,7 @@ namespace DisneyDown.Common.Parsers
             }
 
             //default
-            return @"";
+            return null;
         }
 
         /// <summary>
