@@ -3,6 +3,7 @@ using DisneyDown.Common.Net;
 using DisneyDown.Common.Parsers;
 using DisneyDown.Common.Util;
 using DisneyDown.Common.Util.Diagnostics;
+using DisneyDown.Common.Util.Kit;
 using System;
 using System.IO;
 
@@ -32,7 +33,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
                     var videoMapUrl = $"{videoBaseUri}{videoMapPath}";
 
                     //report status
-                    Console.WriteLine($@"Downloading bumper video MPEG-4 init segment: {videoMapUrl}");
+                    ConsoleWriters.WriteLine($@"[i] Downloading bumper video MPEG-4 init segment: {videoMapUrl}", ConsoleColor.Cyan);
 
                     //download the bumper video map
                     var videoMap = ResourceGrab.GrabBytes(videoMapUrl);
@@ -44,7 +45,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
                         File.WriteAllBytes(encryptedBumperVideoFile, videoMap);
 
                         //start segments download
-                        Console.WriteLine(@"Video bumper init data saved successfully; starting segments download");
+                        ConsoleWriters.WriteLine(@"[i] Video bumper init data saved successfully; starting segments download", ConsoleColor.Green);
 
                         //do download
                         SegmentHandlers.DownloadAllMpegSegments(playlist, videoBaseUri,
@@ -52,8 +53,8 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
                             @"[Bumper Video]");
 
                         //report success
-                        Console.WriteLine(
-                            $"\nSuccessfully downloaded bumper video data to: {encryptedBumperVideoFile}\n");
+                        ConsoleWriters.WriteLine(
+                            $"\n[i] Successfully downloaded bumper video data to: {encryptedBumperVideoFile}\n", ConsoleColor.Green);
 
                         //stop measuring bumper video download time
                         Timers.StopTimer(Timers.Bumper.BumperVideoDownloadTimer);
@@ -64,17 +65,17 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
                     else
 
                         //map file was null
-                        Console.WriteLine(@"Bumper video download failed; video init segment data was null");
+                        ConsoleWriters.WriteLine(@"[!] Bumper video download failed; video init segment data was null", ConsoleColor.Red);
                 }
                 else
 
                     //no bumper media detected
-                    Console.WriteLine(@"Bumper video download failed; content does not contain the Disney+ bumper intro");
+                    ConsoleWriters.WriteLine(@"[!] Bumper video download failed; content does not contain the Disney+ bumper intro", ConsoleColor.Red);
             }
             catch (Exception ex)
             {
                 //report error
-                Console.WriteLine($"Bumper video download error: {ex}");
+                ConsoleWriters.WriteLine($"[!] Bumper video download error: {ex}", ConsoleColor.Red);
             }
 
             //stop measuring bumper video download time

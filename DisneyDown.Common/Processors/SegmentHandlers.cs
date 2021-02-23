@@ -1,11 +1,13 @@
 ﻿using DisneyDown.Common.Net;
 using DisneyDown.Common.Parsers.HLS;
 using DisneyDown.Common.Parsers.HLS.Playlist;
+using DisneyDown.Common.Util.Kit;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
+// ReSharper disable UnusedMember.Global
 // ReSharper disable LocalizableElement
 // ReSharper disable InvertIf
 
@@ -105,7 +107,8 @@ namespace DisneyDown.Common.Processors
             }
             catch (Exception ex)
             {
-                Console.WriteLine($@"Playlist segment filter error: {ex.Message}");
+                //report error
+                ConsoleWriters.WriteLine($@"Playlist segment filter error: {ex.Message}", ConsoleColor.Red);
             }
 
             //default
@@ -119,6 +122,7 @@ namespace DisneyDown.Common.Processors
         /// <param name="baseUri"></param>
         /// <param name="filePath"></param>
         /// <param name="correctUrlComponent"></param>
+        /// <param name="displayPrefix"></param>
         public static void DownloadAllMpegSegments(string playlist, string baseUri, string correctUrlComponent, string filePath = @"segments.bin", string displayPrefix = @"")
         {
             try
@@ -142,7 +146,7 @@ namespace DisneyDown.Common.Processors
                         var totalSegments = filteredSegments.Count;
 
                         //report merge file
-                        Console.WriteLine($"\nStarting segment download on merge file: {filePath}\n");
+                        ConsoleWriters.WriteLine($"\n[i] Starting segment download on merge file: {filePath}\n", ConsoleColor.Cyan);
 
                         //go through each item in the playlist
                         foreach (var i in filteredSegments)
@@ -168,25 +172,29 @@ namespace DisneyDown.Common.Processors
                                     WriteSegment(filePath, segment);
 
                                     //report success
-                                    Console.WriteLine(
+                                    ConsoleWriters.WriteLine(
                                         $"{(!string.IsNullOrWhiteSpace(displayPrefix) ? $"{displayPrefix} " : @"")}" +
-                                        $"Segment {counter + 1:D4}/{totalSegments:D4} ({segmentFileName}) downloaded and merged | {progress:P2}");
+                                        $"Segment {counter + 1:D4}/{totalSegments:D4} ({segmentFileName}) downloaded and merged | {progress:P2}",
+                                        ConsoleColor.Green);
                                 }
                                 else
 
                                     //report failure
-                                    Console.WriteLine(
+                                    ConsoleWriters.WriteLine(
                                         $"{(!string.IsNullOrWhiteSpace(displayPrefix) ? $"{displayPrefix} " : @"")}" +
-                                        $"Segment {counter + 1:D4}/{totalSegments:D4} ({segmentFileName}) download error: null result | {progress:P2}");
+                                        $"Segment {counter + 1:D4}/{totalSegments:D4} ({segmentFileName}) download error: null result | {progress:P2}",
+                                        ConsoleColor.Red);
 
                                 //incremented only on valid segment URL to keep count fluid
                                 counter++;
                             }
                             catch (Exception ex)
                             {
-                                Console.WriteLine(
+                                //report error
+                                ConsoleWriters.WriteLine(
                                     $"{(!string.IsNullOrWhiteSpace(displayPrefix) ? $"{displayPrefix} " : @"")}" +
-                                    $"Segment {counter + 1:D4}/{totalSegments:D4} download error: {ex.Message}");
+                                    $"Segment {counter + 1:D4}/{totalSegments:D4} download error: {ex.Message}",
+                                    ConsoleColor.Red);
                             }
                         }
                     }
@@ -195,7 +203,7 @@ namespace DisneyDown.Common.Processors
             catch (Exception ex)
             {
                 //report error
-                Console.WriteLine($"MPEG-4 playlist download error:\n\n{ex.Message}");
+                ConsoleWriters.WriteLine($"[!] MPEG-4 playlist download error:\n\n{ex.Message}", ConsoleColor.Red);
             }
         }
 
@@ -206,6 +214,7 @@ namespace DisneyDown.Common.Processors
         /// <param name="baseUri"></param>
         /// <param name="filePath"></param>
         /// <param name="correctUrlComponent"></param>
+        /// <param name="displayPrefix"></param>
         public static string DownloadAllSubtitlesSegments(string playlist, string baseUri, string correctUrlComponent, string filePath = @"subtitles.srt", string displayPrefix = @"")
         {
             try
@@ -239,7 +248,8 @@ namespace DisneyDown.Common.Processors
                         var totalSegments = filteredSegments.Count;
 
                         //report merge file
-                        Console.WriteLine($"\nStarting subtitle download on merge directory: {subtitlesDirectory}\n");
+                        ConsoleWriters.WriteLine($"\n[i] Starting subtitle download on merge directory: {subtitlesDirectory}\n",
+                            ConsoleColor.Cyan);
 
                         //go through each item in the playlist
                         foreach (var i in filteredSegments)
@@ -268,25 +278,28 @@ namespace DisneyDown.Common.Processors
                                     WriteSegment(segmentSavePath, segment, false);
 
                                     //report success
-                                    Console.WriteLine(
+                                    ConsoleWriters.WriteLine(
                                         $"{(!string.IsNullOrWhiteSpace(displayPrefix) ? $"{displayPrefix} " : @"")}" +
-                                        $"Segment {counter + 1:D4}/{totalSegments:D4} ({segmentFileName}) downloaded and merged | {progress:P2}");
+                                        $"Segment {counter + 1:D4}/{totalSegments:D4} ({segmentFileName}) downloaded and merged | {progress:P2}",
+                                        ConsoleColor.Green);
                                 }
                                 else
 
                                     //report failure
-                                    Console.WriteLine(
+                                    ConsoleWriters.WriteLine(
                                         $"{(!string.IsNullOrWhiteSpace(displayPrefix) ? $"{displayPrefix} " : @"")}" +
-                                        $"Segment {counter + 1:D4}/{totalSegments:D4} ({segmentFileName}) download error: null result | {progress:P2}");
+                                        $"Segment {counter + 1:D4}/{totalSegments:D4} ({segmentFileName}) download error: null result | {progress:P2}",
+                                        ConsoleColor.Red);
 
                                 //incremented only on valid segment URL to keep count fluid
                                 counter++;
                             }
                             catch (Exception ex)
                             {
-                                Console.WriteLine(
+                                //report error
+                                ConsoleWriters.WriteLine(
                                     $"{(!string.IsNullOrWhiteSpace(displayPrefix) ? $"{displayPrefix} " : @"")}" +
-                                    $"Segment {counter + 1:D4}/{totalSegments:D4} download error: {ex.Message}");
+                                    $"Segment {counter + 1:D4}/{totalSegments:D4} download error: {ex.Message}", ConsoleColor.Red);
                             }
                         }
 
@@ -298,7 +311,7 @@ namespace DisneyDown.Common.Processors
             catch (Exception ex)
             {
                 //report error
-                Console.WriteLine($"Subtitles playlist download error:\n\n{ex.Message}");
+                ConsoleWriters.WriteLine($"[!] Subtitles playlist download error:\n\n{ex.Message}", ConsoleColor.Red);
             }
 
             //default

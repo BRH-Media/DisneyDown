@@ -2,6 +2,7 @@
 using DisneyDown.Common.Net;
 using DisneyDown.Common.Parsers.HLS;
 using DisneyDown.Common.Parsers.HLS.Playlist;
+using DisneyDown.Common.Util.Kit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -77,12 +78,12 @@ namespace DisneyDown.Common.Parsers
                         return playlist;
                 }
                 else
-                    Console.WriteLine($"Incorrect content/playlist URL: {playlistUrl}");
+                    ConsoleWriters.WriteLine($"Incorrect content/playlist URL: {playlistUrl}", ConsoleColor.Red);
             }
             catch (Exception ex)
             {
                 //report error
-                Console.WriteLine($"Playlist download error:\n\n{ex.Message}");
+                ConsoleWriters.WriteLine($"Playlist download error:\n\n{ex.Message}", ConsoleColor.Red);
             }
 
             //default
@@ -90,13 +91,10 @@ namespace DisneyDown.Common.Parsers
         }
 
         private static bool ValidSegmentUrl(string urlSegment)
-        {
-            //check values for verification
-            var checkValues = new[] { Verification.BumperIntro, Verification.DubCard };
 
-            //if there's any match, it's an instant false
-            return checkValues.All(s => !urlSegment.Contains(s));
-        }
+            =>  //if there's any match, it's an instant fail
+                new[] { Verification.BumperIntro, Verification.DubCard }
+                    .All(s => !urlSegment.Contains(s));
 
         /// <summary>
         /// Lists all manifest MPEG-4 map URLs (MPEG-4 initialisation segment data)
@@ -148,15 +146,19 @@ namespace DisneyDown.Common.Parsers
                         return mapList.ToArray();
                     }
                     else
-                        Console.WriteLine(@"Null playlist parse result; couldn't find map URL");
+
+                        //report error
+                        ConsoleWriters.WriteLine(@"Null playlist parse result; couldn't find map URL", ConsoleColor.Red);
                 }
                 else
-                    Console.WriteLine(@"Null or empty playlist supplied; couldn't find list of map URLs");
+
+                    //report error
+                    ConsoleWriters.WriteLine(@"Null or empty playlist supplied; couldn't find", ConsoleColor.Red);
             }
             catch (Exception ex)
             {
                 //report error
-                Console.WriteLine($"Playlist parse error:\n\n{ex.Message}");
+                ConsoleWriters.WriteLine($"Playlist parse error:\n\n{ex.Message}", ConsoleColor.Red);
             }
 
             //default
@@ -188,12 +190,14 @@ namespace DisneyDown.Common.Parsers
                             return m;
                 }
                 else
-                    Console.WriteLine(@"Null or empty playlist supplied; couldn't find map URL");
+
+                    //report error
+                    ConsoleWriters.WriteLine(@"Null or empty playlist supplied; couldn't find map URL", ConsoleColor.Red);
             }
             catch (Exception ex)
             {
                 //report error
-                Console.WriteLine($"Playlist parse error:\n\n{ex.Message}");
+                ConsoleWriters.WriteLine($"Playlist parse error:\n\n{ex.Message}", ConsoleColor.Red);
             }
 
             //default
@@ -225,12 +229,14 @@ namespace DisneyDown.Common.Parsers
                             return m;
                 }
                 else
-                    Console.WriteLine(@"Null or empty playlist supplied; couldn't find Disney+ intro map URL");
+
+                    //report error
+                    ConsoleWriters.WriteLine(@"Null or empty playlist supplied; couldn't find Disney+ intro map URL", ConsoleColor.Red);
             }
             catch (Exception ex)
             {
                 //report error
-                Console.WriteLine($"Playlist parse error:\n\n{ex.Message}");
+                ConsoleWriters.WriteLine($"Playlist parse error:\n\n{ex.Message}", ConsoleColor.Red);
             }
 
             //default

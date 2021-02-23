@@ -1,9 +1,11 @@
-﻿using System;
+﻿using DisneyDown.Common.Util.Kit;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
+// ReSharper disable InconsistentNaming
 // ReSharper disable InvertIf
 
 namespace DisneyDown.Common.Processors
@@ -48,15 +50,19 @@ namespace DisneyDown.Common.Processors
                         p.WaitForExit();
                     }
                     else
-                        Console.WriteLine(@"Decrypt failed; output file specified already exists");
+
+                        //report error
+                        ConsoleWriters.WriteLine(@"[!] Decrypt failed; output file specified already exists", ConsoleColor.Red);
                 }
                 else
-                    Console.WriteLine($"Couldn't decrypt because {FILE_NAME} was not found");
+
+                    //report error
+                    ConsoleWriters.WriteLine($"[!] Couldn't decrypt because {FILE_NAME} was not found", ConsoleColor.Red);
             }
             catch (Exception ex)
             {
                 //report error
-                Console.WriteLine($"Decryption error:\n\n{ex.Message}");
+                ConsoleWriters.WriteLine($"[!] Decryption error:\n\n{ex.Message}", ConsoleColor.Red);
             }
         }
 
@@ -70,10 +76,13 @@ namespace DisneyDown.Common.Processors
         {
             try
             {
+                //FFMPEG executable
                 const string FILE_NAME = @"ffmpeg.exe";
 
+                //does FFMPEG exist?
                 if (File.Exists(FILE_NAME))
                 {
+                    //if the output file doesn't exist or an overwrite is forced
                     if (!File.Exists(outputFile) || forceOverwrite)
                     {
                         //loop through each input file to build the string
@@ -97,15 +106,19 @@ namespace DisneyDown.Common.Processors
                         p.WaitForExit();
                     }
                     else
-                        Console.WriteLine(@"Remux failed; output file specified already exists");
+
+                        //report error
+                        ConsoleWriters.WriteLine(@"[!] Remux failed; output file specified already exists", ConsoleColor.Red);
                 }
                 else
-                    Console.WriteLine($"Couldn't remux because {FILE_NAME} was not found");
+
+                    //report error
+                    ConsoleWriters.WriteLine($"[!] Couldn't remux because {FILE_NAME} was not found", ConsoleColor.Red);
             }
             catch (Exception ex)
             {
                 //report error
-                Console.WriteLine($"FFMPEG Remux error:\n\n{ex}");
+                ConsoleWriters.WriteLine($"[!] FFMPEG Remux error:\n\n{ex}", ConsoleColor.Red);
             }
         }
 
@@ -129,7 +142,7 @@ namespace DisneyDown.Common.Processors
             catch (Exception ex)
             {
                 //report error
-                Console.WriteLine($@"Merge file write error: {ex.Message}");
+                ConsoleWriters.WriteLine($@"[!] Merge file write error: {ex.Message}", ConsoleColor.Red);
             }
         }
 
@@ -180,15 +193,19 @@ namespace DisneyDown.Common.Processors
                             File.Delete(tmpListFile);
                     }
                     else
-                        Console.WriteLine(@"Concat remux failed; output file specified already exists");
+
+                        //report error
+                        ConsoleWriters.WriteLine(@"[!] Concat remux failed; output file specified already exists", ConsoleColor.Red);
                 }
                 else
-                    Console.WriteLine($"Couldn't concat remux because {FILE_NAME} was not found");
+
+                    //report error
+                    ConsoleWriters.WriteLine($"[!] Couldn't concat remux because {FILE_NAME} was not found", ConsoleColor.Red);
             }
             catch (Exception ex)
             {
                 //report error
-                Console.WriteLine($"FFMPEG Concat remux error:\n\n{ex}");
+                ConsoleWriters.WriteLine($"[!] FFMPEG Concat remux error:\n\n{ex}", ConsoleColor.Red);
             }
         }
     }

@@ -1,6 +1,7 @@
 ﻿using DisneyDown.Common.Globals;
 using DisneyDown.Common.Processors;
 using DisneyDown.Common.Util.Diagnostics;
+using DisneyDown.Common.Util.Kit;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -47,11 +48,14 @@ namespace DisneyDown.Console
                     p.Start();
                 }
                 else
-                    System.Console.Write(@"Playback failed; file does not exist.");
+
+                    //report error
+                    ConsoleWriters.Write(@"[!] Playback failed; file does not exist.", ConsoleColor.Red);
             }
             catch (Exception ex)
             {
-                System.Console.WriteLine($@"Content playback error: {ex.Message}");
+                //report error
+                ConsoleWriters.WriteLine($@"[!] Content playback error: {ex.Message}", ConsoleColor.Red);
             }
         }
 
@@ -85,8 +89,8 @@ namespace DisneyDown.Console
             }
             catch (Exception ex)
             {
-                //report errorm
-                System.Console.WriteLine($"Output file name parse error: {ex.Message}");
+                //report error
+                ConsoleWriters.WriteLine($"[!] Output file name parse error: {ex.Message}", ConsoleColor.Red);
             }
 
             //default

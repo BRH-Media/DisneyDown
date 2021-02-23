@@ -1,6 +1,7 @@
 ﻿using DisneyDown.Common.Globals;
 using DisneyDown.Common.Parsers.HLS;
 using DisneyDown.Common.Parsers.HLS.Playlist;
+using DisneyDown.Common.Util.Kit;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -179,7 +180,7 @@ namespace DisneyDown.Common.Parsers
             catch (Exception ex)
             {
                 //report error
-                Console.WriteLine($@"Language priority error: {ex.Message}. Will use '{Strings.DefaultLang}'.");
+                ConsoleWriters.WriteLine($@"Language priority error: {ex.Message}. Will use '{Strings.DefaultLang}'.", ConsoleColor.Red);
             }
 
             //default
@@ -350,7 +351,7 @@ namespace DisneyDown.Common.Parsers
             catch (Exception ex)
             {
                 //report error
-                Console.WriteLine($"Parse master video URI error:\n\n{ex.Message}");
+                ConsoleWriters.WriteLine($"Parse master video URI error:\n\n{ex.Message}", ConsoleColor.Red);
             }
 
             //default
@@ -418,7 +419,7 @@ namespace DisneyDown.Common.Parsers
             catch (Exception ex)
             {
                 //report error
-                Console.WriteLine($"Parse master audio URI error:\n\n{ex.Message}");
+                ConsoleWriters.WriteLine($"Parse master audio URI error:\n\n{ex.Message}", ConsoleColor.Red);
             }
 
             //default
@@ -488,7 +489,7 @@ namespace DisneyDown.Common.Parsers
             catch (Exception ex)
             {
                 //report error
-                Console.WriteLine($"Parse master subtitle URI error:\n\n{ex.Message}");
+                ConsoleWriters.WriteLine($"Parse master subtitle URI error:\n\n{ex.Message}", ConsoleColor.Red);
             }
 
             //default

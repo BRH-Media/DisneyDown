@@ -33,6 +33,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
@@ -50,6 +51,13 @@
     <Compile Include="Util\Diagnostics\MainTimers.cs" />
     <Compile Include="Util\Extensions.cs" />
     <Compile Include="Security\Md5Helper.cs" />
+    <Compile Include="Util\Kit\ConsoleColourSet.cs" />
+    <Compile Include="Util\Kit\ConsoleImageAscii.cs" />
+    <Compile Include="Util\Kit\ConsoleSpinner.cs" />
+    <Compile Include="Util\Kit\ConsoleSpinnerSequence.cs" />
+    <Compile Include="Util\Kit\ConsoleWriters.cs" />
+    <Compile Include="Util\Kit\Interop.cs" />
+    <Compile Include="Util\Kit\InteropConst.cs" />
     <Compile Include="Util\Methods.cs" />
     <Compile Include="Net\ResourceGrab.cs" />
     <Compile Include="Processors\MainProcessor.cs" />

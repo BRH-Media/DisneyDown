@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DisneyDown.Common.Util.Kit;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -159,7 +160,7 @@ namespace DisneyDown.Common.Processors
             catch (Exception ex)
             {
                 //report error
-                Console.WriteLine($"Subtitle VTT-SRT error: {ex.Message}");
+                ConsoleWriters.WriteLine($"[!] Subtitle VTT-SRT error: {ex.Message}", ConsoleColor.Red);
             }
 
             //default
