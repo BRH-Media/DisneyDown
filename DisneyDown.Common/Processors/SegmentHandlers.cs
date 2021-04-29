@@ -1,10 +1,12 @@
 ﻿using DisneyDown.Common.Net;
 using DisneyDown.Common.Parsers.HLS;
 using DisneyDown.Common.Parsers.HLS.Playlist;
+using DisneyDown.Common.Util.Diagnostics;
 using DisneyDown.Common.Util.Kit;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 // ReSharper disable UnusedMember.Global
@@ -44,12 +46,20 @@ namespace DisneyDown.Common.Processors
         /// Writes a segment to a file; creates the file if it doesn't exist, otherwise it will append.
         /// </summary>
         /// <param name="path"></param>
-        /// <param name="contents"></param>
+        /// <param name="text"></param>
         /// <param name="append"></param>
-        public static void WriteSegment(string path, string contents, bool append = true)
+        public static void WriteSegment(string path, string text, bool append = true)
+        {
+            //null validation
+            if (!string.IsNullOrWhiteSpace(text))
+            {
+                //text to bytes
+                var bytes = Encoding.Default.GetBytes(text);
 
-            //use the existing segment writer but convert the string contents into bytes first
-            => WriteSegment(path, Encoding.Default.GetBytes(contents), append);
+                //pass on to byte handler
+                WriteSegment(path, bytes, append);
+            }
+        }
 
         /// <summary>
         /// Append bytes to an existing file; will fail if the file does not exist
@@ -231,24 +241,17 @@ namespace DisneyDown.Common.Processors
                         //current item counter
                         var counter = 0;
 
-                        //where to save downloaded subs (they won't get merged; just dumped here)
-                        var subtitlesDirectory = $"{filePath}.tmp";
-
-                        //delete the entire directory if it already exists
-                        if (Directory.Exists(subtitlesDirectory))
-                            Directory.Delete(subtitlesDirectory, true);
-
-                        //create the directory
-                        Directory.CreateDirectory(subtitlesDirectory);
-
                         //filter out any unnecessary segments (only get the MAIN segments, for example)
                         var filteredSegments = FilterUrlItems(p.Items, correctUrlComponent);
 
                         //total amount of segments
                         var totalSegments = filteredSegments.Count;
 
+                        //WebVTT merge file
+                        var segmentMergeFile = $@"{Path.GetDirectoryName(filePath)}\{Path.GetFileNameWithoutExtension(filePath)}.vtm";
+
                         //report merge file
-                        ConsoleWriters.WriteLine($"\n[i] Starting subtitle download on merge directory: {subtitlesDirectory}\n",
+                        ConsoleWriters.WriteLine($"\n[i] Starting subtitle download on merge file: {filePath}\n",
                             ConsoleColor.Cyan);
 
                         //go through each item in the playlist
@@ -265,9 +268,6 @@ namespace DisneyDown.Common.Processors
                                 //segment file name from URL
                                 var segmentFileName = Path.GetFileName(new Uri(segmentUrl).LocalPath);
 
-                                //where to save the individual segment
-                                var segmentSavePath = $@"{subtitlesDirectory}\{segmentFileName}";
-
                                 //% completion
                                 var progress = decimal.Divide(counter + 1, totalSegments);
 
@@ -275,7 +275,7 @@ namespace DisneyDown.Common.Processors
                                 if (segment != null)
                                 {
                                     //flush to file
-                                    WriteSegment(segmentSavePath, segment, false);
+                                    WriteSegment(segmentMergeFile, segment);
 
                                     //report success
                                     ConsoleWriters.WriteLine(
@@ -303,8 +303,30 @@ namespace DisneyDown.Common.Processors
                             }
                         }
 
+                        //report progress
+                        ConsoleWriters.WriteLine(@"[i] Attempting subtitles parse and merge", ConsoleColor.Cyan);
+
+                        //start measuring subtitles parse and merge time
+                        Timers.StartTimer(Timers.Generic.SubtitlesParseTimer);
+
+                        //total lines
+                        var subtitles = File.ReadAllLines(segmentMergeFile);
+
+                        //check if there are lines
+                        if (subtitles.Length > 0)
+                        {
+                            //conversion
+                            var convertedSubs = SubtitleProcessor.ConvertToSrt(subtitles.ToList());
+
+                            //export to the merge file
+                            File.WriteAllLines(filePath, convertedSubs);
+                        }
+
+                        //stop measuring subtitle parse and merge time
+                        Timers.StopTimer(Timers.Generic.SubtitlesParseTimer);
+
                         //return the directory of the saved subtitle segments
-                        return subtitlesDirectory;
+                        return filePath;
                     }
                 }
             }

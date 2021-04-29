@@ -30,7 +30,10 @@ namespace DisneyDown.Common.Processors.Downloaders.Subtitles
                     //if the file already exists, simply return it and don't try and re-download it
                     if (File.Exists(subtitlesMergeFile))
                     {
+                        //log existing status
                         ConsoleWriters.WriteLine($@"[i] Using existing {subtitlesMergeFile}; download skipped", ConsoleColor.Cyan);
+
+                        //return existing subtitle merge file location
                         return subtitlesMergeFile;
                     }
 
@@ -50,12 +53,14 @@ namespace DisneyDown.Common.Processors.Downloaders.Subtitles
                             var masterBaseUri = Methods.GetBaseUrl(masterPlaylistUrl);
                             var subtitlePlaylistFullUrl = $"{masterBaseUri}{subtitlePlaylistPathUrl}";
 
-                            //do the download
+                            //log the download
                             ConsoleWriters.WriteLine(@"[i] Downloading subtitles manifest", ConsoleColor.Cyan);
-                            var audioManifest = ManifestParsers.DownloadManifest(subtitlePlaylistFullUrl);
+
+                            //do the download
+                            var subtitlesManifest = ManifestParsers.DownloadManifest(subtitlePlaylistFullUrl);
 
                             //download processor
-                            return PerformDownload(audioManifest, subtitlePlaylistFullUrl, subtitlesMergeFile);
+                            return PerformDownload(subtitlesManifest, subtitlePlaylistFullUrl, subtitlesMergeFile);
                         }
                         else
 
@@ -93,10 +98,10 @@ namespace DisneyDown.Common.Processors.Downloaders.Subtitles
                 if (ManifestParsers.ManifestValid(subtitlesManifest))
                 {
                     //get base path
-                    var audioBaseUri = Methods.GetBaseUrl(subtitlesManifestUrl);
+                    var subtitlesBaseUrl = Methods.GetBaseUrl(subtitlesManifestUrl);
 
                     //do download
-                    var savedDirectory = SegmentHandlers.DownloadAllSubtitlesSegments(subtitlesManifest, audioBaseUri,
+                    var savedDirectory = SegmentHandlers.DownloadAllSubtitlesSegments(subtitlesManifest, subtitlesBaseUrl,
                         Verification.MainContent, subtitlesMergeFile,
                         @"[Subtitles]");
 

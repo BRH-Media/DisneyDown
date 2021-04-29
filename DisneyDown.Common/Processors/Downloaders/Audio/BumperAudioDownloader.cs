@@ -13,7 +13,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
 {
     public static class BumperAudioDownloader
     {
-        public static string DownloadBumperAudioFromPlaylist(string playlist, string playlistUri, string encryptedBumperAudioFile = "bumperAudioEncrypted.bin")
+        public static string DownloadBumperAudioFromPlaylist(string playlist, string playlistUri, string encryptedBumperAudioFile = "bumperAudioDecrypted.mp4")
         {
             try
             {

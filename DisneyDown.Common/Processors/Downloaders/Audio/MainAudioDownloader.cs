@@ -24,7 +24,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
         /// <param name="masterPlaylistUrl"></param>
         /// <param name="encryptedAudioFile"></param>
         /// <returns></returns>
-        public static string DownloadBestAudioFromMaster(string masterPlaylist, string masterPlaylistUrl, string encryptedAudioFile = "audioEncrypted.bin")
+        public static string DownloadBestAudioFromMaster(string masterPlaylist, string masterPlaylistUrl, string encryptedAudioFile = "audioDecrypted.mp4")
         {
             try
             {
@@ -84,7 +84,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
             return @"";
         }
 
-        public static string PerformDownload(string audioManifest, string audioPlaylistUrl, string encryptedAudioFile = "audioEncrypted.bin")
+        public static string PerformDownload(string audioManifest, string audioPlaylistUrl, string encryptedAudioFile = "audioDecrypted.mp4")
         {
             try
             {
@@ -99,12 +99,12 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
                     var audioMapPath = ManifestParsers.ManifestMainMapUrl(audioManifest);
 
                     //bumper file name
-                    var bumperEncryptedFileName = $@"{Path.GetDirectoryName(encryptedAudioFile)}\bumperAudioEncrypted.bin";
+                    var bumperDecryptedFileName = $@"{Path.GetDirectoryName(encryptedAudioFile)}\bumperAudioDecrypted.mp4";
 
                     //download the bumper if we're allowed to
                     if (Args.DownloadBumperEnabled)
                         BumperAudioDownloader.DownloadBumperAudioFromPlaylist(audioManifest,
-                            audioPlaylistUrl, bumperEncryptedFileName);
+                            audioPlaylistUrl, bumperDecryptedFileName);
 
                     //ensure the map URL is valid
                     if (!string.IsNullOrWhiteSpace(audioMapPath))

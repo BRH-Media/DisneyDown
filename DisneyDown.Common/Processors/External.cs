@@ -152,7 +152,7 @@ namespace DisneyDown.Common.Processors
         /// <param name="inputFiles"></param>
         /// <param name="outputFile"></param>
         /// <param name="forceOverwrite"></param>
-        public static void DoConcatMux(List<string> inputFiles, string outputFile = @"content.mkv", bool forceOverwrite = false)
+        public static void DoConcatMux(List<string> inputFiles, string outputFile = @"content.mp4", bool forceOverwrite = false)
         {
             try
             {

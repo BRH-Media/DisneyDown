@@ -40,14 +40,14 @@ namespace DisneyDown.Common.Processors
                 if (!string.IsNullOrWhiteSpace(masterPlaylist))
                 {
                     //download subtitles
-                    var subtitlesDirectory =
+                    var subtitlesFile =
                         MainSubtitlesDownloader.DownloadSubtitlesFromMaster(
                             masterPlaylist,
                             Strings.ManifestUrl,
                             subtitleMergeFile);
 
                     //the downloader will return the merged file if it already exists; make sure to check for this
-                    if (File.Exists(subtitlesDirectory))
+                    if (File.Exists(subtitlesFile))
                     {
                         //stop measuring subtitle parse and merge time
                         Timers.StopTimer(Timers.Generic.SubtitlesParseTimer);
@@ -55,41 +55,6 @@ namespace DisneyDown.Common.Processors
                         //return the already existing file and do not attempt extra processing
                         return subtitleMergeFile;
                     }
-
-                    //report progress
-                    ConsoleWriters.WriteLine(@"[i] Attempting subtitles parse and merge", ConsoleColor.Cyan);
-
-                    //start measuring subtitles parse and merge time
-                    Timers.StartTimer(Timers.Generic.SubtitlesParseTimer);
-
-                    //total lines
-                    var subtitles = new List<string>();
-
-                    //go through each subtitle file in the directory
-                    foreach (var f in Directory.GetFiles(subtitlesDirectory))
-                    {
-                        //extension of the file
-                        var ext = Path.GetExtension(f);
-
-                        //make sure it's WebVTT
-                        if (ext == @".vtt")
-
-                            //append
-                            subtitles.AddRange(File.ReadAllLines(f));
-                    }
-
-                    //check if there are lines
-                    if (subtitles.Count > 0)
-                    {
-                        //conversion
-                        var convertedSubs = SubtitleProcessor.ConvertToSrt(subtitles);
-
-                        //export to the merge file
-                        File.WriteAllLines(subtitleMergeFile, convertedSubs);
-                    }
-
-                    //stop measuring subtitle parse and merge time
-                    Timers.StopTimer(Timers.Generic.SubtitlesParseTimer);
 
                     //report progress
                     ConsoleWriters.WriteLine(@"[i] Subtitles processing completed", ConsoleColor.Green);
@@ -123,20 +88,10 @@ namespace DisneyDown.Common.Processors
         public static string StartAudio(string masterPlaylist, string workingDir)
         {
             //main file names
-            const string encryptedAudioFileName = @"audioEncrypted.bin";
             const string decryptedAudioFileName = @"audioDecrypted.mp4";
 
-            //Disney+ intro (bumper) file names
-            const string encryptedBumperFileName = @"bumperAudioEncrypted.bin";
-            const string decryptedBumperFileName = @"bumperAudioDecrypted.mp4";
-
             //main file paths
-            var encryptedAudio = $@"{workingDir}\{encryptedAudioFileName}";
             var decryptedAudio = $@"{workingDir}\{decryptedAudioFileName}";
-
-            //Disney+ intro (bumper) file paths
-            var encryptedBumper = $@"{workingDir}\{encryptedBumperFileName}";
-            var decryptedBumper = $@"{workingDir}\{decryptedBumperFileName}";
 
             try
             {
@@ -148,32 +103,7 @@ namespace DisneyDown.Common.Processors
                         MainAudioDownloader.DownloadBestAudioFromMaster(
                             masterPlaylist,
                             Strings.ManifestUrl,
-                            encryptedAudio);
-
-                    //report progress
-                    ConsoleWriters.WriteLine(@"[i] Attempting decryption on audio", ConsoleColor.Cyan);
-
-                    //start measuring audio decrypt time
-                    Timers.StartTimer(Timers.Generic.AudioDecryptTimer);
-
-                    //decrypt audio stream
-                    External.DoDecrypt(audioFile, decryptedAudio, Strings.DecryptionKey);
-
-                    //stop measuring audio decrypt time
-                    Timers.StopTimer(Timers.Generic.AudioDecryptTimer);
-
-                    //start measuring bumper audio decrypt time
-                    Timers.StartTimer(Timers.Bumper.BumperAudioDecryptTimer);
-
-                    //decrypt bumper (if enabled)
-                    if (Args.DownloadBumperEnabled)
-                        External.DoDecrypt(encryptedBumper, decryptedBumper, Strings.DecryptionKey);
-
-                    //stop measuring bumper audio decrypt time
-                    Timers.StopTimer(Timers.Bumper.BumperAudioDecryptTimer);
-
-                    //report progress
-                    ConsoleWriters.WriteLine(@"[i] Audio decryption finished", ConsoleColor.Green);
+                            decryptedAudio);
 
                     //return decrypted file path
                     return decryptedAudio;
@@ -416,8 +346,8 @@ namespace DisneyDown.Common.Processors
 
                                     //report progress
                                     ConsoleWriters.WriteLine($"\n[i] Decrypted video path: {decryptedVideo}", ConsoleColor.Cyan);
-                                    ConsoleWriters.WriteLine($"[i]Decrypted audio path: {decryptedAudio}", ConsoleColor.Cyan);
-                                    ConsoleWriters.WriteLine($"[i]Output path: {outputFile}\n", ConsoleColor.Cyan);
+                                    ConsoleWriters.WriteLine($"[i] Decrypted audio path: {decryptedAudio}", ConsoleColor.Cyan);
+                                    ConsoleWriters.WriteLine($"[i] Output path: {outputFile}\n", ConsoleColor.Cyan);
 
                                     //FFMPEG mux inputs for the main output file
                                     var muxInput = new List<string>();
