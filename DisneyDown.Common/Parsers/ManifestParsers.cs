@@ -26,13 +26,13 @@ namespace DisneyDown.Common.Parsers
         {
             try
             {
-                //validation
+                //null validation
                 if (!string.IsNullOrWhiteSpace(playlist))
                 {
                     //parse
                     var p = new PlaylistParser().Parse(playlist);
 
-                    //validation
+                    //null validation
                     if (p != null)
                     {
                         //additional validation
@@ -43,6 +43,76 @@ namespace DisneyDown.Common.Parsers
 
                             //verify
                             return tag.Id == PlaylistTagId.EXTM3U;
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                //nothing
+            }
+
+            //default
+            return false;
+        }
+
+        /// <summary>
+        /// Verify if a manifest is a valid master manifest
+        /// </summary>
+        /// <param name="playlist"></param>
+        /// <returns></returns>
+        public static bool MasterValid(string playlist)
+        {
+            try
+            {
+                //null validation
+                if (!string.IsNullOrWhiteSpace(playlist))
+                {
+                    //parse
+                    var p = new PlaylistParser().Parse(playlist);
+
+                    //null validation
+                    if (p != null)
+                    {
+                        //additional validation
+                        if (p.Items.Count > 0)
+                        {
+                            //check if any items are PlaylistUrl
+                            foreach (var item in p.Items)
+                            {
+                                try
+                                {
+                                    //try casting
+                                    var playlistUri = (PlaylistUriItem)item;
+
+                                    //validation
+                                    if (playlistUri != null)
+                                    {
+                                        //uri
+                                        var uri = playlistUri.Uri.Split('?')[0];
+
+                                        //is it an m3u8?
+                                        var master = uri.EndsWith(@".m3u8") || uri.EndsWith(@".m3u");
+
+                                        //verification
+                                        if (master)
+                                        {
+                                            //apply master parameter
+                                            p.IsMaster = true;
+
+                                            //exit loop
+                                            break;
+                                        }
+                                    }
+                                }
+                                catch (InvalidCastException)
+                                {
+                                    //nothing
+                                }
+                            }
+
+                            //return final result
+                            return p.IsMaster;
                         }
                     }
                 }

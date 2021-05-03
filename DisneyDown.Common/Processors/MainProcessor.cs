@@ -293,183 +293,206 @@ namespace DisneyDown.Common.Processors
                                 //check conformity
                                 if (ManifestParsers.ManifestValid(masterPlaylist))
                                 {
-                                    //directories for temporary storage
-                                    const string baseOutputDir = @"output";
-                                    const string baseWorkingDir = @"tmp";
-
-                                    //unique hash for master manifest URL (MD5)
-                                    var masterManifestHash = Md5Helper.CalculateMd5Hash(Strings.ManifestUrl);
-
-                                    //actual working directory
-                                    var workingDir = $@"{baseWorkingDir}\{masterManifestHash}";
-                                    var outputDir = $@"{baseOutputDir}\{masterManifestHash}";
-
-                                    //output file path
-                                    var outputFile = $@"{outputDir}\{Strings.OutFileName}";
-
-                                    //ensure the final output directory exists
-                                    if (!Directory.Exists(outputDir))
-                                        Directory.CreateDirectory(outputDir);
-
-                                    //ensure the temporary working directory exists
-                                    if (!Directory.Exists(workingDir))
-                                        Directory.CreateDirectory(workingDir);
-
-                                    //decrypted outputs
-                                    var decryptedAudio = @"";
-                                    var decryptedVideo = @"";
-
-                                    //subtitle file
-                                    var mergedSubtitles = @"";
-
-                                    //download, parse and merge subtitles
-                                    if (!Args.VideoOnlyMode)
-                                        mergedSubtitles = StartSubtitles(masterPlaylist, workingDir);
-
-                                    //download and decrypt audio
-                                    if (!Args.VideoOnlyMode)
-                                        decryptedAudio = StartAudio(masterPlaylist, workingDir);
-
-                                    //download and decrypt video
-                                    if (!Args.AudioOnlyMode)
-                                        decryptedVideo = StartVideo(masterPlaylist, workingDir);
-
-                                    //decrypted video
-                                    var decryptedBumperVideo = $@"{Path.GetDirectoryName(decryptedVideo)}\bumperVideoDecrypted.mp4";
-
-                                    //decrypted audio
-                                    var decryptedBumperAudio = $@"{Path.GetDirectoryName(decryptedAudio)}\bumperAudioDecrypted.mp4";
-
-                                    //decrypted bumper to be saved
-                                    var decryptedBumper = $@"{outputDir}\decryptedBumper.mkv";
-                                    var decryptedMerged = $@"{outputDir}\decryptedMerged.mkv";
-
-                                    //report progress
-                                    ConsoleWriters.WriteLine($"\n[i] Decrypted video path: {decryptedVideo}", ConsoleColor.Cyan);
-                                    ConsoleWriters.WriteLine($"[i] Decrypted audio path: {decryptedAudio}", ConsoleColor.Cyan);
-                                    ConsoleWriters.WriteLine($"[i] Output path: {outputFile}\n", ConsoleColor.Cyan);
-
-                                    //FFMPEG mux inputs for the main output file
-                                    var muxInput = new List<string>();
-
-                                    //FFMPEG mux inputs for the Disney+ intro (bumper)
-                                    var muxBumperInput = new List<string> { decryptedBumperAudio, decryptedBumperVideo };
-
-                                    //add the files to remux
-                                    //~~~~~
-                                    //audio
-                                    if (!string.IsNullOrWhiteSpace(decryptedAudio))
-                                        muxInput.Add(decryptedAudio);
-
-                                    //video
-                                    if (!string.IsNullOrWhiteSpace(decryptedVideo))
-                                        muxInput.Add(decryptedVideo);
-
-                                    //subtitles
-                                    if (!string.IsNullOrWhiteSpace(mergedSubtitles))
-
-                                        //don't add subtitles if they don't exist; this avoids the later check
-                                        //that will crash the main application processor
-                                        if (File.Exists(mergedSubtitles))
-                                            muxInput.Add(mergedSubtitles);
-
-                                    //attempt mux audio and video together (only if the decryption succeeded)
-                                    if (AllExistInList(muxInput))
+                                    //check valid master (exclusive mode disables this check, since it can accept a raw stream-ready playlist)
+                                    if (ManifestParsers.MasterValid(masterPlaylist) || Args.ExclusiveMode)
                                     {
-                                        //start measuring remux time
-                                        Timers.StartTimer(Timers.Generic.RemuxTimer);
+                                        //directories for temporary storage
+                                        const string baseOutputDir = @"output";
+                                        const string baseWorkingDir = @"tmp";
+
+                                        //unique hash for master manifest URL (MD5)
+                                        var masterManifestHash = Md5Helper.CalculateMd5Hash(Strings.ManifestUrl);
+
+                                        //actual working directory
+                                        var workingDir = $@"{baseWorkingDir}\{masterManifestHash}";
+                                        var outputDir = $@"{baseOutputDir}\{masterManifestHash}";
+
+                                        //output file path
+                                        var outputFile = $@"{outputDir}\{Strings.OutFileName}";
+
+                                        //ensure the final output directory exists
+                                        if (!Directory.Exists(outputDir))
+                                            Directory.CreateDirectory(outputDir);
+
+                                        //ensure the temporary working directory exists
+                                        if (!Directory.Exists(workingDir))
+                                            Directory.CreateDirectory(workingDir);
+
+                                        //decrypted outputs
+                                        var decryptedAudio = @"";
+                                        var decryptedVideo = @"";
+
+                                        //subtitle file
+                                        var mergedSubtitles = @"";
+
+                                        //download, parse and merge subtitles
+                                        if (!Args.VideoOnlyMode)
+                                            mergedSubtitles = StartSubtitles(masterPlaylist, workingDir);
+
+                                        //download and decrypt audio
+                                        if (!Args.VideoOnlyMode)
+                                            decryptedAudio = StartAudio(masterPlaylist, workingDir);
+
+                                        //download and decrypt video
+                                        if (!Args.AudioOnlyMode)
+                                            decryptedVideo = StartVideo(masterPlaylist, workingDir);
+
+                                        //decrypted video
+                                        var decryptedBumperVideo =
+                                            $@"{Path.GetDirectoryName(decryptedVideo)}\bumperVideoDecrypted.mp4";
+
+                                        //decrypted audio
+                                        var decryptedBumperAudio =
+                                            $@"{Path.GetDirectoryName(decryptedAudio)}\bumperAudioDecrypted.mp4";
+
+                                        //decrypted bumper to be saved
+                                        var decryptedBumper = $@"{outputDir}\decryptedBumper.mkv";
+                                        var decryptedMerged = $@"{outputDir}\decryptedMerged.mkv";
 
                                         //report progress
-                                        ConsoleWriters.WriteLine("[i] Attempting main stream remux", ConsoleColor.Cyan);
+                                        ConsoleWriters.WriteLine($"\n[i] Decrypted video path: {decryptedVideo}",
+                                            ConsoleColor.Cyan);
+                                        ConsoleWriters.WriteLine($"[i] Decrypted audio path: {decryptedAudio}",
+                                            ConsoleColor.Cyan);
+                                        ConsoleWriters.WriteLine($"[i] Output path: {outputFile}\n", ConsoleColor.Cyan);
 
-                                        //execute FFMPEG
-                                        External.DoMux(muxInput, outputFile);
+                                        //FFMPEG mux inputs for the main output file
+                                        var muxInput = new List<string>();
 
-                                        //report progress
-                                        ConsoleWriters.WriteLine("[i] Main stream remux process completed", ConsoleColor.Green);
+                                        //FFMPEG mux inputs for the Disney+ intro (bumper)
+                                        var muxBumperInput = new List<string>
+                                            {decryptedBumperAudio, decryptedBumperVideo};
 
-                                        //mux the bumper if allowed
-                                        if (Args.DownloadBumperEnabled)
+                                        //add the files to remux
+                                        //~~~~~
+                                        //audio
+                                        if (!string.IsNullOrWhiteSpace(decryptedAudio))
+                                            muxInput.Add(decryptedAudio);
+
+                                        //video
+                                        if (!string.IsNullOrWhiteSpace(decryptedVideo))
+                                            muxInput.Add(decryptedVideo);
+
+                                        //subtitles
+                                        if (!string.IsNullOrWhiteSpace(mergedSubtitles))
+
+                                            //don't add subtitles if they don't exist; this avoids the later check
+                                            //that will crash the main application processor
+                                            if (File.Exists(mergedSubtitles))
+                                                muxInput.Add(mergedSubtitles);
+
+                                        //attempt mux audio and video together (only if the decryption succeeded)
+                                        if (AllExistInList(muxInput))
                                         {
-                                            if (AllExistInList(muxBumperInput))
+                                            //start measuring remux time
+                                            Timers.StartTimer(Timers.Generic.RemuxTimer);
+
+                                            //report progress
+                                            ConsoleWriters.WriteLine("[i] Attempting main stream remux",
+                                                ConsoleColor.Cyan);
+
+                                            //execute FFMPEG
+                                            External.DoMux(muxInput, outputFile);
+
+                                            //report progress
+                                            ConsoleWriters.WriteLine("[i] Main stream remux process completed",
+                                                ConsoleColor.Green);
+
+                                            //mux the bumper if allowed
+                                            if (Args.DownloadBumperEnabled)
                                             {
-                                                //report progress
-                                                ConsoleWriters.WriteLine("[i] Attempting bumper stream remux", ConsoleColor.Cyan);
-
-                                                //start measuring bumper remux time
-                                                Timers.StartTimer(Timers.Bumper.BumperRemuxTimer);
-
-                                                //combine bumper audio and video
-                                                External.DoMux(muxBumperInput, decryptedBumper);
-
-                                                //stop measuring bumper remux time
-                                                Timers.StopTimer(Timers.Bumper.BumperRemuxTimer);
-
-                                                //report progress
-                                                ConsoleWriters.WriteLine("[i] Bumper stream remux process completed", ConsoleColor.Green);
-
-                                                //combine the bumper and main content (if bumper mux succeeded)
-                                                if (File.Exists(decryptedBumper))
+                                                if (AllExistInList(muxBumperInput))
                                                 {
                                                     //report progress
-                                                    ConsoleWriters.WriteLine("[i] Attempting main stream and bumper concatenation", ConsoleColor.Cyan);
+                                                    ConsoleWriters.WriteLine("[i] Attempting bumper stream remux",
+                                                        ConsoleColor.Cyan);
 
-                                                    //start measuring bumper concat time
-                                                    Timers.StartTimer(Timers.Bumper.BumperConcatTimer);
+                                                    //start measuring bumper remux time
+                                                    Timers.StartTimer(Timers.Bumper.BumperRemuxTimer);
 
-                                                    //perform concat operation
-                                                    External.DoConcatMux(new List<string> { decryptedBumper, outputFile },
-                                                        decryptedMerged);
+                                                    //combine bumper audio and video
+                                                    External.DoMux(muxBumperInput, decryptedBumper);
 
-                                                    //stop measuring bumper concat time
-                                                    Timers.StopTimer(Timers.Bumper.BumperConcatTimer);
+                                                    //stop measuring bumper remux time
+                                                    Timers.StopTimer(Timers.Bumper.BumperRemuxTimer);
 
                                                     //report progress
-                                                    ConsoleWriters.WriteLine("[i] Main stream and bumper concatenation process completed",
+                                                    ConsoleWriters.WriteLine(
+                                                        "[i] Bumper stream remux process completed",
                                                         ConsoleColor.Green);
+
+                                                    //combine the bumper and main content (if bumper mux succeeded)
+                                                    if (File.Exists(decryptedBumper))
+                                                    {
+                                                        //report progress
+                                                        ConsoleWriters.WriteLine(
+                                                            "[i] Attempting main stream and bumper concatenation",
+                                                            ConsoleColor.Cyan);
+
+                                                        //start measuring bumper concat time
+                                                        Timers.StartTimer(Timers.Bumper.BumperConcatTimer);
+
+                                                        //perform concat operation
+                                                        External.DoConcatMux(
+                                                            new List<string> { decryptedBumper, outputFile },
+                                                            decryptedMerged);
+
+                                                        //stop measuring bumper concat time
+                                                        Timers.StopTimer(Timers.Bumper.BumperConcatTimer);
+
+                                                        //report progress
+                                                        ConsoleWriters.WriteLine(
+                                                            "[i] Main stream and bumper concatenation process completed",
+                                                            ConsoleColor.Green);
+                                                    }
+                                                    else
+
+                                                        //report error
+                                                        ConsoleWriters.WriteLine(
+                                                            "[!] FFMPEG bumper concat mux failed because the decrypted bumper was not available; " +
+                                                            "check your key and try again.", ConsoleColor.Red);
                                                 }
                                                 else
 
                                                     //report error
                                                     ConsoleWriters.WriteLine(
-                                                        "[!] FFMPEG bumper concat mux failed because the decrypted bumper was not available; " +
+                                                        "[!] FFMPEG bumper mux failed because one or more decrypted files were not available; " +
                                                         "check your key and try again.", ConsoleColor.Red);
                                             }
-                                            else
 
-                                                //report error
-                                                ConsoleWriters.WriteLine(
-                                                    "[!] FFMPEG bumper mux failed because one or more decrypted files were not available; " +
-                                                    "check your key and try again.", ConsoleColor.Red);
+                                            //stop measuring remux time
+                                            Timers.StopTimer(Timers.Generic.RemuxTimer);
+
+                                            //report progress
+                                            ConsoleWriters.WriteLine(@"[i] Overall remux process completed",
+                                                ConsoleColor.Green);
+
+                                            //return output file
+                                            return !Args.DownloadBumperEnabled
+
+                                                //downloading the Disney+ intro was disabled; use the normal output file
+                                                ? outputFile
+
+                                                //downloading the Disney+ was enabled; check if the merged file exists
+                                                : File.Exists(decryptedMerged)
+
+                                                    //the merge file exists; report it instead
+                                                    ? decryptedMerged
+
+                                                    //the merge file does not exist; report the normal output file
+                                                    : outputFile;
                                         }
+                                        else
 
-                                        //stop measuring remux time
-                                        Timers.StopTimer(Timers.Generic.RemuxTimer);
-
-                                        //report progress
-                                        ConsoleWriters.WriteLine(@"[i] Overall remux process completed", ConsoleColor.Green);
-
-                                        //return output file
-                                        return !Args.DownloadBumperEnabled
-
-                                            //downloading the Disney+ intro was disabled; use the normal output file
-                                            ? outputFile
-
-                                            //downloading the Disney+ was enabled; check if the merged file exists
-                                            : File.Exists(decryptedMerged)
-
-                                                //the merge file exists; report it instead
-                                                ? decryptedMerged
-
-                                                //the merge file does not exist; report the normal output file
-                                                : outputFile;
+                                            //report error
+                                            ConsoleWriters.WriteLine(
+                                                "[!] FFMPEG main stream mux failed because one or more decrypted files were not available; " +
+                                                "check your key and try again.", ConsoleColor.Red);
                                     }
                                     else
 
                                         //report error
-                                        ConsoleWriters.WriteLine(
-                                            "[!] FFMPEG main stream mux failed because one or more decrypted files were not available; " +
-                                            "check your key and try again.", ConsoleColor.Red);
+                                        ConsoleWriters.WriteLine(@"[!] Process failed; provided HLS playlist was not a valid master playlist.", ConsoleColor.Red);
                                 }
                                 else
 

@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("DisneyDown.Common")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("BRH Media")]
+[assembly: AssemblyCompany("SneakySnyper")]
 [assembly: AssemblyProduct("DisneyDown.Common")]
-[assembly: AssemblyCopyright("Copyright © BRH Media (Baeleigh Harris)  2020")]
+[assembly: AssemblyCopyright("Copyright © SneakySnyper 2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

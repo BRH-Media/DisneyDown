@@ -13,7 +13,7 @@ namespace DisneyDown.Common.Parsers.HLS.Playlist
             Items = new List<PlaylistItem>(items);
         }
 
-        public bool IsMaster { get; set; }
+        public bool IsMaster { get; set; } = false;
         public List<PlaylistItem> Items { get; set; }
     }
 }

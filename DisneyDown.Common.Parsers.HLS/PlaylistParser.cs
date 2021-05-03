@@ -9,15 +9,24 @@ namespace DisneyDown.Common.Parsers.HLS
     {
         public Playlist.Playlist Parse(string playlist)
         {
+            //temporary IO provider
             using (var stringReader = new StringReader(playlist))
             {
+                //new HLS items list
                 var playListItems = new List<PlaylistItem>();
+
+                //temporary line buffer
                 string line;
 
+                //parse each line in the playlist
                 while ((line = stringReader.ReadLine()) != null)
                     playListItems.Add(PlaylistGrammar.PlaylistParser.Parse(line));
 
-                return new Playlist.Playlist(playListItems);
+                //create playlist
+                var playlistProvider = new Playlist.Playlist(playListItems);
+
+                //return final result
+                return playlistProvider;
             }
         }
     }
