@@ -21,27 +21,38 @@ namespace DisneyDown.Common.Processors
 
         private static string DeleteCueSettings(string line)
         {
-            //cleaned line output
-            var output = new StringBuilder();
-
-            //go through each character in the supplied WebVTT line
-            foreach (var ch in line)
+            try
             {
-                //convert the character to lowercase
-                var chLower = char.ToLower(ch);
+                //cleaned line output
+                var output = new StringBuilder();
 
-                //if the character is in the alphabetical unicode range (061-122)
-                if (chLower >= 'a' && chLower <= 'z')
+                //go through each character in the supplied WebVTT line
+                foreach (var ch in line)
+                {
+                    //convert the character to lowercase
+                    var chLower = char.ToLower(ch);
 
-                    //break the loop; character is alphabetical
-                    break;
+                    //if the character is in the alphabetical unicode range (061-122)
+                    if (chLower >= 'a' && chLower <= 'z')
 
-                //character is not alphabetical; append to the buffer
-                output.Append(ch);
+                        //break the loop; character is alphabetical
+                        break;
+
+                    //character is not alphabetical; append to the buffer
+                    output.Append(ch);
+                }
+
+                //return the final cleaned line
+                return output.ToString();
+            }
+            catch (Exception ex)
+            {
+                //report error
+                ConsoleWriters.ConsoleWriteError($"Subtitle conversion error: {ex.Message}");
             }
 
-            //return the final cleaned line
-            return output.ToString();
+            //default
+            return @"";
         }
 
         public static List<string> ConvertToSrt(List<string> fileLines)
@@ -160,7 +171,7 @@ namespace DisneyDown.Common.Processors
             catch (Exception ex)
             {
                 //report error
-                ConsoleWriters.WriteLine($"[!] Subtitle VTT-SRT error: {ex.Message}", ConsoleColor.Red);
+                ConsoleWriters.ConsoleWriteError($"Subtitle VTT-SRT error: {ex.Message}");
             }
 
             //default

@@ -57,7 +57,7 @@ namespace DisneyDown.Common.Processors
                     }
 
                     //report progress
-                    ConsoleWriters.WriteLine(@"[i] Subtitles processing completed", ConsoleColor.Green);
+                    ConsoleWriters.ConsoleWriteSuccess(@"Subtitles processing completed");
 
                     //return merged subtitles file path
                     return subtitleMergeFile;
@@ -65,12 +65,12 @@ namespace DisneyDown.Common.Processors
                 else
 
                     //report error
-                    ConsoleWriters.WriteLine(@"[!] Subtitles processor failed; invalid master playlist", ConsoleColor.Red);
+                    ConsoleWriters.ConsoleWriteError(@"Subtitles processor failed; invalid master playlist");
             }
             catch (Exception ex)
             {
                 //report error
-                ConsoleWriters.WriteLine($@"[!] Subtitles process error: {ex.Message}", ConsoleColor.Red);
+                ConsoleWriters.ConsoleWriteError($@"Subtitles process error: {ex.Message}");
             }
 
             //stop measuring subtitle parse and merge time
@@ -111,12 +111,12 @@ namespace DisneyDown.Common.Processors
                 else
 
                     //report error
-                    ConsoleWriters.WriteLine(@"[!] Audio processor failed; invalid master playlist", ConsoleColor.Red);
+                    ConsoleWriters.ConsoleWriteError(@"Audio processor failed; invalid master playlist");
             }
             catch (Exception ex)
             {
                 //report error
-                ConsoleWriters.WriteLine($@"[!] Audio process error: {ex.Message}", ConsoleColor.Red);
+                ConsoleWriters.ConsoleWriteError($@"Audio process error: {ex.Message}");
             }
 
             //stop measuring audio decrypt time
@@ -165,7 +165,7 @@ namespace DisneyDown.Common.Processors
                             encryptedVideo);
 
                     //report progress
-                    ConsoleWriters.WriteLine(@"[i] Attempting decryption on video", ConsoleColor.Cyan);
+                    ConsoleWriters.ConsoleWriteInfo(@"Attempting decryption on video");
 
                     //start measuring video decrypt time
                     Timers.StartTimer(Timers.Generic.VideoDecryptTimer);
@@ -187,7 +187,7 @@ namespace DisneyDown.Common.Processors
                     Timers.StopTimer(Timers.Bumper.BumperVideoDecryptTimer);
 
                     //report progress
-                    ConsoleWriters.WriteLine(@"[i] Video decryption finished", ConsoleColor.Green);
+                    ConsoleWriters.ConsoleWriteSuccess(@"Video decryption finished");
 
                     //return decrypted file path
                     return decryptedVideo;
@@ -195,12 +195,12 @@ namespace DisneyDown.Common.Processors
                 else
 
                     //report error
-                    ConsoleWriters.WriteLine(@"[!] Video processor failed; invalid master playlist", ConsoleColor.Red);
+                    ConsoleWriters.ConsoleWriteError(@"Video processor failed; invalid master playlist");
             }
             catch (Exception ex)
             {
                 //report error
-                ConsoleWriters.WriteLine($@"[!] Video process error: {ex.Message}", ConsoleColor.Red);
+                ConsoleWriters.ConsoleWriteError($@"Video process error: {ex.Message}");
             }
 
             //stop measuring video decrypt time
@@ -237,15 +237,15 @@ namespace DisneyDown.Common.Processors
                 if (!Args.CheckRequiredExecutables)
 
                     //report error
-                    ConsoleWriters.WriteLine(
-                        @"[!] Process failed; required executable ffmpeg.exe and/or mp4decrypt.exe was not present.", ConsoleColor.Red);
+                    ConsoleWriters.ConsoleWriteError(
+                        @"Process failed; required executable ffmpeg.exe and/or mp4decrypt.exe was not present.");
                 else
                 {
                     //validation
                     if (string.IsNullOrWhiteSpace(Strings.ManifestUrl) || string.IsNullOrWhiteSpace(Strings.DecryptionKey))
 
                         //report error
-                        ConsoleWriters.WriteLine(@"[!] Process failed; one or more arguments were incorrect", ConsoleColor.Red);
+                        ConsoleWriters.ConsoleWriteError(@"Process failed; one or more arguments were incorrect");
                     else
                     {
                         //the length of a valid hex Widevine key
@@ -258,9 +258,9 @@ namespace DisneyDown.Common.Processors
                         if (actualKeyLength != correctKeyLength)
 
                             //report error
-                            ConsoleWriters.WriteLine(
-                                $"[!] Process failed; key was of incorrect length. Expected length of " +
-                                $"{correctKeyLength} but got {actualKeyLength}.", ConsoleColor.Red);
+                            ConsoleWriters.ConsoleWriteError(
+                                $"Process failed; key was of incorrect length. Expected length of " +
+                                $"{correctKeyLength} but got {actualKeyLength}.");
                         else
                         {
                             //ensure manifest URI is a valid URI and is a valid HLS manifest file
@@ -281,11 +281,11 @@ namespace DisneyDown.Common.Processors
                             if (!masterUriValid)
 
                                 //report error
-                                ConsoleWriters.WriteLine(@"[!] Process failed; master playlist URL was invalid", ConsoleColor.Red);
+                                ConsoleWriters.ConsoleWriteError(@"Process failed; master playlist URL was invalid");
                             else
                             {
                                 //report progress
-                                ConsoleWriters.WriteLine(@"[i] Downloading master playlist", ConsoleColor.Cyan);
+                                ConsoleWriters.ConsoleWriteInfo(@"Downloading master playlist");
 
                                 //download master
                                 var masterPlaylist = ManifestParsers.DownloadManifest(Strings.ManifestUrl);
@@ -350,11 +350,9 @@ namespace DisneyDown.Common.Processors
                                         var decryptedMerged = $@"{outputDir}\decryptedMerged.mkv";
 
                                         //report progress
-                                        ConsoleWriters.WriteLine($"\n[i] Decrypted video path: {decryptedVideo}",
-                                            ConsoleColor.Cyan);
-                                        ConsoleWriters.WriteLine($"[i] Decrypted audio path: {decryptedAudio}",
-                                            ConsoleColor.Cyan);
-                                        ConsoleWriters.WriteLine($"[i] Output path: {outputFile}\n", ConsoleColor.Cyan);
+                                        ConsoleWriters.ConsoleWriteInfo($"Decrypted video path: {decryptedVideo}");
+                                        ConsoleWriters.ConsoleWriteInfo($"Decrypted audio path: {decryptedAudio}");
+                                        ConsoleWriters.ConsoleWriteInfo($"Output path: {outputFile}\n");
 
                                         //FFMPEG mux inputs for the main output file
                                         var muxInput = new List<string>();
@@ -388,15 +386,13 @@ namespace DisneyDown.Common.Processors
                                             Timers.StartTimer(Timers.Generic.RemuxTimer);
 
                                             //report progress
-                                            ConsoleWriters.WriteLine("[i] Attempting main stream remux",
-                                                ConsoleColor.Cyan);
+                                            ConsoleWriters.ConsoleWriteInfo("Attempting main stream remux");
 
                                             //execute FFMPEG
                                             External.DoMux(muxInput, outputFile);
 
                                             //report progress
-                                            ConsoleWriters.WriteLine("[i] Main stream remux process completed",
-                                                ConsoleColor.Green);
+                                            ConsoleWriters.ConsoleWriteInfo("Main stream remux process completed");
 
                                             //mux the bumper if allowed
                                             if (Args.DownloadBumperEnabled)
@@ -404,8 +400,7 @@ namespace DisneyDown.Common.Processors
                                                 if (AllExistInList(muxBumperInput))
                                                 {
                                                     //report progress
-                                                    ConsoleWriters.WriteLine("[i] Attempting bumper stream remux",
-                                                        ConsoleColor.Cyan);
+                                                    ConsoleWriters.ConsoleWriteInfo("Attempting bumper stream remux");
 
                                                     //start measuring bumper remux time
                                                     Timers.StartTimer(Timers.Bumper.BumperRemuxTimer);
@@ -417,17 +412,15 @@ namespace DisneyDown.Common.Processors
                                                     Timers.StopTimer(Timers.Bumper.BumperRemuxTimer);
 
                                                     //report progress
-                                                    ConsoleWriters.WriteLine(
-                                                        "[i] Bumper stream remux process completed",
-                                                        ConsoleColor.Green);
+                                                    ConsoleWriters.ConsoleWriteSuccess(
+                                                        "Bumper stream remux process completed");
 
                                                     //combine the bumper and main content (if bumper mux succeeded)
                                                     if (File.Exists(decryptedBumper))
                                                     {
                                                         //report progress
-                                                        ConsoleWriters.WriteLine(
-                                                            "[i] Attempting main stream and bumper concatenation",
-                                                            ConsoleColor.Cyan);
+                                                        ConsoleWriters.ConsoleWriteInfo(
+                                                            "Attempting main stream and bumper concatenation");
 
                                                         //start measuring bumper concat time
                                                         Timers.StartTimer(Timers.Bumper.BumperConcatTimer);
@@ -441,31 +434,29 @@ namespace DisneyDown.Common.Processors
                                                         Timers.StopTimer(Timers.Bumper.BumperConcatTimer);
 
                                                         //report progress
-                                                        ConsoleWriters.WriteLine(
-                                                            "[i] Main stream and bumper concatenation process completed",
-                                                            ConsoleColor.Green);
+                                                        ConsoleWriters.ConsoleWriteSuccess(
+                                                            "Main stream and bumper concatenation process completed");
                                                     }
                                                     else
 
                                                         //report error
-                                                        ConsoleWriters.WriteLine(
-                                                            "[!] FFMPEG bumper concat mux failed because the decrypted bumper was not available; " +
-                                                            "check your key and try again.", ConsoleColor.Red);
+                                                        ConsoleWriters.ConsoleWriteError(
+                                                            "FFMPEG bumper concat mux failed because the decrypted bumper was not available; " +
+                                                            "check your key and try again.");
                                                 }
                                                 else
 
                                                     //report error
-                                                    ConsoleWriters.WriteLine(
-                                                        "[!] FFMPEG bumper mux failed because one or more decrypted files were not available; " +
-                                                        "check your key and try again.", ConsoleColor.Red);
+                                                    ConsoleWriters.ConsoleWriteError(
+                                                        "FFMPEG bumper mux failed because one or more decrypted files were not available; " +
+                                                        "check your key and try again.");
                                             }
 
                                             //stop measuring remux time
                                             Timers.StopTimer(Timers.Generic.RemuxTimer);
 
                                             //report progress
-                                            ConsoleWriters.WriteLine(@"[i] Overall remux process completed",
-                                                ConsoleColor.Green);
+                                            ConsoleWriters.ConsoleWriteSuccess(@"Overall remux process completed");
 
                                             //return output file
                                             return !Args.DownloadBumperEnabled
@@ -485,20 +476,20 @@ namespace DisneyDown.Common.Processors
                                         else
 
                                             //report error
-                                            ConsoleWriters.WriteLine(
-                                                "[!] FFMPEG main stream mux failed because one or more decrypted files were not available; " +
-                                                "check your key and try again.", ConsoleColor.Red);
+                                            ConsoleWriters.ConsoleWriteError(
+                                                "FFMPEG main stream mux failed because one or more decrypted files were not available; " +
+                                                "check your key and try again.");
                                     }
                                     else
 
                                         //report error
-                                        ConsoleWriters.WriteLine(@"[!] Process failed; provided HLS playlist was not a valid master playlist.", ConsoleColor.Red);
+                                        ConsoleWriters.ConsoleWriteError(@"Process failed; provided HLS playlist was not a valid master playlist.");
                                 }
                                 else
 
                                     //report error
-                                    ConsoleWriters.WriteLine(
-                                        @"[!] Process failed; master playlist does not conform and is therefore invalid.", ConsoleColor.Red);
+                                    ConsoleWriters.ConsoleWriteError(
+                                        @"Process failed; master playlist does not conform and is therefore invalid.");
                             }
                         }
                     }
@@ -507,7 +498,7 @@ namespace DisneyDown.Common.Processors
             catch (Exception ex)
             {
                 //report error
-                ConsoleWriters.WriteLine($@"[!] Main process error: {ex.Message}", ConsoleColor.Red);
+                ConsoleWriters.ConsoleWriteError($@"Main process error: {ex.Message}");
             }
 
             //default

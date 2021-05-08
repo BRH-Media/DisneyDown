@@ -40,10 +40,12 @@
     <Compile Include="ConsoleImageAscii.cs" />
     <Compile Include="ConsoleSpinner.cs" />
     <Compile Include="ConsoleSpinnerSequence.cs" />
+    <Compile Include="Enums\ConsoleWriterMode.cs" />
     <Compile Include="ConsoleWriters.cs" />
     <Compile Include="Interop.cs" />
     <Compile Include="InteropConst.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

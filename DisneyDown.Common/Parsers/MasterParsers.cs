@@ -180,7 +180,7 @@ namespace DisneyDown.Common.Parsers
             catch (Exception ex)
             {
                 //report error
-                ConsoleWriters.WriteLine($@"Language priority error: {ex.Message}. Will use '{Strings.DefaultLang}'.", ConsoleColor.Red);
+                ConsoleWriters.ConsoleWriteError($@"Language priority error: {ex.Message}. Will use '{Strings.DefaultLang}'.");
             }
 
             //default
@@ -223,9 +223,10 @@ namespace DisneyDown.Common.Parsers
                         return typeValid;
                     }
             }
-            catch
+            catch (Exception ex)
             {
-                //nothing
+                //report error
+                ConsoleWriters.ConsoleWriteError($"Track validation error: {ex.Message}");
             }
 
             //default
@@ -296,9 +297,10 @@ namespace DisneyDown.Common.Parsers
                     return new Tuple<string, QualityRating>(matchedUrl, definitions[qualityLevel]);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                //nothing
+                //report error
+                ConsoleWriters.ConsoleWriteError($"Playlist sorting error: {ex.Message}");
             }
 
             //default
@@ -351,7 +353,7 @@ namespace DisneyDown.Common.Parsers
             catch (Exception ex)
             {
                 //report error
-                ConsoleWriters.WriteLine($"Parse master video URI error:\n\n{ex.Message}", ConsoleColor.Red);
+                ConsoleWriters.ConsoleWriteError($"Parse master video URI error: {ex.Message}");
             }
 
             //default
@@ -419,7 +421,7 @@ namespace DisneyDown.Common.Parsers
             catch (Exception ex)
             {
                 //report error
-                ConsoleWriters.WriteLine($"Parse master audio URI error:\n\n{ex.Message}", ConsoleColor.Red);
+                ConsoleWriters.ConsoleWriteError($"Parse master audio URI error: {ex.Message}");
             }
 
             //default
@@ -489,7 +491,7 @@ namespace DisneyDown.Common.Parsers
             catch (Exception ex)
             {
                 //report error
-                ConsoleWriters.WriteLine($"Parse master subtitle URI error:\n\n{ex.Message}", ConsoleColor.Red);
+                ConsoleWriters.ConsoleWriteError($"Parse master subtitle URI error: {ex.Message}");
             }
 
             //default

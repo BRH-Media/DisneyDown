@@ -117,9 +117,10 @@ namespace DisneyDown.Common.Parsers
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                //nothing
+                //report error
+                ConsoleWriters.ConsoleWriteError($"Master validation error: {ex.Message}");
             }
 
             //default
@@ -148,12 +149,12 @@ namespace DisneyDown.Common.Parsers
                         return playlist;
                 }
                 else
-                    ConsoleWriters.WriteLine($"Incorrect content/playlist URL: {playlistUrl}", ConsoleColor.Red);
+                    ConsoleWriters.ConsoleWriteError($"Incorrect content/playlist URL: {playlistUrl}");
             }
             catch (Exception ex)
             {
                 //report error
-                ConsoleWriters.WriteLine($"Playlist download error:\n\n{ex.Message}", ConsoleColor.Red);
+                ConsoleWriters.ConsoleWriteError($"Playlist download error: {ex.Message}");
             }
 
             //default
@@ -218,17 +219,17 @@ namespace DisneyDown.Common.Parsers
                     else
 
                         //report error
-                        ConsoleWriters.WriteLine(@"Null playlist parse result; couldn't find map URL", ConsoleColor.Red);
+                        ConsoleWriters.ConsoleWriteError(@"Null playlist parse result; couldn't find map URL");
                 }
                 else
 
                     //report error
-                    ConsoleWriters.WriteLine(@"Null or empty playlist supplied; couldn't find", ConsoleColor.Red);
+                    ConsoleWriters.ConsoleWriteError(@"Null or empty playlist supplied; couldn't find");
             }
             catch (Exception ex)
             {
                 //report error
-                ConsoleWriters.WriteLine($"Playlist parse error:\n\n{ex.Message}", ConsoleColor.Red);
+                ConsoleWriters.ConsoleWriteError($"Playlist parse error: {ex.Message}");
             }
 
             //default
@@ -262,12 +263,12 @@ namespace DisneyDown.Common.Parsers
                 else
 
                     //report error
-                    ConsoleWriters.WriteLine(@"Null or empty playlist supplied; couldn't find map URL", ConsoleColor.Red);
+                    ConsoleWriters.ConsoleWriteError(@"Null or empty playlist supplied; couldn't find map URL");
             }
             catch (Exception ex)
             {
                 //report error
-                ConsoleWriters.WriteLine($"Playlist parse error:\n\n{ex.Message}", ConsoleColor.Red);
+                ConsoleWriters.ConsoleWriteError($"Playlist parse error: {ex.Message}");
             }
 
             //default
@@ -301,12 +302,12 @@ namespace DisneyDown.Common.Parsers
                 else
 
                     //report error
-                    ConsoleWriters.WriteLine(@"Null or empty playlist supplied; couldn't find Disney+ intro map URL", ConsoleColor.Red);
+                    ConsoleWriters.ConsoleWriteError(@"Null or empty playlist supplied; couldn't find Disney+ intro map URL");
             }
             catch (Exception ex)
             {
                 //report error
-                ConsoleWriters.WriteLine($"Playlist parse error:\n\n{ex.Message}", ConsoleColor.Red);
+                ConsoleWriters.ConsoleWriteError($"Playlist parse error: {ex.Message}");
             }
 
             //default

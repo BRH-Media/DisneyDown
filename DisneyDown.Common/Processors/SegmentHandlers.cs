@@ -118,7 +118,7 @@ namespace DisneyDown.Common.Processors
             catch (Exception ex)
             {
                 //report error
-                ConsoleWriters.WriteLine($@"Playlist segment filter error: {ex.Message}", ConsoleColor.Red);
+                ConsoleWriters.ConsoleWriteError($@"Playlist segment filter error: {ex.Message}");
             }
 
             //default
@@ -156,7 +156,7 @@ namespace DisneyDown.Common.Processors
                         var totalSegments = filteredSegments.Count;
 
                         //report merge file
-                        ConsoleWriters.WriteLine($"\n[i] Starting segment download on merge file: {filePath}\n", ConsoleColor.Cyan);
+                        ConsoleWriters.ConsoleWriteInfo($"Starting segment download on merge file: {filePath}\n");
 
                         //go through each item in the playlist
                         foreach (var i in filteredSegments)
@@ -182,18 +182,16 @@ namespace DisneyDown.Common.Processors
                                     WriteSegment(filePath, segment);
 
                                     //report success
-                                    ConsoleWriters.WriteLine(
+                                    ConsoleWriters.ConsoleWriteSuccess(
                                         $"{(!string.IsNullOrWhiteSpace(displayPrefix) ? $"{displayPrefix} " : @"")}" +
-                                        $"Segment {counter + 1:D4}/{totalSegments:D4} ({segmentFileName}) downloaded and merged | {progress:P2}",
-                                        ConsoleColor.Green);
+                                        $"Segment {counter + 1:D4}/{totalSegments:D4} ({segmentFileName}) downloaded and merged | {progress:P2}");
                                 }
                                 else
 
                                     //report failure
-                                    ConsoleWriters.WriteLine(
+                                    ConsoleWriters.ConsoleWriteSuccess(
                                         $"{(!string.IsNullOrWhiteSpace(displayPrefix) ? $"{displayPrefix} " : @"")}" +
-                                        $"Segment {counter + 1:D4}/{totalSegments:D4} ({segmentFileName}) download error: null result | {progress:P2}",
-                                        ConsoleColor.Red);
+                                        $"Segment {counter + 1:D4}/{totalSegments:D4} ({segmentFileName}) download error: null result | {progress:P2}");
 
                                 //incremented only on valid segment URL to keep count fluid
                                 counter++;
@@ -201,10 +199,9 @@ namespace DisneyDown.Common.Processors
                             catch (Exception ex)
                             {
                                 //report error
-                                ConsoleWriters.WriteLine(
+                                ConsoleWriters.ConsoleWriteError(
                                     $"{(!string.IsNullOrWhiteSpace(displayPrefix) ? $"{displayPrefix} " : @"")}" +
-                                    $"Segment {counter + 1:D4}/{totalSegments:D4} download error: {ex.Message}",
-                                    ConsoleColor.Red);
+                                    $"Segment {counter + 1:D4}/{totalSegments:D4} download error: {ex.Message}");
                             }
                         }
                     }
@@ -213,7 +210,7 @@ namespace DisneyDown.Common.Processors
             catch (Exception ex)
             {
                 //report error
-                ConsoleWriters.WriteLine($"[!] MPEG-4 playlist download error:\n\n{ex.Message}", ConsoleColor.Red);
+                ConsoleWriters.ConsoleWriteError($"MPEG-4 playlist download error: {ex.Message}");
             }
         }
 
@@ -251,8 +248,7 @@ namespace DisneyDown.Common.Processors
                         var segmentMergeFile = $@"{Path.GetDirectoryName(filePath)}\{Path.GetFileNameWithoutExtension(filePath)}.vtm";
 
                         //report merge file
-                        ConsoleWriters.WriteLine($"\n[i] Starting subtitle download on merge file: {filePath}\n",
-                            ConsoleColor.Cyan);
+                        ConsoleWriters.ConsoleWriteInfo($"Starting subtitle download on merge file: {filePath}\n");
 
                         //go through each item in the playlist
                         foreach (var i in filteredSegments)
@@ -278,18 +274,16 @@ namespace DisneyDown.Common.Processors
                                     WriteSegment(segmentMergeFile, segment);
 
                                     //report success
-                                    ConsoleWriters.WriteLine(
+                                    ConsoleWriters.ConsoleWriteSuccess(
                                         $"{(!string.IsNullOrWhiteSpace(displayPrefix) ? $"{displayPrefix} " : @"")}" +
-                                        $"Segment {counter + 1:D4}/{totalSegments:D4} ({segmentFileName}) downloaded and merged | {progress:P2}",
-                                        ConsoleColor.Green);
+                                        $"Segment {counter + 1:D4}/{totalSegments:D4} ({segmentFileName}) downloaded and merged | {progress:P2}");
                                 }
                                 else
 
                                     //report failure
-                                    ConsoleWriters.WriteLine(
+                                    ConsoleWriters.ConsoleWriteSuccess(
                                         $"{(!string.IsNullOrWhiteSpace(displayPrefix) ? $"{displayPrefix} " : @"")}" +
-                                        $"Segment {counter + 1:D4}/{totalSegments:D4} ({segmentFileName}) download error: null result | {progress:P2}",
-                                        ConsoleColor.Red);
+                                        $"Segment {counter + 1:D4}/{totalSegments:D4} ({segmentFileName}) download error: null result | {progress:P2}");
 
                                 //incremented only on valid segment URL to keep count fluid
                                 counter++;
@@ -297,14 +291,14 @@ namespace DisneyDown.Common.Processors
                             catch (Exception ex)
                             {
                                 //report error
-                                ConsoleWriters.WriteLine(
+                                ConsoleWriters.ConsoleWriteError(
                                     $"{(!string.IsNullOrWhiteSpace(displayPrefix) ? $"{displayPrefix} " : @"")}" +
-                                    $"Segment {counter + 1:D4}/{totalSegments:D4} download error: {ex.Message}", ConsoleColor.Red);
+                                    $"Segment {counter + 1:D4}/{totalSegments:D4} download error: {ex.Message}");
                             }
                         }
 
                         //report progress
-                        ConsoleWriters.WriteLine(@"[i] Attempting subtitles parse and merge", ConsoleColor.Cyan);
+                        ConsoleWriters.ConsoleWriteInfo(@"Attempting subtitles parse and merge");
 
                         //start measuring subtitles parse and merge time
                         Timers.StartTimer(Timers.Generic.SubtitlesParseTimer);
@@ -333,7 +327,7 @@ namespace DisneyDown.Common.Processors
             catch (Exception ex)
             {
                 //report error
-                ConsoleWriters.WriteLine($"[!] Subtitles playlist download error:\n\n{ex.Message}", ConsoleColor.Red);
+                ConsoleWriters.ConsoleWriteError($"Subtitles playlist download error: {ex.Message}");
             }
 
             //default

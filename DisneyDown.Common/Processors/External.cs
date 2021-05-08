@@ -52,17 +52,17 @@ namespace DisneyDown.Common.Processors
                     else
 
                         //report error
-                        ConsoleWriters.WriteLine(@"[!] Decrypt failed; output file specified already exists", ConsoleColor.Red);
+                        ConsoleWriters.ConsoleWriteError(@"Decrypt failed; output file specified already exists");
                 }
                 else
 
                     //report error
-                    ConsoleWriters.WriteLine($"[!] Couldn't decrypt because {FILE_NAME} was not found", ConsoleColor.Red);
+                    ConsoleWriters.ConsoleWriteError($"Couldn't decrypt because {FILE_NAME} was not found");
             }
             catch (Exception ex)
             {
                 //report error
-                ConsoleWriters.WriteLine($"[!] Decryption error:\n\n{ex.Message}", ConsoleColor.Red);
+                ConsoleWriters.ConsoleWriteError($"Decryption error:\n\n{ex.Message}");
             }
         }
 
@@ -108,17 +108,17 @@ namespace DisneyDown.Common.Processors
                     else
 
                         //report error
-                        ConsoleWriters.WriteLine(@"[!] Remux failed; output file specified already exists", ConsoleColor.Red);
+                        ConsoleWriters.ConsoleWriteError(@"Remux failed; output file specified already exists");
                 }
                 else
 
                     //report error
-                    ConsoleWriters.WriteLine($"[!] Couldn't remux because {FILE_NAME} was not found", ConsoleColor.Red);
+                    ConsoleWriters.ConsoleWriteError($"Couldn't remux because {FILE_NAME} was not found");
             }
             catch (Exception ex)
             {
                 //report error
-                ConsoleWriters.WriteLine($"[!] FFMPEG Remux error:\n\n{ex}", ConsoleColor.Red);
+                ConsoleWriters.ConsoleWriteError($"FFMPEG Remux error:\n\n{ex}");
             }
         }
 
@@ -142,7 +142,7 @@ namespace DisneyDown.Common.Processors
             catch (Exception ex)
             {
                 //report error
-                ConsoleWriters.WriteLine($@"[!] Merge file write error: {ex.Message}", ConsoleColor.Red);
+                ConsoleWriters.ConsoleWriteError($@"Merge file write error: {ex.Message}");
             }
         }
 
@@ -195,17 +195,17 @@ namespace DisneyDown.Common.Processors
                     else
 
                         //report error
-                        ConsoleWriters.WriteLine(@"[!] Concat remux failed; output file specified already exists", ConsoleColor.Red);
+                        ConsoleWriters.ConsoleWriteError(@"Concat remux failed; output file specified already exists");
                 }
                 else
 
                     //report error
-                    ConsoleWriters.WriteLine($"[!] Couldn't concat remux because {FILE_NAME} was not found", ConsoleColor.Red);
+                    ConsoleWriters.ConsoleWriteError($"Couldn't concat remux because {FILE_NAME} was not found");
             }
             catch (Exception ex)
             {
                 //report error
-                ConsoleWriters.WriteLine($"[!] FFMPEG Concat remux error:\n\n{ex}", ConsoleColor.Red);
+                ConsoleWriters.ConsoleWriteError($"FFMPEG Concat remux error:\n\n{ex}");
             }
         }
     }

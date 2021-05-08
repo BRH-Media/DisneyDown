@@ -31,7 +31,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Subtitles
                     if (File.Exists(subtitlesMergeFile))
                     {
                         //log existing status
-                        ConsoleWriters.WriteLine($@"[i] Using existing {subtitlesMergeFile}; download skipped", ConsoleColor.Cyan);
+                        ConsoleWriters.ConsoleWriteInfo($@"Using existing {subtitlesMergeFile}; download skipped");
 
                         //return existing subtitle merge file location
                         return subtitlesMergeFile;
@@ -47,14 +47,14 @@ namespace DisneyDown.Common.Processors.Downloaders.Subtitles
                         if (!string.IsNullOrWhiteSpace(subtitlePlaylistPathUrl))
                         {
                             //report progress
-                            ConsoleWriters.WriteLine($@"[i] Found subtitles manifest: {subtitlePlaylistPathUrl}", ConsoleColor.Green);
+                            ConsoleWriters.ConsoleWriteSuccess($@"Found subtitles manifest: {subtitlePlaylistPathUrl}");
 
                             //create fully-qualified URL for the playlist
                             var masterBaseUri = Methods.GetBaseUrl(masterPlaylistUrl);
                             var subtitlePlaylistFullUrl = $"{masterBaseUri}{subtitlePlaylistPathUrl}";
 
                             //log the download
-                            ConsoleWriters.WriteLine(@"[i] Downloading subtitles manifest", ConsoleColor.Cyan);
+                            ConsoleWriters.ConsoleWriteInfo(@"Downloading subtitles manifest");
 
                             //do the download
                             var subtitlesManifest = ManifestParsers.DownloadManifest(subtitlePlaylistFullUrl);
@@ -65,22 +65,22 @@ namespace DisneyDown.Common.Processors.Downloaders.Subtitles
                         else
 
                             //report error
-                            ConsoleWriters.WriteLine(@"[!] Subtitles download failed; subtitles playlist URL was null", ConsoleColor.Red);
+                            ConsoleWriters.ConsoleWriteError(@"Subtitles download failed; subtitles playlist URL was null");
                     }
                     else
 
                         //report error; subtitles cannot be downloaded in exclusive mode
-                        ConsoleWriters.WriteLine("\n[!] Subtitles download failed; subtitles cannot be downloaded in exclusive mode\n", ConsoleColor.Red);
+                        ConsoleWriters.ConsoleWriteError("Subtitles download failed; subtitles cannot be downloaded in exclusive mode\n");
                 }
                 else
 
                     //report error
-                    ConsoleWriters.WriteLine(@"[!] Subtitles download failed; master playlist does not conform", ConsoleColor.Red);
+                    ConsoleWriters.ConsoleWriteError(@"Subtitles download failed; master playlist does not conform");
             }
             catch (Exception ex)
             {
                 //report error
-                ConsoleWriters.WriteLine($@"[!] Subtitles download error: {ex.Message}", ConsoleColor.Red);
+                ConsoleWriters.ConsoleWriteError($@"Subtitles download error: {ex.Message}");
             }
 
             //default
@@ -106,8 +106,8 @@ namespace DisneyDown.Common.Processors.Downloaders.Subtitles
                         @"[Subtitles]");
 
                     //report success
-                    ConsoleWriters.WriteLine(
-                        $"\n[i] Successfully downloaded subtitles data to: {savedDirectory}\n", ConsoleColor.Green);
+                    ConsoleWriters.ConsoleWriteSuccess(
+                        $"Successfully downloaded subtitles data to: {savedDirectory}\n");
 
                     //stop measuring audio download time
                     Timers.StopTimer(Timers.Generic.SubtitlesDownloadTimer);
@@ -118,11 +118,12 @@ namespace DisneyDown.Common.Processors.Downloaders.Subtitles
                 else
 
                     //report error
-                    ConsoleWriters.WriteLine(@"[!] Subtitles download failed; subtitles manifest does not conform", ConsoleColor.Red);
+                    ConsoleWriters.ConsoleWriteError(@"Subtitles download failed; subtitles manifest does not conform");
             }
-            catch
+            catch (Exception ex)
             {
-                //nothing
+                //report error
+                ConsoleWriters.ConsoleWriteError($"Subtitles download error: {ex.Message}");
             }
 
             //stop measuring audio download time

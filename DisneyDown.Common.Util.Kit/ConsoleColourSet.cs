@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DisneyDown.Common.Util.Kit.Enums;
+using System;
 
 namespace DisneyDown.Common.Util.Kit
 {
@@ -10,28 +11,76 @@ namespace DisneyDown.Common.Util.Kit
             Console.BackgroundColor = ConsoleColor.Black;
         }
 
-        public static void ConsoleColourRed()
+        public static void ConsoleColourRed(ConsoleWriterColouringMode m)
         {
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.BackgroundColor = ConsoleColor.Red;
+            switch (m)
+            {
+                case ConsoleWriterColouringMode.BackColour:
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.BackgroundColor = ConsoleColor.Red;
+
+                    break;
+
+                case ConsoleWriterColouringMode.ForeColour:
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.BackgroundColor = ConsoleColor.Black;
+
+                    break;
+            }
         }
 
-        public static void ConsoleColourOcr()
+        public static void ConsoleColourOcr(ConsoleWriterColouringMode m)
         {
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.BackgroundColor = ConsoleColor.DarkYellow;
+            switch (m)
+            {
+                case ConsoleWriterColouringMode.BackColour:
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.BackgroundColor = ConsoleColor.DarkYellow;
+
+                    break;
+
+                case ConsoleWriterColouringMode.ForeColour:
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    Console.BackgroundColor = ConsoleColor.Black;
+
+                    break;
+            }
         }
 
-        public static void ConsoleColourGrn()
+        public static void ConsoleColourGrn(ConsoleWriterColouringMode m)
         {
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.BackgroundColor = ConsoleColor.DarkGreen;
+            switch (m)
+            {
+                case ConsoleWriterColouringMode.BackColour:
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.BackgroundColor = ConsoleColor.DarkGreen;
+
+                    break;
+
+                case ConsoleWriterColouringMode.ForeColour:
+                    Console.ForegroundColor = ConsoleColor.DarkGreen;
+                    Console.BackgroundColor = ConsoleColor.Black;
+
+                    break;
+            }
         }
 
-        public static void ConsoleColourBlu()
+        public static void ConsoleColourBlu(ConsoleWriterColouringMode m)
         {
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.BackgroundColor = ConsoleColor.Blue;
+            switch (m)
+            {
+                case ConsoleWriterColouringMode.BackColour:
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.BackgroundColor = ConsoleColor.Cyan;
+
+                    break;
+
+                case ConsoleWriterColouringMode.ForeColour:
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.BackgroundColor = ConsoleColor.Black;
+
+                    break;
+            }
         }
     }
 }

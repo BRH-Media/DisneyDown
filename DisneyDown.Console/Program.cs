@@ -50,12 +50,12 @@ namespace DisneyDown.Console
                 else
 
                     //report error
-                    ConsoleWriters.Write(@"[!] Playback failed; file does not exist.", ConsoleColor.Red);
+                    ConsoleWriters.ConsoleWriteError(@"Playback failed; file does not exist.");
             }
             catch (Exception ex)
             {
                 //report error
-                ConsoleWriters.WriteLine($@"[!] Content playback error: {ex.Message}", ConsoleColor.Red);
+                ConsoleWriters.ConsoleWriteError($@"Content playback error: {ex.Message}");
             }
         }
 
@@ -90,7 +90,7 @@ namespace DisneyDown.Console
             catch (Exception ex)
             {
                 //report error
-                ConsoleWriters.WriteLine($"[!] Output file name parse error: {ex.Message}", ConsoleColor.Red);
+                ConsoleWriters.ConsoleWriteError($"Output file name parse error: {ex.Message}");
             }
 
             //default
@@ -102,50 +102,58 @@ namespace DisneyDown.Console
         /// </summary>
         private static void PrintUsage()
         {
-            //square-bracket list of all arguments
-            var argumentList = @"";
-
-            //generate the argument square-bracket list
-            foreach (var a in Args.Definitions)
+            try
             {
-                //argument format
-                var argument = $"[{a.Key}]";
+                //square-bracket list of all arguments
+                var argumentList = @"";
 
-                //append the argument
-                argumentList += $"{argument} ";
-            }
+                //generate the argument square-bracket list
+                foreach (var a in Args.Definitions)
+                {
+                    //argument format
+                    var argument = $"[{a.Key}]";
 
-            //trim any trailing spaces
-            argumentList = argumentList.TrimEnd(' ');
+                    //append the argument
+                    argumentList += $"{argument} ";
+                }
 
-            //program name and argument summary
-            System.Console.WriteLine(
-                $"{ExecutableName}\n\nwidevine_hex_key master_manifest_URL [output_file_name] {argumentList}");
-            System.Console.WriteLine("\n options:");
+                //trim any trailing spaces
+                argumentList = argumentList.TrimEnd(' ');
 
-            //print hard-coded parameter definitions
-            System.Console.WriteLine(
-                @"  widevine_hex_key    - 32 character content decryption key");
-            System.Console.WriteLine(
-                @"  master_manifest_URL - m3u8 master manifest URL; do not input a locally available manifest");
-            System.Console.WriteLine(
-                @"  output_file_name    - Name of the remuxed file in the .\output folder");
-
-            //hard-coded line length of each argument name
-            const int lineLength = 19;
-
-            //go through each argument definition
-            foreach (var a in Args.Definitions)
-            {
-                //whitespace to append
-                var whitespace = new string(' ', lineLength - a.Key.Length);
-
-                //argument name line to prepend
-                var argumentLine = $@"{a.Key}{whitespace}";
-
-                //print the argument itself and its description
+                //program name and argument summary
                 System.Console.WriteLine(
-                    $@"  {argumentLine} - {a.Value}");
+                    $"{ExecutableName}\n\nwidevine_hex_key master_manifest_URL [output_file_name] {argumentList}");
+                System.Console.WriteLine("\n options:");
+
+                //print hard-coded parameter definitions
+                System.Console.WriteLine(
+                    @"  widevine_hex_key    - 32 character content decryption key");
+                System.Console.WriteLine(
+                    @"  master_manifest_URL - m3u8 master manifest URL; do not input a locally available manifest");
+                System.Console.WriteLine(
+                    @"  output_file_name    - Name of the remuxed file in the .\output folder");
+
+                //hard-coded line length of each argument name
+                const int lineLength = 19;
+
+                //go through each argument definition
+                foreach (var a in Args.Definitions)
+                {
+                    //whitespace to append
+                    var whitespace = new string(' ', lineLength - a.Key.Length);
+
+                    //argument name line to prepend
+                    var argumentLine = $@"{a.Key}{whitespace}";
+
+                    //print the argument itself and its description
+                    System.Console.WriteLine(
+                        $@"  {argumentLine} - {a.Value}");
+                }
+            }
+            catch (Exception ex)
+            {
+                //report error
+                ConsoleWriters.ConsoleWriteError($"Print usage error: {ex.Message}");
             }
         }
 
@@ -155,58 +163,67 @@ namespace DisneyDown.Console
         /// <param name="args"></param>
         private static void Main(string[] args)
         {
-            //main execution timer start
-            Timers.StartTimer(Timers.Generic.ExecutionTimer);
-
-            //verify arguments
-            if (args.Length < 2
-                || args.Contains(@"-?")
-                || args.Contains(@"-help")
-                || args.Contains(@"-h"))
-
-                //help information
-                PrintUsage();
-            else
+            try
             {
-                //make sure -a and -v are not used together
-                if (Args.AudioOnlyMode && Args.VideoOnlyMode)
+                //main execution timer start
+                Timers.StartTimer(Timers.Generic.ExecutionTimer);
 
-                    //alert the user to the problem
-                    System.Console.WriteLine("\n-a and -v flags cannot be combined; this would result in a null output.");
+                //verify arguments
+                if (args.Length < 2
+                    || args.Contains(@"-?")
+                    || args.Contains(@"-help")
+                    || args.Contains(@"-h"))
+
+                    //help information
+                    PrintUsage();
                 else
                 {
-                    //set required globals
-                    Strings.DecryptionKey = args[0];
-                    Strings.ManifestUrl = args[1];
-                    Strings.OutFileName = GetOutputFileName(args);
+                    //make sure -a and -v are not used together
+                    if (Args.AudioOnlyMode && Args.VideoOnlyMode)
 
-                    //begin
-                    var outFile = MainProcessor.StartProcessor();
-
-                    //validation
-                    if (!string.IsNullOrWhiteSpace(outFile))
+                        //alert the user to the problem
+                        System.Console.WriteLine(
+                            "\n-a and -v flags cannot be combined; this would result in a null output.");
+                    else
                     {
-                        //report finality
-                        System.Console.WriteLine("\nDone! Play now? (y/n)");
+                        //set required globals
+                        Strings.DecryptionKey = args[0];
+                        Strings.ManifestUrl = args[1];
+                        Strings.OutFileName = GetOutputFileName(args);
 
-                        //read the console line
-                        var response = System.Console.ReadLine();
+                        //begin
+                        var outFile = MainProcessor.StartProcessor();
 
-                        //figure out the response
-                        if (response == @"y")
-                            PlayContent(outFile);
+                        //validation
+                        if (!string.IsNullOrWhiteSpace(outFile))
+                        {
+                            //report finality
+                            System.Console.WriteLine("\nDone! Play now? (y/n)");
+
+                            //read the console line
+                            var response = System.Console.ReadLine();
+
+                            //figure out the response
+                            if (response == @"y")
+                                PlayContent(outFile);
+                        }
+
+                        //main execution timer stop
+                        Timers.StopTimer(Timers.Generic.ExecutionTimer);
+
+                        //line break for timings
+                        if (Timers.TimersEnabled)
+                            System.Console.WriteLine();
+
+                        //report all diagnostics timings
+                        Timers.ReportTimers();
                     }
-
-                    //main execution timer stop
-                    Timers.StopTimer(Timers.Generic.ExecutionTimer);
-
-                    //line break for timings
-                    if (Timers.TimersEnabled)
-                        System.Console.WriteLine();
-
-                    //report all diagnostics timings
-                    Timers.ReportTimers();
                 }
+            }
+            catch (Exception ex)
+            {
+                //report error
+                ConsoleWriters.ConsoleWriteError($"Main system error: {ex.Message}");
             }
         }
     }

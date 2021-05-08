@@ -33,7 +33,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
                     var audioMapUrl = $"{audioBaseUri}{audioMapPath}";
 
                     //report status
-                    ConsoleWriters.WriteLine($@"[i] Downloading bumper audio MPEG-4 init segment: {audioMapUrl}", ConsoleColor.Cyan);
+                    ConsoleWriters.ConsoleWriteInfo($@"Downloading bumper audio MPEG-4 init segment: {audioMapUrl}");
 
                     //download the bumper audio map
                     var audioMap = ResourceGrab.GrabBytes(audioMapUrl);
@@ -45,7 +45,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
                         File.WriteAllBytes(encryptedBumperAudioFile, audioMap);
 
                         //start segments download
-                        ConsoleWriters.WriteLine(@"[i] Audio bumper init data saved successfully; starting segments download", ConsoleColor.Cyan);
+                        ConsoleWriters.ConsoleWriteInfo(@"Audio bumper init data saved successfully; starting segments download");
 
                         //do download
                         SegmentHandlers.DownloadAllMpegSegments(playlist, audioBaseUri,
@@ -53,8 +53,8 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
                             @"[Bumper Audio]");
 
                         //report success
-                        ConsoleWriters.WriteLine(
-                            $"\n[i] Successfully downloaded bumper audio data to: {encryptedBumperAudioFile}\n", ConsoleColor.Green);
+                        ConsoleWriters.ConsoleWriteSuccess(
+                            $"Successfully downloaded bumper audio data to: {encryptedBumperAudioFile}\n");
 
                         //stop measuring bumper audio download time
                         Timers.StopTimer(Timers.Bumper.BumperAudioDownloadTimer);
@@ -65,17 +65,17 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
                     else
 
                         //map file was null
-                        ConsoleWriters.WriteLine(@"Bumper audio download failed; audio init segment data was null", ConsoleColor.Red);
+                        ConsoleWriters.ConsoleWriteError(@"Bumper audio download failed; audio init segment data was null");
                 }
                 else
 
                     //no bumper media detected
-                    ConsoleWriters.WriteLine(@"Bumper audio download failed; content does not contain the Disney+ bumper intro", ConsoleColor.Red);
+                    ConsoleWriters.ConsoleWriteError(@"Bumper audio download failed; content does not contain the Disney+ bumper intro");
             }
             catch (Exception ex)
             {
                 //report error
-                ConsoleWriters.WriteLine($"Bumper audio download error: {ex}", ConsoleColor.Red);
+                ConsoleWriters.ConsoleWriteError($"Bumper audio download error: {ex}");
             }
 
             //stop measuring bumper audio download time

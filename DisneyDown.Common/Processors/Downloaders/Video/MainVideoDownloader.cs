@@ -35,7 +35,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
                     //if the file already exists, simply return it and don't try and re-download it
                     if (File.Exists(encryptedVideoFile))
                     {
-                        ConsoleWriters.WriteLine($@"[i] Using existing {encryptedVideoFile}; download skipped", ConsoleColor.Cyan);
+                        ConsoleWriters.ConsoleWriteInfo($@"Using existing {encryptedVideoFile}; download skipped");
                         return encryptedVideoFile;
                     }
 
@@ -48,14 +48,14 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
                         if (!string.IsNullOrWhiteSpace(bestVideoPlaylistPath))
                         {
                             //report progress
-                            ConsoleWriters.WriteLine($@"[i] Found best video quality manifest: {qualityRating.QualityName}", ConsoleColor.Green);
+                            ConsoleWriters.ConsoleWriteSuccess($@"Found best video quality manifest: {qualityRating.QualityName}");
 
                             //create fully-qualified URL for the playlist
                             var masterBaseUri = Methods.GetBaseUrl(masterPlaylistUrl);
                             var videoPlaylistUrl = $"{masterBaseUri}{bestVideoPlaylistPath}";
 
                             //report progress
-                            ConsoleWriters.WriteLine(@"[i] Downloading video manifest", ConsoleColor.Cyan);
+                            ConsoleWriters.ConsoleWriteInfo(@"Downloading video manifest");
 
                             //do the download
                             var videoManifest = ManifestParsers.DownloadManifest(videoPlaylistUrl);
@@ -66,7 +66,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
                         else
 
                             //report error
-                            ConsoleWriters.WriteLine(@"[!] Video download failed; video playlist URL was null", ConsoleColor.Red);
+                            ConsoleWriters.ConsoleWriteError(@"Video download failed; video playlist URL was null");
                     }
                     else
 
@@ -76,12 +76,12 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
                 else
 
                     //report error
-                    ConsoleWriters.WriteLine(@"[!] Video download failed; master playlist does not conform", ConsoleColor.Red);
+                    ConsoleWriters.ConsoleWriteError(@"Video download failed; master playlist does not conform");
             }
             catch (Exception ex)
             {
                 //report error
-                ConsoleWriters.WriteLine($@"[!] Video download error: {ex.Message}", ConsoleColor.Red);
+                ConsoleWriters.ConsoleWriteError($@"Video download error: {ex.Message}");
             }
 
             //default
@@ -117,7 +117,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
                         var videoMapUrl = $"{videoBaseUri}{videoMapPath}";
 
                         //download map
-                        ConsoleWriters.WriteLine($@"[i] Downloading video MPEG-4 init segment: {videoMapUrl}", ConsoleColor.Cyan);
+                        ConsoleWriters.ConsoleWriteInfo($@"Downloading video MPEG-4 init segment: {videoMapUrl}");
                         var videoMap = ResourceGrab.GrabBytes(videoMapUrl);
 
                         //validation
@@ -127,7 +127,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
                             File.WriteAllBytes(encryptedVideoFile, videoMap);
 
                             //start segments download
-                            ConsoleWriters.WriteLine(@"[i] Video init data saved successfully; starting segments download", ConsoleColor.Green);
+                            ConsoleWriters.ConsoleWriteSuccess(@"Video init data saved successfully; starting segments download");
 
                             //do download
                             SegmentHandlers.DownloadAllMpegSegments(videoManifest, videoBaseUri,
@@ -135,8 +135,8 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
                                 @"[Main Video]");
 
                             //report success
-                            ConsoleWriters.WriteLine(
-                                $"\n[i] Successfully downloaded video data to: {encryptedVideoFile}\n", ConsoleColor.Green);
+                            ConsoleWriters.ConsoleWriteSuccess(
+                                $"Successfully downloaded video data to: {encryptedVideoFile}\n");
 
                             //stop measuring video download time
                             Timers.StopTimer(Timers.Generic.VideoDownloadTimer);
@@ -147,21 +147,22 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
                         else
 
                             //report error
-                            ConsoleWriters.WriteLine(@"[!] Video download failed; video init segment data was null", ConsoleColor.Red);
+                            ConsoleWriters.ConsoleWriteError(@"Video download failed; video init segment data was null");
                     }
                     else
 
                         //report error
-                        ConsoleWriters.WriteLine(@"[!] Video download failed; video init URL was invalid, null or empty result.", ConsoleColor.Red);
+                        ConsoleWriters.ConsoleWriteError(@"Video download failed; video init URL was invalid, null or empty result.");
                 }
                 else
 
                     //report error
-                    ConsoleWriters.WriteLine(@"[!] Video download failed; video manifest does not conform", ConsoleColor.Red);
+                    ConsoleWriters.ConsoleWriteError(@"Video download failed; video manifest does not conform");
             }
-            catch
+            catch (Exception ex)
             {
-                //nothing
+                //report error
+                ConsoleWriters.ConsoleWriteError($"Video download error: {ex.Message}");
             }
 
             //stop measuring video download time

@@ -34,7 +34,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
                     //if the file already exists, simply return it and don't try and re-download it
                     if (File.Exists(encryptedAudioFile))
                     {
-                        ConsoleWriters.WriteLine($@"[i] Using existing {encryptedAudioFile}; download skipped", ConsoleColor.Cyan);
+                        ConsoleWriters.ConsoleWriteInfo($@"Using existing {encryptedAudioFile}; download skipped");
                         return encryptedAudioFile;
                     }
 
@@ -47,14 +47,14 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
                         if (!string.IsNullOrWhiteSpace(bestAudioPlaylistPath))
                         {
                             //report progress
-                            ConsoleWriters.WriteLine($@"[i] Found best audio quality manifest: {qualityRating.QualityName}", ConsoleColor.Green);
+                            ConsoleWriters.ConsoleWriteInfo($@"Found best audio quality manifest: {qualityRating.QualityName}");
 
                             //create fully-qualified URL for the playlist
                             var masterBaseUri = Methods.GetBaseUrl(masterPlaylistUrl);
                             var audioPlaylistUrl = $"{masterBaseUri}{bestAudioPlaylistPath}";
 
                             //do the download
-                            ConsoleWriters.WriteLine(@"[i] Downloading audio manifest", ConsoleColor.Cyan);
+                            ConsoleWriters.ConsoleWriteInfo(@"Downloading audio manifest");
                             var audioManifest = ManifestParsers.DownloadManifest(audioPlaylistUrl);
 
                             //download processor
@@ -63,7 +63,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
                         else
 
                             //report error
-                            ConsoleWriters.WriteLine(@"[!] Audio download failed; audio playlist URL was null", ConsoleColor.Red);
+                            ConsoleWriters.ConsoleWriteError(@"Audio download failed; audio playlist URL was null");
                     }
                     else
 
@@ -72,12 +72,12 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
                 }
                 else
                     //report error
-                    ConsoleWriters.WriteLine(@"[!] Audio download failed; master playlist does not conform", ConsoleColor.Red);
+                    ConsoleWriters.ConsoleWriteError(@"Audio download failed; master playlist does not conform");
             }
             catch (Exception ex)
             {
                 //report error
-                ConsoleWriters.WriteLine($@"[!] Audio download error: {ex.Message}", ConsoleColor.Red);
+                ConsoleWriters.ConsoleWriteError($@"Audio download error: {ex.Message}");
             }
 
             //default
@@ -113,7 +113,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
                         var audioMapUrl = $"{audioBaseUri}{audioMapPath}";
 
                         //download map
-                        ConsoleWriters.WriteLine($@"[i] Downloading audio MPEG-4 init segment: {audioMapUrl}", ConsoleColor.Cyan);
+                        ConsoleWriters.ConsoleWriteInfo($@"Downloading audio MPEG-4 init segment: {audioMapUrl}");
                         var audioMap = ResourceGrab.GrabBytes(audioMapUrl);
 
                         //validation
@@ -123,7 +123,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
                             File.WriteAllBytes(encryptedAudioFile, audioMap);
 
                             //start segments download
-                            ConsoleWriters.WriteLine(@"[i] Audio init data saved successfully; starting segments download", ConsoleColor.Green);
+                            ConsoleWriters.ConsoleWriteSuccess(@"Audio init data saved successfully; starting segments download");
 
                             //do download
                             SegmentHandlers.DownloadAllMpegSegments(audioManifest, audioBaseUri,
@@ -131,8 +131,8 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
                                 @"[Main Audio]");
 
                             //report success
-                            Console.WriteLine(
-                                $"\n[i] Successfully downloaded audio data to: {encryptedAudioFile}\n", ConsoleColor.Green);
+                            ConsoleWriters.ConsoleWriteSuccess(
+                                $"Successfully downloaded audio data to: {encryptedAudioFile}\n");
 
                             //stop measuring audio download time
                             Timers.StopTimer(Timers.Generic.AudioDownloadTimer);
@@ -143,17 +143,17 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
                         else
 
                             //report error
-                            ConsoleWriters.WriteLine(@"[!] Audio download failed; audio init segment data was null", ConsoleColor.Red);
+                            ConsoleWriters.ConsoleWriteError(@"Audio download failed; audio init segment data was null");
                     }
                     else
 
                         //report error
-                        ConsoleWriters.WriteLine(@"[!] Audio download failed; audio init URL was invalid, null or empty result.", ConsoleColor.Red);
+                        ConsoleWriters.ConsoleWriteError(@"Audio download failed; audio init URL was invalid, null or empty result.");
                 }
                 else
 
                     //report error
-                    ConsoleWriters.WriteLine(@"[!] Audio download failed; audio manifest does not conform", ConsoleColor.Red);
+                    ConsoleWriters.ConsoleWriteError(@"Audio download failed; audio manifest does not conform");
             }
             catch
             {
