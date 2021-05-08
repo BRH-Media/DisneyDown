@@ -4,17 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{127829B8-F399-49E7-BC47-D12138A45FC3}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>DisneyDown.Console</RootNamespace>
-    <AssemblyName>DisneyDown.Console</AssemblyName>
+    <ProjectGuid>{7502C0DF-9E69-4AC3-AF72-F950AFA77962}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DisneyDown.Common.API</RootNamespace>
+    <AssemblyName>DisneyDown.Common.API</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +23,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -32,30 +30,18 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject>DisneyDown.Console.Program</StartupObject>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DisneyDown.Common.Util.Kit\DisneyDown.Common.Util.Kit.csproj">
-      <Project>{1df9eab5-5707-4f5e-8dae-a791c3f3cd42}</Project>
-      <Name>DisneyDown.Common.Util.Kit</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DisneyDown.Common\DisneyDown.Common.csproj">
-      <Project>{a121a22d-a229-4eb5-9d81-908e69ec95ee}</Project>
-      <Name>DisneyDown.Common</Name>
+    <ProjectReference Include="..\DisneyDown.Common.Net\DisneyDown.Common.Net.csproj">
+      <Project>{e8a05637-f1f8-48df-a52f-e17587e832ae}</Project>
+      <Name>DisneyDown.Common.Net</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

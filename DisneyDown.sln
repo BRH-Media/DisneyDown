@@ -13,6 +13,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WidevineLicensor", "Widevin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisneyDown.Common.Parsers.HLS", "DisneyDown.Common.Parsers.HLS\DisneyDown.Common.Parsers.HLS.csproj", "{E72C3DBE-762A-45F4-B85D-439075E74B12}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisneyDown.Common.Net", "DisneyDown.Common.Net\DisneyDown.Common.Net.csproj", "{E8A05637-F1F8-48DF-A52F-E17587E832AE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisneyDown.Common.API", "DisneyDown.Common.API\DisneyDown.Common.API.csproj", "{7502C0DF-9E69-4AC3-AF72-F950AFA77962}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisneyDown.Common.ExternalRetrieval", "DisneyDown.Common.ExternalRetrieval\DisneyDown.Common.ExternalRetrieval.csproj", "{E57471F5-65BE-4997-BE81-EDEF4435313E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisneyDown.Common.Security", "DisneyDown.Common.Security\DisneyDown.Common.Security.csproj", "{35B93821-9759-4B5F-8ADF-C238ED3D0E72}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisneyDown.Common.Util.Kit", "DisneyDown.Common.Util.Kit\DisneyDown.Common.Util.Kit.csproj", "{1DF9EAB5-5707-4F5E-8DAE-A791C3F3CD42}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +49,26 @@ Global
 		{E72C3DBE-762A-45F4-B85D-439075E74B12}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E72C3DBE-762A-45F4-B85D-439075E74B12}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E72C3DBE-762A-45F4-B85D-439075E74B12}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8A05637-F1F8-48DF-A52F-E17587E832AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8A05637-F1F8-48DF-A52F-E17587E832AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8A05637-F1F8-48DF-A52F-E17587E832AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8A05637-F1F8-48DF-A52F-E17587E832AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7502C0DF-9E69-4AC3-AF72-F950AFA77962}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7502C0DF-9E69-4AC3-AF72-F950AFA77962}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7502C0DF-9E69-4AC3-AF72-F950AFA77962}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7502C0DF-9E69-4AC3-AF72-F950AFA77962}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E57471F5-65BE-4997-BE81-EDEF4435313E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E57471F5-65BE-4997-BE81-EDEF4435313E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E57471F5-65BE-4997-BE81-EDEF4435313E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E57471F5-65BE-4997-BE81-EDEF4435313E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35B93821-9759-4B5F-8ADF-C238ED3D0E72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35B93821-9759-4B5F-8ADF-C238ED3D0E72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35B93821-9759-4B5F-8ADF-C238ED3D0E72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35B93821-9759-4B5F-8ADF-C238ED3D0E72}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DF9EAB5-5707-4F5E-8DAE-A791C3F3CD42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DF9EAB5-5707-4F5E-8DAE-A791C3F3CD42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DF9EAB5-5707-4F5E-8DAE-A791C3F3CD42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DF9EAB5-5707-4F5E-8DAE-A791C3F3CD42}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
