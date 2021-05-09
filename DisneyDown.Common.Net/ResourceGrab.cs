@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 
@@ -47,7 +48,10 @@ namespace DisneyDown.Common.Net
                 frame = new ServiceFrame();
 
             //request client
-            var client = new HttpClient(handler);
+            var client = new HttpClient(handler)
+            {
+                Timeout = TimeSpan.FromHours(2)
+            };
 
             //new request message for this session
             var request = new HttpRequestMessage(new HttpMethod(frame.Method), uri);

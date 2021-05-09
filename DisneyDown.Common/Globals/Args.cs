@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
+// ReSharper disable InconsistentNaming
+
 namespace DisneyDown.Common.Globals
 {
     public static class Args
@@ -48,11 +50,23 @@ namespace DisneyDown.Common.Globals
             && (AudioOnlyMode || VideoOnlyMode);
 
         /// <summary>
+        /// Check if ffmpeg.exe exists
+        /// </summary>
+        public static bool FFMpegExists
+            => File.Exists($@"{Strings.AssemblyDirectory}\ffmpeg.exe");
+
+        /// <summary>
+        /// Check if mp4decrypt.exe exists
+        /// </summary>
+        public static bool MP4DecryptExists
+            => File.Exists($@"{Strings.AssemblyDirectory}\mp4decrypt.exe");
+
+        /// <summary>
         /// Verifies the existence of ffmpeg and bento4 mp4decrypt.
         /// </summary>
         /// <returns></returns>
         public static bool CheckRequiredExecutables
-            => File.Exists(@"ffmpeg.exe")
-               && File.Exists(@"mp4decrypt.exe");
+            => FFMpegExists &&
+               MP4DecryptExists;
     }
 }

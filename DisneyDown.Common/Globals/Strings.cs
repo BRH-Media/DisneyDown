@@ -1,4 +1,8 @@
-﻿namespace DisneyDown.Common.Globals
+﻿using System;
+using System.IO;
+using System.Reflection;
+
+namespace DisneyDown.Common.Globals
 {
     public static class Strings
     {
@@ -36,5 +40,19 @@
         /// Global storage for the remuxed file name
         /// </summary>
         public static string OutFileName { get; set; } = @"decryptedDisney.mkv";
+
+        /// <summary>
+        /// Current directory of the DisneyDown executable
+        /// </summary>
+        public static string AssemblyDirectory
+        {
+            get
+            {
+                var codeBase = Assembly.GetExecutingAssembly().CodeBase;
+                var uri = new UriBuilder(codeBase);
+                var path = Uri.UnescapeDataString(uri.Path);
+                return Path.GetDirectoryName(path);
+            }
+        }
     }
 }

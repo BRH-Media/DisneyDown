@@ -1,4 +1,5 @@
-﻿using DisneyDown.Common.Util.Kit;
+﻿using DisneyDown.Common.Globals;
+using DisneyDown.Common.Util.Kit;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -26,9 +27,9 @@ namespace DisneyDown.Common.Processors
         {
             try
             {
-                const string FILE_NAME = @"mp4decrypt.exe";
+                var fileName = $@"{Strings.AssemblyDirectory}\mp4decrypt.exe";
 
-                if (File.Exists(FILE_NAME))
+                if (File.Exists(fileName))
                 {
                     if (!File.Exists(outputFile) || forceOverwrite)
                     {
@@ -37,7 +38,7 @@ namespace DisneyDown.Common.Processors
                         {
                             StartInfo =
                             {
-                                FileName = FILE_NAME,
+                                FileName = fileName,
                                 WindowStyle = ProcessWindowStyle.Hidden,
                                 Arguments = $"--key 1:{key} --show-progress \"{inputFile}\" \"{outputFile}\""
                             }
@@ -57,12 +58,12 @@ namespace DisneyDown.Common.Processors
                 else
 
                     //report error
-                    ConsoleWriters.ConsoleWriteError($"Couldn't decrypt because {FILE_NAME} was not found");
+                    ConsoleWriters.ConsoleWriteError($"Couldn't decrypt because {fileName} was not found");
             }
             catch (Exception ex)
             {
                 //report error
-                ConsoleWriters.ConsoleWriteError($"Decryption error:\n\n{ex.Message}");
+                ConsoleWriters.ConsoleWriteError($"Decryption error: {ex.Message}");
             }
         }
 
@@ -77,10 +78,10 @@ namespace DisneyDown.Common.Processors
             try
             {
                 //FFMPEG executable
-                const string FILE_NAME = @"ffmpeg.exe";
+                var fileName = $@"{Strings.AssemblyDirectory}\ffmpeg.exe";
 
                 //does FFMPEG exist?
-                if (File.Exists(FILE_NAME))
+                if (File.Exists(fileName))
                 {
                     //if the output file doesn't exist or an overwrite is forced
                     if (!File.Exists(outputFile) || forceOverwrite)
@@ -93,7 +94,7 @@ namespace DisneyDown.Common.Processors
                         {
                             StartInfo =
                             {
-                                FileName = FILE_NAME,
+                                FileName = fileName,
                                 WindowStyle = ProcessWindowStyle.Hidden,
                                 Arguments = $"{inputFileString.TrimStart(' ')} -c copy \"{outputFile}\""
                             }
@@ -113,12 +114,12 @@ namespace DisneyDown.Common.Processors
                 else
 
                     //report error
-                    ConsoleWriters.ConsoleWriteError($"Couldn't remux because {FILE_NAME} was not found");
+                    ConsoleWriters.ConsoleWriteError($"Couldn't remux because {fileName} was not found");
             }
             catch (Exception ex)
             {
                 //report error
-                ConsoleWriters.ConsoleWriteError($"FFMPEG Remux error:\n\n{ex}");
+                ConsoleWriters.ConsoleWriteError($"FFMPEG Remux error: {ex}");
             }
         }
 
@@ -160,10 +161,10 @@ namespace DisneyDown.Common.Processors
                 var tmpListFile = $@"{Path.GetDirectoryName(outputFile)}\mergeDef";
 
                 //FFMPEG executable to run
-                const string FILE_NAME = @"ffmpeg.exe";
+                var fileName = $@"{Strings.AssemblyDirectory}\ffmpeg.exe";
 
                 //ensure FFMPEG exists
-                if (File.Exists(FILE_NAME))
+                if (File.Exists(fileName))
                 {
                     //ensure the file doesn't get overwritten (unless the flag is provided to be true)
                     if (!File.Exists(outputFile) || forceOverwrite)
@@ -176,7 +177,7 @@ namespace DisneyDown.Common.Processors
                         {
                             StartInfo =
                             {
-                                FileName = FILE_NAME,
+                                FileName = fileName,
                                 WindowStyle = ProcessWindowStyle.Hidden,
                                 Arguments = $"-f concat -safe 0 -i \"{tmpListFile}\" -c copy \"{outputFile}\""
                             }
@@ -200,12 +201,12 @@ namespace DisneyDown.Common.Processors
                 else
 
                     //report error
-                    ConsoleWriters.ConsoleWriteError($"Couldn't concat remux because {FILE_NAME} was not found");
+                    ConsoleWriters.ConsoleWriteError($"Couldn't concat remux because {fileName} was not found");
             }
             catch (Exception ex)
             {
                 //report error
-                ConsoleWriters.ConsoleWriteError($"FFMPEG Concat remux error:\n\n{ex}");
+                ConsoleWriters.ConsoleWriteError($"FFMPEG Concat remux error: {ex}");
             }
         }
     }

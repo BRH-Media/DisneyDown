@@ -59,6 +59,10 @@
     <Compile Include="Util\Diagnostics\Timers.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DisneyDown.Common.ExternalRetrieval\DisneyDown.Common.ExternalRetrieval.csproj">
+      <Project>{e57471f5-65be-4997-be81-edef4435313e}</Project>
+      <Name>DisneyDown.Common.ExternalRetrieval</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DisneyDown.Common.Net\DisneyDown.Common.Net.csproj">
       <Project>{e8a05637-f1f8-48df-a52f-e17587e832ae}</Project>
       <Name>DisneyDown.Common.Net</Name>
