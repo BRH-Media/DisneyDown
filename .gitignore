@@ -338,3 +338,11 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+
+ # Archives and storage images
+*.zip
+*.7z
+*.tar.gz
+*.rar
+*.iso
+*.img
