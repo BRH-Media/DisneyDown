@@ -338,4 +338,15 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+<<<<<<< HEAD
 /Obfuscation.crproj
+=======
+
+ # Archives and storage images
+*.zip
+*.7z
+*.tar.gz
+*.rar
+*.iso
+*.img
+>>>>>>> a4b1424fbed12024c9df9f34816cc7000eb74388
