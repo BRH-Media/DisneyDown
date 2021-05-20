@@ -17,7 +17,7 @@ namespace DisneyDown.Common.ExternalRetrieval
                 if (string.IsNullOrWhiteSpace(extractDir))
 
                     //set default value
-                    extractDir = Endpoints.AssemblyDirectory;
+                    extractDir = Globals.AssemblyDirectory;
 
                 //null validation
                 if (archiveData?.Length > 0 && !string.IsNullOrWhiteSpace(fileName) && Directory.Exists(extractDir))

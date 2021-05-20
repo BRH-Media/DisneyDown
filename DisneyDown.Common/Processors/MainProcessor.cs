@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DisneyDown.Common.ExternalRetrieval.Modules;
 
 // ReSharper disable UnusedVariable
 // ReSharper disable UnusedMember.Global

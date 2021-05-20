@@ -7,7 +7,7 @@ using DisneyDown.Common.Security;
 using DisneyDown.Common.Util.Kit;
 using System;
 
-namespace DisneyDown.Common.ExternalRetrieval
+namespace DisneyDown.Common.ExternalRetrieval.Modules
 {
     public static class FFMpeg
     {
@@ -15,6 +15,9 @@ namespace DisneyDown.Common.ExternalRetrieval
         {
             try
             {
+                //first step is XML endpoints extraction
+                Endpoints.EnsureXml();
+
                 //download archive
                 var archive = FetchArchive();
 
@@ -56,13 +59,13 @@ namespace DisneyDown.Common.ExternalRetrieval
             try
             {
                 //validation
-                if (!string.IsNullOrWhiteSpace(Endpoints.FFMpegDownloadUrl))
+                if (!string.IsNullOrWhiteSpace(Globals.SystemEndpoints.FFMpegDownloadUrl))
                 {
                     //report download
                     ConsoleWriters.ConsoleWriteInfo(@"Downloading FFMPEG...");
 
                     //perform download
-                    var ffmpeg = ResourceGrab.GrabBytes(Endpoints.FFMpegDownloadUrl);
+                    var ffmpeg = ResourceGrab.GrabBytes(Globals.SystemEndpoints.FFMpegDownloadUrl);
 
                     //validation
                     if (ffmpeg?.Length > 0)
@@ -77,13 +80,13 @@ namespace DisneyDown.Common.ExternalRetrieval
                         ConsoleWriters.ConsoleWriteInfo(@"Retrieving valid checksum...");
 
                         //valid checksum retrieval
-                        var validChecksum = ResourceGrab.GrabString(Endpoints.FFMpegChecksumUrl);
+                        var validChecksum = ResourceGrab.GrabString(Globals.SystemEndpoints.FFMpegChecksumUrl);
 
                         //report comparison of checksums
                         ConsoleWriters.ConsoleWriteInfo(@"Comparing checksums...");
 
                         //checksum comparison
-                        var valid = string.Equals(checksum, validChecksum, StringComparison.CurrentCultureIgnoreCase); ;
+                        var valid = string.Equals(checksum, validChecksum, StringComparison.CurrentCultureIgnoreCase);
 
                         //report result
                         if (valid)

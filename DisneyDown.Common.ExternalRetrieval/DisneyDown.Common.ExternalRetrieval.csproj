@@ -35,12 +35,15 @@
     <Reference Include="System.Core" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArchiveHandler.cs" />
     <Compile Include="Endpoints.cs" />
-    <Compile Include="FFMpeg.cs" />
-    <Compile Include="MP4Decrypt.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="Modules\FFMpeg.cs" />
+    <Compile Include="Globals.cs" />
+    <Compile Include="Modules\MP4Decrypt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -57,5 +60,6 @@
       <Name>DisneyDown.Common.Util.Kit</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
