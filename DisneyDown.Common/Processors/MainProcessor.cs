@@ -1,4 +1,4 @@
-﻿using DisneyDown.Common.ExternalRetrieval;
+﻿using DisneyDown.Common.ExternalRetrieval.Modules;
 using DisneyDown.Common.Globals;
 using DisneyDown.Common.Parsers;
 using DisneyDown.Common.Processors.Downloaders.Audio;
@@ -11,7 +11,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DisneyDown.Common.ExternalRetrieval.Modules;
 
 // ReSharper disable UnusedVariable
 // ReSharper disable UnusedMember.Global
@@ -311,8 +310,8 @@ namespace DisneyDown.Common.Processors
                                 if (ManifestParsers.MasterValid(masterPlaylist) || Args.ExclusiveMode)
                                 {
                                     //directories for temporary storage
-                                    const string baseOutputDir = @"output";
-                                    const string baseWorkingDir = @"tmp";
+                                    var baseOutputDir = $@"{Strings.AssemblyDirectory}\output";
+                                    var baseWorkingDir = $@"{Strings.AssemblyDirectory}\tmp";
 
                                     //unique hash for master manifest URL (MD5)
                                     var masterManifestHash = Md5Helper.CalculateMd5Hash(Strings.ManifestUrl);
@@ -320,6 +319,9 @@ namespace DisneyDown.Common.Processors
                                     //actual working directory
                                     var workingDir = $@"{baseWorkingDir}\{masterManifestHash}";
                                     var outputDir = $@"{baseOutputDir}\{masterManifestHash}";
+
+                                    //output key file path (for debugging)
+                                    var keyFilePath = $@"{workingDir}\key";
 
                                     //output file path
                                     var outputFile = $@"{outputDir}\{Strings.OutFileName}";
@@ -331,6 +333,9 @@ namespace DisneyDown.Common.Processors
                                     //ensure the temporary working directory exists
                                     if (!Directory.Exists(workingDir))
                                         Directory.CreateDirectory(workingDir);
+
+                                    //output key file (for debugging)
+                                    File.WriteAllText(keyFilePath, Strings.DecryptionKey);
 
                                     //decrypted outputs
                                     var decryptedAudio = @"";

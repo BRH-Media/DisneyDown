@@ -15,14 +15,21 @@ namespace DisneyDown.Common.ExternalRetrieval
         public string FFMpegChecksumUrl { get; set; } = @"https://www.gyan.dev/ffmpeg/builds/sha256-release-essentials-zip";
         public string MP4DecryptDownloadUrl { get; set; } = @"http://zebulon.bok.net/Bento4/binaries/Bento4-SDK-1-6-0-637.x86_64-microsoft-win32.zip";
         public string MP4DecryptChecksum { get; set; } = @"a60f19aedcdfd9bc7a9fc6a4c7587fefb4c59273";
+        public static string XmlFileDirectory { get; set; } = $@"{Globals.AssemblyDirectory}\cfg";
 
         public static void EnsureXml()
         {
             //XML file to save/load
             const string file = @"external.xml";
 
+            //does the folder exist yet
+            if (!Directory.Exists(XmlFileDirectory))
+
+                //no, create it
+                Directory.CreateDirectory(XmlFileDirectory);
+
             //file final path
-            var filePath = $@"{Globals.AssemblyDirectory}\{file}";
+            var filePath = $@"{XmlFileDirectory}\{file}";
 
             //does it not already exist?
             if (!File.Exists(filePath))

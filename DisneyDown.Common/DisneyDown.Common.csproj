@@ -33,6 +33,9 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="TagLibSharp, Version=2.2.0.0, Culture=neutral, PublicKeyToken=db62eba44689b5b0, processorArchitecture=MSIL">
+      <HintPath>..\packages\TagLibSharp.2.2.0\lib\net45\TagLibSharp.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Globals\Strings.cs" />
@@ -40,6 +43,7 @@
     <Compile Include="Globals\Verification.cs" />
     <Compile Include="Globals\BandwidthDefinitions.cs" />
     <Compile Include="Parsers\QualityRating.cs" />
+    <Compile Include="Processors\AtomParser\KeyIdExtraction.cs" />
     <Compile Include="Processors\Downloaders\Audio\BumperAudioDownloader.cs" />
     <Compile Include="Processors\Downloaders\Subtitles\MainSubtitlesDownloader.cs" />
     <Compile Include="Processors\Downloaders\Video\BumperVideoDownloader.cs" />
@@ -85,6 +89,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Security\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
