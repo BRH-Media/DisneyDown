@@ -62,11 +62,18 @@ namespace DisneyDown.Common.Globals
             => File.Exists($@"{Strings.AssemblyDirectory}\mp4decrypt.exe");
 
         /// <summary>
+        /// Check if mp4dump.exe exists
+        /// </summary>
+        public static bool MP4DumpExists
+            => File.Exists($@"{Strings.AssemblyDirectory}\mp4dump.exe");
+
+        /// <summary>
         /// Verifies the existence of ffmpeg and bento4 mp4decrypt.
         /// </summary>
         /// <returns></returns>
         public static bool CheckRequiredExecutables
             => FFMpegExists &&
-               MP4DecryptExists;
+               MP4DecryptExists &&
+               MP4DumpExists;
     }
 }

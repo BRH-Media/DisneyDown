@@ -1,4 +1,5 @@
 ﻿using DisneyDown.Common.Globals;
+using DisneyDown.Common.Schemas;
 using DisneyDown.Common.Util.Kit;
 using System;
 using System.Collections.Generic;
@@ -121,6 +122,137 @@ namespace DisneyDown.Common.Processors
                 //report error
                 ConsoleWriters.ConsoleWriteError($"FFMPEG Remux error: {ex}");
             }
+        }
+
+        public static void GetKeyIdFromMp4(string inputFile, string outputFile)
+            => File.WriteAllText(outputFile, GetKeyIdFromMp4(inputFile));
+
+        public static string GetKeyIdFromMp4(string inputFile)
+        {
+            try
+            {
+                //MP4Dump executable
+                var fileName = $@"{Strings.AssemblyDirectory}\mp4dump.exe";
+
+                //does MP4Dump exist?
+                if (File.Exists(fileName))
+                {
+                    //declare MP4Dump executable startup
+                    var process = new Process
+                    {
+                        StartInfo =
+                            {
+                                FileName = fileName,
+                                CreateNoWindow = true,
+                                RedirectStandardOutput = true,
+                                UseShellExecute = false,
+                                Arguments = $"--format json \"{inputFile}\""
+                            }
+                    };
+
+                    //execute MP4Dump
+                    process.Start();
+
+                    //JSON result
+                    var finalJson = "";
+
+                    //capture standard output
+                    while (!process.StandardOutput.EndOfStream)
+                    {
+                        //read in new line
+                        finalJson += process.StandardOutput.ReadLine() + "\n";
+                    }
+
+                    //parse JSON
+                    var jsonObject = Mp4DumpSchema.FromJson(finalJson);
+
+                    //through each atom
+                    foreach (var a in jsonObject)
+                    {
+                        //movie atom
+                        if (a.Name == "moov")
+                        {
+                            foreach (var m in a.Children)
+                            {
+                                //track atom
+                                if (m.Name == "trak")
+                                {
+                                    foreach (var d in m.Children)
+                                    {
+                                        //media atom
+                                        if (d.Name == "mdia")
+                                        {
+                                            foreach (var e in d.Children)
+                                            {
+                                                //media information atom
+                                                if (e.Name == "minf")
+                                                {
+                                                    foreach (var i in e.Children)
+                                                    {
+                                                        //static table atom
+                                                        if (i.Name == "stbl")
+                                                        {
+                                                            foreach (var s in i.Children)
+                                                            {
+                                                                if (s.Name == "stsd")
+                                                                {
+                                                                    foreach (var t in s.Children)
+                                                                    {
+                                                                        if (t.Name == "encv")
+                                                                        {
+                                                                            foreach (var p in t.Children)
+                                                                            {
+                                                                                if (p.Name == "sinf")
+                                                                                {
+                                                                                    foreach (var k in p.Children)
+                                                                                    {
+                                                                                        if (k.Name == "schi")
+                                                                                        {
+                                                                                            foreach (var j in k.Children
+                                                                                            )
+                                                                                            {
+                                                                                                if (j.Name == "tenc")
+                                                                                                {
+                                                                                                    //key ID
+                                                                                                    var rawKeyId =
+                                                                                                        j.DefaultKid.Replace(" ", "").Replace("[", "").Replace("]", "").ToLower();
+
+                                                                                                    //return result
+                                                                                                    return rawKeyId;
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+
+                    //report error
+                    ConsoleWriters.ConsoleWriteError($"Couldn't extract key ID because {fileName} was not found");
+            }
+            catch (Exception ex)
+            {
+                //report error
+                ConsoleWriters.ConsoleWriteError($"MP4Dump extraction error: {ex}");
+            }
+
+            //default value
+            return @"";
         }
 
         private static void WriteMergeList(string filePath, IReadOnlyCollection<string> files)

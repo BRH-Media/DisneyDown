@@ -1,11 +1,12 @@
-﻿// ReSharper disable UnusedMember.Global
-// ReSharper disable ArrangeTypeModifiers
-// ReSharper disable InconsistentNaming
-
-using DisneyDown.Common.Net;
+﻿using DisneyDown.Common.Net;
 using DisneyDown.Common.Security;
 using DisneyDown.Common.Util.Kit;
 using System;
+
+// ReSharper disable UnusedMember.Global
+// ReSharper disable ArrangeTypeModifiers
+// ReSharper disable InconsistentNaming
+// ReSharper disable UnusedVariable
 
 namespace DisneyDown.Common.ExternalRetrieval.Modules
 {
@@ -25,29 +26,29 @@ namespace DisneyDown.Common.ExternalRetrieval.Modules
                 if (archive?.Length > 0)
                 {
                     //report extraction
-                    ConsoleWriters.ConsoleWriteInfo(@"Extracting MP4Decrypt...");
+                    ConsoleWriters.ConsoleWriteInfo(@"Extracting MP4Decrypt and MP4Dump...");
 
                     //required constants
-                    const string fileName = @"mp4decrypt.exe";
+                    const string mp4DecryptFileName = @"mp4decrypt.exe";
+                    const string mp4DumpFileName = @"mp4dump.exe";
 
                     //execute extraction
-                    if (ArchiveHandler.ExtractSingleFile(archive, fileName))
+                    if (ArchiveHandler.ExtractSingleFile(archive, mp4DecryptFileName) && ArchiveHandler.ExtractSingleFile(archive, mp4DumpFileName))
                     {
                         //report success
-                        ConsoleWriters.ConsoleWriteSuccess(@"MP4Decrypt successfully extracted");
+                        ConsoleWriters.ConsoleWriteSuccess(@"MP4Decrypt and MP4Dump successfully extracted");
 
-                        //success
                         return true;
                     }
 
                     //report failure
-                    ConsoleWriters.ConsoleWriteError(@"MP4Decrypt extraction failed");
+                    ConsoleWriters.ConsoleWriteError(@"MP4Decrypt and MP4Dump extraction failed");
                 }
             }
             catch (Exception ex)
             {
                 //report error
-                ConsoleWriters.ConsoleWriteError($"MP4Decrypt download and extract error: {ex.Message}");
+                ConsoleWriters.ConsoleWriteError($"MP4Decrypt and MP4Dump download and extract error: {ex.Message}");
             }
 
             //default
@@ -62,7 +63,7 @@ namespace DisneyDown.Common.ExternalRetrieval.Modules
                 if (!string.IsNullOrWhiteSpace(Globals.SystemEndpoints.MP4DecryptDownloadUrl))
                 {
                     //report download
-                    ConsoleWriters.ConsoleWriteInfo(@"Downloading MP4Decrypt...");
+                    ConsoleWriters.ConsoleWriteInfo(@"Downloading MP4Decrypt and MP4Dump...");
 
                     //perform download
                     var mp4decrypt = ResourceGrab.GrabBytes(Globals.SystemEndpoints.MP4DecryptDownloadUrl);
@@ -92,11 +93,11 @@ namespace DisneyDown.Common.ExternalRetrieval.Modules
                         if (valid)
 
                             //successful download
-                            ConsoleWriters.ConsoleWriteSuccess(@"MP4Decrypt successfully downloaded");
+                            ConsoleWriters.ConsoleWriteSuccess(@"MP4Decrypt and MP4Dump successfully downloaded");
                         else
 
                             //download error
-                            ConsoleWriters.ConsoleWriteError(@"MP4Decrypt download error: checksums do not match");
+                            ConsoleWriters.ConsoleWriteError(@"MP4Decrypt and MP4Dump download error: checksums do not match");
 
                         //result
                         return valid ? mp4decrypt : null;
@@ -106,7 +107,7 @@ namespace DisneyDown.Common.ExternalRetrieval.Modules
             catch (Exception ex)
             {
                 //report error
-                ConsoleWriters.ConsoleWriteError($"MP4Decrypt download error: {ex}");
+                ConsoleWriters.ConsoleWriteError($"MP4Decrypt and MP4Dump download error: {ex}");
             }
 
             //default

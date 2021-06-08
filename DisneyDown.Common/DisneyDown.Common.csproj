@@ -31,11 +31,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="TagLibSharp, Version=2.2.0.0, Culture=neutral, PublicKeyToken=db62eba44689b5b0, processorArchitecture=MSIL">
-      <HintPath>..\packages\TagLibSharp.2.2.0\lib\net45\TagLibSharp.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Globals\Strings.cs" />
@@ -43,11 +43,22 @@
     <Compile Include="Globals\Verification.cs" />
     <Compile Include="Globals\BandwidthDefinitions.cs" />
     <Compile Include="Parsers\QualityRating.cs" />
-    <Compile Include="Processors\AtomParser\KeyIdExtraction.cs" />
     <Compile Include="Processors\Downloaders\Audio\BumperAudioDownloader.cs" />
     <Compile Include="Processors\Downloaders\Subtitles\MainSubtitlesDownloader.cs" />
     <Compile Include="Processors\Downloaders\Video\BumperVideoDownloader.cs" />
     <Compile Include="Processors\SubtitleProcessor.cs" />
+    <Compile Include="Schemas\AmbitiousChild.cs" />
+    <Compile Include="Schemas\Converter.cs" />
+    <Compile Include="Schemas\FluffyChild.cs" />
+    <Compile Include="Schemas\HilariousChild.cs" />
+    <Compile Include="Schemas\IndecentChild.cs" />
+    <Compile Include="Schemas\IndigoChild.cs" />
+    <Compile Include="Schemas\Mp4DumpSchema.cs" />
+    <Compile Include="Schemas\Mp4DumpSchemaChild.cs" />
+    <Compile Include="Schemas\PurpleChild.cs" />
+    <Compile Include="Schemas\Serialize.cs" />
+    <Compile Include="Schemas\StickyChild.cs" />
+    <Compile Include="Schemas\TentacledChild.cs" />
     <Compile Include="Util\Diagnostics\BumperTimers.cs" />
     <Compile Include="Util\Diagnostics\MainTimers.cs" />
     <Compile Include="Util\Extensions.cs" />

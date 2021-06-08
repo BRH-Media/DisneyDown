@@ -245,7 +245,7 @@ namespace DisneyDown.Common.Processors
                 }
 
                 //executable validation
-                if (!Args.MP4DecryptExists)
+                if (!Args.MP4DecryptExists || !Args.MP4DumpExists)
                 {
                     //download and extract MP4Decrypt
                     if (!MP4Decrypt.DownloadAndProcess())

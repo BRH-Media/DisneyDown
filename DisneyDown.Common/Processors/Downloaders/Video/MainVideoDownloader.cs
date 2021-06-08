@@ -129,6 +129,10 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
                             //start segments download
                             ConsoleWriters.ConsoleWriteSuccess(@"Video init data saved successfully; starting segments download");
 
+                            //attempt KID dump
+                            var kidPath = $@"{Path.GetDirectoryName(encryptedVideoFile)}\keyId";
+                            External.GetKeyIdFromMp4(encryptedVideoFile, kidPath);
+
                             //do download
                             SegmentHandlers.DownloadAllMpegSegments(videoManifest, videoBaseUri,
                                 Verification.MainContent, encryptedVideoFile,
