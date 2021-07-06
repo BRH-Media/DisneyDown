@@ -124,8 +124,32 @@ namespace DisneyDown.Common.Processors
             }
         }
 
+        public static void WriteKeyIdFile(string keyId, string outputFile)
+        {
+            try
+            {
+                //ensure valid key ID
+                if (!string.IsNullOrWhiteSpace(keyId) && keyId.Length == 32)
+                {
+                    //ensure directory exists
+                    if (!Directory.Exists(Path.GetDirectoryName(outputFile)))
+
+                        //create it
+                        Directory.CreateDirectory(Path.GetDirectoryName(outputFile) ?? string.Empty);
+
+                    //write
+                    File.WriteAllText(outputFile, keyId);
+                }
+            }
+            catch (Exception ex)
+            {
+                //report error
+                ConsoleWriters.ConsoleWriteError($"Error occurred whilst creating key ID file: {ex}");
+            }
+        }
+
         public static void GetKeyIdFromMp4(string inputFile, string outputFile)
-            => File.WriteAllText(outputFile, GetKeyIdFromMp4(inputFile));
+            => WriteKeyIdFile(GetKeyIdFromMp4(inputFile), outputFile);
 
         public static string GetKeyIdFromMp4(string inputFile)
         {

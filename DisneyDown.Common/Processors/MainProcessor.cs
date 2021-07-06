@@ -319,9 +319,10 @@ namespace DisneyDown.Common.Processors
                                     //actual working directory
                                     var workingDir = $@"{baseWorkingDir}\{masterManifestHash}";
                                     var outputDir = $@"{baseOutputDir}\{masterManifestHash}";
+                                    var keyDir = $@"{baseWorkingDir}\{masterManifestHash}\keyinfo";
 
                                     //output key file path (for debugging)
-                                    var keyFilePath = $@"{workingDir}\key";
+                                    var keyFilePath = $@"{keyDir}\key";
 
                                     //output file path
                                     var outputFile = $@"{outputDir}\{Strings.OutFileName}";
@@ -333,6 +334,10 @@ namespace DisneyDown.Common.Processors
                                     //ensure the temporary working directory exists
                                     if (!Directory.Exists(workingDir))
                                         Directory.CreateDirectory(workingDir);
+
+                                    //ensure the temporary keyinfo directory exists
+                                    if (!Directory.Exists(keyDir))
+                                        Directory.CreateDirectory(keyDir);
 
                                     //output key file (for debugging)
                                     File.WriteAllText(keyFilePath, Strings.DecryptionKey);
@@ -411,7 +416,7 @@ namespace DisneyDown.Common.Processors
                                         External.DoMux(muxInput, outputFile);
 
                                         //report progress
-                                        ConsoleWriters.ConsoleWriteInfo("Main stream remux process completed");
+                                        ConsoleWriters.ConsoleWriteSuccess("Main stream remux process completed");
 
                                         //mux the bumper if allowed
                                         if (Args.DownloadBumperEnabled)

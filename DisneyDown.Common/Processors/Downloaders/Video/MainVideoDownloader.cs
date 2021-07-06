@@ -129,9 +129,24 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
                             //start segments download
                             ConsoleWriters.ConsoleWriteSuccess(@"Video init data saved successfully; starting segments download");
 
-                            //attempt KID dump
-                            var kidPath = $@"{Path.GetDirectoryName(encryptedVideoFile)}\keyId";
-                            External.GetKeyIdFromMp4(encryptedVideoFile, kidPath);
+                            //path to save key ID to
+                            var kidPath = $@"{Path.GetDirectoryName(encryptedVideoFile)}\keyinfo\keyId";
+
+                            //attempt key ID dump
+                            var kid = External.GetKeyIdFromMp4(encryptedVideoFile);
+
+                            //save key ID
+                            External.WriteKeyIdFile(kid, kidPath);
+
+                            //report key ID
+                            ConsoleWriters.ConsoleWriteInfo($"Widevine Key ID: {kid}");
+
+                            //confirmation
+                            ConsoleWriters.WriteLine(@"Confirm key ID is correct");
+                            ConsoleWriters.WriteLine(@"Press any key to continue...");
+
+                            //halt execution
+                            Console.ReadKey();
 
                             //do download
                             SegmentHandlers.DownloadAllMpegSegments(videoManifest, videoBaseUri,
