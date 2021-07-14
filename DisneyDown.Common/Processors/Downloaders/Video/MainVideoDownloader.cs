@@ -135,32 +135,40 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
                             //attempt key ID dump
                             var kid = External.GetKeyIdFromMp4(encryptedVideoFile);
 
-                            //save key ID
-                            External.WriteKeyIdFile(kid, kidPath);
+                            //ensure valid KID
+                            if (!string.IsNullOrWhiteSpace(kid) && kid.Length == 32)
+                            {
+                                //save key ID
+                                External.WriteKeyIdFile(kid, kidPath);
 
-                            //report key ID
-                            ConsoleWriters.ConsoleWriteInfo($"Widevine Key ID: {kid}");
+                                //report key ID
+                                ConsoleWriters.ConsoleWriteInfo($"Widevine Key ID: {kid}");
 
-                            //confirmation
-                            ConsoleWriters.ConsoleWriteQuestion(@"Confirm key ID is correct");
+                                //confirmation
+                                ConsoleWriters.ConsoleWriteQuestion(@"Confirm key ID is correct");
 
-                            //temporarily halt
-                            ConsoleTools.PauseExecution();
+                                //temporarily halt
+                                ConsoleTools.PauseExecution();
 
-                            //do download
-                            SegmentHandlers.DownloadAllMpegSegments(videoManifest, videoBaseUri,
-                                Verification.MainContent, encryptedVideoFile,
-                                @"[Main Video]");
+                                //do download
+                                SegmentHandlers.DownloadAllMpegSegments(videoManifest, videoBaseUri,
+                                    Verification.MainContent, encryptedVideoFile,
+                                    @"[Main Video]");
 
-                            //report success
-                            ConsoleWriters.ConsoleWriteSuccess(
-                                $"Successfully downloaded video data to: {encryptedVideoFile}\n");
+                                //report success
+                                ConsoleWriters.ConsoleWriteSuccess(
+                                    $"Successfully downloaded video data to: {encryptedVideoFile}\n");
 
-                            //stop measuring video download time
-                            Timers.StopTimer(Timers.Generic.VideoDownloadTimer);
+                                //stop measuring video download time
+                                Timers.StopTimer(Timers.Generic.VideoDownloadTimer);
 
-                            //return the saved file path
-                            return encryptedVideoFile;
+                                //return the saved file path
+                                return encryptedVideoFile;
+                            }
+                            else
+
+                                //report error
+                                ConsoleWriters.ConsoleWriteError(@"Failed to retrieve key ID");
                         }
                         else
 

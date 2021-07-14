@@ -5,12 +5,12 @@ using DisneyDown.Common.Processors.Downloaders.Audio;
 using DisneyDown.Common.Processors.Downloaders.Subtitles;
 using DisneyDown.Common.Processors.Downloaders.Video;
 using DisneyDown.Common.Security;
+using DisneyDown.Common.Util;
 using DisneyDown.Common.Util.Diagnostics;
 using DisneyDown.Common.Util.Kit;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 // ReSharper disable UnusedVariable
 // ReSharper disable UnusedMember.Global
@@ -106,8 +106,15 @@ namespace DisneyDown.Common.Processors
                             Strings.ManifestUrl,
                             decryptedAudio);
 
-                    //return decrypted file path
-                    return decryptedAudio;
+                    //validation
+                    if (!string.IsNullOrWhiteSpace(audioFile))
+
+                        //return decrypted file path
+                        return decryptedAudio;
+                    else
+
+                        //report error
+                        ConsoleWriters.ConsoleWriteError(@"Audio processor failed; audio download was unsuccessful");
                 }
                 else
 
@@ -159,33 +166,41 @@ namespace DisneyDown.Common.Processors
                             Strings.ManifestUrl,
                             encryptedVideo);
 
-                    //report progress
-                    ConsoleWriters.ConsoleWriteInfo(@"Attempting decryption on video");
+                    //validation
+                    if (!string.IsNullOrWhiteSpace(videoFile))
+                    {
+                        //report progress
+                        ConsoleWriters.ConsoleWriteInfo(@"Attempting decryption on video");
 
-                    //start measuring video decrypt time
-                    Timers.StartTimer(Timers.Generic.VideoDecryptTimer);
+                        //start measuring video decrypt time
+                        Timers.StartTimer(Timers.Generic.VideoDecryptTimer);
 
-                    //decrypt video stream
-                    External.DoDecrypt(videoFile, decryptedVideo, Strings.DecryptionKey);
+                        //decrypt video stream
+                        External.DoDecrypt(videoFile, decryptedVideo, Strings.DecryptionKey);
 
-                    //stop measuring video decrypt time
-                    Timers.StopTimer(Timers.Generic.VideoDecryptTimer);
+                        //stop measuring video decrypt time
+                        Timers.StopTimer(Timers.Generic.VideoDecryptTimer);
 
-                    //start measuring bumper video decrypt time
-                    Timers.StartTimer(Timers.Bumper.BumperVideoDecryptTimer);
+                        //start measuring bumper video decrypt time
+                        Timers.StartTimer(Timers.Bumper.BumperVideoDecryptTimer);
 
-                    //decrypt bumper (if enabled)
-                    if (Args.DownloadBumperEnabled)
-                        External.DoDecrypt(encryptedBumper, decryptedBumper, Strings.DecryptionKey);
+                        //decrypt bumper (if enabled)
+                        if (Args.DownloadBumperEnabled)
+                            External.DoDecrypt(encryptedBumper, decryptedBumper, Strings.DecryptionKey);
 
-                    //start measuring bumper video decrypt time
-                    Timers.StopTimer(Timers.Bumper.BumperVideoDecryptTimer);
+                        //start measuring bumper video decrypt time
+                        Timers.StopTimer(Timers.Bumper.BumperVideoDecryptTimer);
 
-                    //report progress
-                    ConsoleWriters.ConsoleWriteSuccess(@"Video decryption finished");
+                        //report progress
+                        ConsoleWriters.ConsoleWriteSuccess(@"Video decryption finished");
 
-                    //return decrypted file path
-                    return decryptedVideo;
+                        //return decrypted file path
+                        return decryptedVideo;
+                    }
+                    else
+
+                        //report error
+                        ConsoleWriters.ConsoleWriteError(@"Video processor failed; video download was unsuccessful");
                 }
                 else
 
@@ -206,22 +221,6 @@ namespace DisneyDown.Common.Processors
 
             //default
             return @"";
-        }
-
-        private static bool AllExistInList(IEnumerable<string> inputFiles)
-        {
-            try
-            {
-                //return true only if every single file in the list exists
-                return inputFiles.All(File.Exists);
-            }
-            catch
-            {
-                //nothing
-            }
-
-            //default
-            return false;
         }
 
         public static string StartProcessor()
@@ -398,7 +397,7 @@ namespace DisneyDown.Common.Processors
                                             muxInput.Add(mergedSubtitles);
 
                                     //attempt mux audio and video together (only if the decryption succeeded)
-                                    if (AllExistInList(muxInput))
+                                    if (Methods.AllExistInList(muxInput))
                                     {
                                         //start measuring remux time
                                         Timers.StartTimer(Timers.Generic.RemuxTimer);
@@ -415,7 +414,7 @@ namespace DisneyDown.Common.Processors
                                         //mux the bumper if allowed
                                         if (Args.DownloadBumperEnabled)
                                         {
-                                            if (AllExistInList(muxBumperInput))
+                                            if (Methods.AllExistInList(muxBumperInput))
                                             {
                                                 //report progress
                                                 ConsoleWriters.ConsoleWriteInfo("Attempting bumper stream remux");
