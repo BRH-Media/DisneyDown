@@ -120,12 +120,6 @@ namespace DisneyDown.Common.Processors
                 ConsoleWriters.ConsoleWriteError($@"Audio process error: {ex.Message}");
             }
 
-            //stop measuring audio decrypt time
-            Timers.StopTimer(Timers.Generic.AudioDecryptTimer);
-
-            //stop measuring bumper audio decrypt time
-            Timers.StopTimer(Timers.Bumper.BumperAudioDecryptTimer);
-
             //default
             return @"";
         }

@@ -94,12 +94,10 @@ namespace DisneyDown.Common.Util.Diagnostics
                 StopwatchStringFormat(Generic.VideoDownloadTimer).Length,
                 StopwatchStringFormat(Generic.SubtitlesDownloadTimer).Length,
                 StopwatchStringFormat(Generic.SubtitlesParseTimer).Length,
-                StopwatchStringFormat(Generic.AudioDecryptTimer).Length,
                 StopwatchStringFormat(Generic.VideoDecryptTimer).Length,
                 StopwatchStringFormat(Bumper.BumperRemuxTimer).Length,
                 StopwatchStringFormat(Bumper.BumperAudioDownloadTimer).Length,
                 StopwatchStringFormat(Bumper.BumperVideoDownloadTimer).Length,
-                StopwatchStringFormat(Bumper.BumperAudioDecryptTimer).Length,
                 StopwatchStringFormat(Bumper.BumperVideoDecryptTimer).Length
             };
 
@@ -147,7 +145,6 @@ namespace DisneyDown.Common.Util.Diagnostics
                     Console.WriteLine($"║ Remux Execution         ║ {PadTimerLine(StopwatchStringFormat(Generic.RemuxTimer))} ║");
                     Console.WriteLine($"║ Audio Download          ║ {PadTimerLine(StopwatchStringFormat(Generic.AudioDownloadTimer))} ║");
                     Console.WriteLine($"║ Video Download          ║ {PadTimerLine(StopwatchStringFormat(Generic.VideoDownloadTimer))} ║");
-                    Console.WriteLine($"║ Audio Decrypt           ║ {PadTimerLine(StopwatchStringFormat(Generic.AudioDecryptTimer))} ║");
                     Console.WriteLine($"║ Video Decrypt           ║ {PadTimerLine(StopwatchStringFormat(Generic.VideoDecryptTimer))} ║");
                     Console.WriteLine($"║ Subtitles Download      ║ {PadTimerLine(StopwatchStringFormat(Generic.SubtitlesDownloadTimer))} ║");
                     Console.WriteLine($"║ Subtitles Parse/Merge   ║ {PadTimerLine(StopwatchStringFormat(Generic.SubtitlesParseTimer))} ║");
@@ -165,7 +162,6 @@ namespace DisneyDown.Common.Util.Diagnostics
                         Console.WriteLine($"║ Bumper Concat Execution ║ {PadTimerLine(StopwatchStringFormat(Bumper.BumperConcatTimer))} ║");
                         Console.WriteLine($"║ Bumper Audio Download   ║ {PadTimerLine(StopwatchStringFormat(Bumper.BumperAudioDownloadTimer))} ║");
                         Console.WriteLine($"║ Bumper Video Download   ║ {PadTimerLine(StopwatchStringFormat(Bumper.BumperVideoDownloadTimer))} ║");
-                        Console.WriteLine($"║ Bumper Audio Decrypt    ║ {PadTimerLine(StopwatchStringFormat(Bumper.BumperAudioDecryptTimer))} ║");
                         Console.WriteLine($"║ Bumper Video Decrypt    ║ {PadTimerLine(StopwatchStringFormat(Bumper.BumperVideoDecryptTimer))} ║");
                         Console.WriteLine($"╚═════════════════════════╩═{borderAdd}╝");
                     }

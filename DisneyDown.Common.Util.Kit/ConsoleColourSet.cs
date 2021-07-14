@@ -71,6 +71,24 @@ namespace DisneyDown.Common.Util.Kit
             {
                 case ConsoleWriterColouringMode.BackColour:
                     Console.ForegroundColor = ConsoleColor.White;
+                    Console.BackgroundColor = ConsoleColor.Blue;
+
+                    break;
+
+                case ConsoleWriterColouringMode.ForeColour:
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.BackgroundColor = ConsoleColor.Black;
+
+                    break;
+            }
+        }
+
+        public static void ConsoleColourCyn(ConsoleWriterColouringMode m)
+        {
+            switch (m)
+            {
+                case ConsoleWriterColouringMode.BackColour:
+                    Console.ForegroundColor = ConsoleColor.White;
                     Console.BackgroundColor = ConsoleColor.Cyan;
 
                     break;

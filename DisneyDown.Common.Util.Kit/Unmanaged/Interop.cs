@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace DisneyDown.Common.Util.Kit
+namespace DisneyDown.Common.Util.Kit.Unmanaged
 {
     public static class Interop
     {

@@ -35,11 +35,6 @@ namespace DisneyDown.Common.Util.Diagnostics
         public Stopwatch VideoDecryptTimer { get; } = new Stopwatch();
 
         /// <summary>
-        /// Time it takes to decrypt the audio stream
-        /// </summary>
-        public Stopwatch AudioDecryptTimer { get; } = new Stopwatch();
-
-        /// <summary>
         /// Records the entire execution time (initiated in the console application not this library)
         /// </summary>
         public Stopwatch ExecutionTimer { get; } = new Stopwatch();

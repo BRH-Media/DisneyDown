@@ -142,11 +142,10 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
                             ConsoleWriters.ConsoleWriteInfo($"Widevine Key ID: {kid}");
 
                             //confirmation
-                            ConsoleWriters.WriteLine(@"Confirm key ID is correct");
-                            ConsoleWriters.WriteLine(@"Press any key to continue...");
+                            ConsoleWriters.ConsoleWriteQuestion(@"Confirm key ID is correct");
 
-                            //halt execution
-                            Console.ReadKey();
+                            //temporarily halt
+                            ConsoleTools.PauseExecution();
 
                             //do download
                             SegmentHandlers.DownloadAllMpegSegments(videoManifest, videoBaseUri,

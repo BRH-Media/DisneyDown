@@ -76,7 +76,18 @@ namespace DisneyDown.Common.Util.Kit
 
         public static void ClearConsole(bool clear = true)
         {
-            if (clear) Console.Clear();
+            if (clear)
+                Console.Clear();
+        }
+
+        public static void ConsoleWriteQuestion(string msg, bool writeQuestionNotation = true)
+        {
+            ConsoleColourSet.ConsoleColourBlu(ColouringMode);
+            if (writeQuestionNotation)
+                Console.WriteLine("[?] " + msg);
+            else
+                Console.WriteLine(msg);
+            ConsoleColourSet.ConsoleColourDef();
         }
 
         public static void ConsoleWriteSuccess(string msg, bool writeSuccessNotation = true)
@@ -91,7 +102,7 @@ namespace DisneyDown.Common.Util.Kit
 
         public static void ConsoleWriteInfo(string msg, bool writeInfoNotation = true)
         {
-            ConsoleColourSet.ConsoleColourBlu(ColouringMode);
+            ConsoleColourSet.ConsoleColourCyn(ColouringMode);
             if (writeInfoNotation)
                 Console.WriteLine("[i] " + msg);
             else

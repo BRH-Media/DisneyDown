@@ -20,11 +20,6 @@ namespace DisneyDown.Common.Util.Diagnostics
         public Stopwatch BumperVideoDecryptTimer { get; } = new Stopwatch();
 
         /// <summary>
-        /// Time it takes to decrypt the bumper audio stream
-        /// </summary>
-        public Stopwatch BumperAudioDecryptTimer { get; } = new Stopwatch();
-
-        /// <summary>
         /// Time it takes to merge the separate bumper streams using FFMPEG
         /// </summary>
         public Stopwatch BumperRemuxTimer { get; } = new Stopwatch();

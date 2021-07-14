@@ -1,7 +1,7 @@
 ﻿// ReSharper disable InconsistentNaming
 // ReSharper disable UnusedMember.Global
 
-namespace DisneyDown.Common.Util.Kit
+namespace DisneyDown.Common.Util.Kit.Unmanaged
 {
     public static class InteropConst
     {
