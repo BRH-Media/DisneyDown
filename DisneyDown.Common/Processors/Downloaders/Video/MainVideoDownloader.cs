@@ -1,4 +1,5 @@
 ﻿using DisneyDown.Common.Globals;
+using DisneyDown.Common.KeySystem.Schemas;
 using DisneyDown.Common.Net;
 using DisneyDown.Common.Parsers;
 using DisneyDown.Common.Util;
@@ -149,6 +150,53 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
 
                                 //temporarily halt
                                 ConsoleTools.PauseExecution();
+
+                                //report key (if enabled)
+                                if (Objects.KeyServerConnection.Service.ServiceEnabled)
+                                {
+                                    //status update
+                                    ConsoleWriters.ConsoleWriteInfo(@"Reporting to key server");
+
+                                    //perform report
+                                    var report = Objects.KeyServerConnection.ReportKey(kid, Strings.DecryptionKey);
+
+                                    //validation
+                                    if (report != null)
+                                    {
+                                        //specific messages
+                                        switch (report.Response.Status.Code)
+                                        {
+                                            case StatusCode.OPERATION_FAILED:
+                                                ConsoleWriters.ConsoleWriteError($@"Key server error: {report.Response.Status.Message}");
+                                                break;
+
+                                            case StatusCode.OPERATION_SUCCESS:
+                                                ConsoleWriters.ConsoleWriteSuccess(@"Successfully reported key");
+                                                break;
+
+                                            case StatusCode.ACCESS_DENIED:
+                                                ConsoleWriters.ConsoleWriteError(@"Key server denied access");
+                                                break;
+
+                                            case StatusCode.UNKNOWN_ERROR:
+                                                ConsoleWriters.ConsoleWriteError($@"Key server internal error: {report.Response.Status.Message}");
+                                                break;
+
+                                            case StatusCode.KEY_EXISTS:
+                                                ConsoleWriters.ConsoleWriteError($@"Key already exists on server");
+                                                break;
+
+                                            default:
+                                                ConsoleWriters.ConsoleWriteError(@"Unknown key server status");
+                                                break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        //report error
+                                        ConsoleWriters.ConsoleWriteError(@"Key server error: Response information was null");
+                                    }
+                                }
 
                                 //do download
                                 SegmentHandlers.DownloadAllMpegSegments(videoManifest, videoBaseUri,

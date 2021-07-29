@@ -1,5 +1,6 @@
 ﻿using DisneyDown.Common.ExternalRetrieval.Modules;
 using DisneyDown.Common.Globals;
+using DisneyDown.Common.KeySystem;
 using DisneyDown.Common.Parsers;
 using DisneyDown.Common.Processors.Downloaders.Audio;
 using DisneyDown.Common.Processors.Downloaders.Subtitles;
@@ -302,6 +303,9 @@ namespace DisneyDown.Common.Processors
                                 //check valid master (exclusive mode disables this check, since it can accept a raw stream-ready playlist)
                                 if (ManifestParsers.MasterValid(masterPlaylist) || Args.ExclusiveMode)
                                 {
+                                    //setup keyserver
+                                    Objects.KeyServerConnection = Connection.FromConnectionFile();
+
                                     //directories for temporary storage
                                     var baseOutputDir = $@"{Strings.AssemblyDirectory}\output";
                                     var baseWorkingDir = $@"{Strings.AssemblyDirectory}\tmp";

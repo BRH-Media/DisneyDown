@@ -33,6 +33,11 @@ namespace DisneyDown.Common.Net
         /// </summary>
         public string Method { get; set; } = @"GET";
 
+        /// <summary>
+        /// HTTP Parameters
+        /// </summary>
+        public Dictionary<string, string> Data { get; set; } = new Dictionary<string, string>();
+
         public ServiceFrame()
         {
             //blank initialiser

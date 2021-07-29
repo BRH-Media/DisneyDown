@@ -62,6 +62,9 @@ namespace DisneyDown.Common.Net
             request.Headers.TryAddWithoutValidation("Connection", "keep-alive");
             request.Headers.TryAddWithoutValidation("Upgrade-Insecure-Requests", "1");
 
+            //request parameters
+            var requestData = new FormUrlEncodedContent(frame.Data);
+
             //if the referrer was set, we can assign the header a value
             if (!string.IsNullOrWhiteSpace(frame.Referrer))
                 request.Headers.TryAddWithoutValidation("Referer", frame.Referrer);

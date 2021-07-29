@@ -47,10 +47,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DisneyDown.Common.ExternalRetrieval\DisneyDown.Common.ExternalRetrieval.csproj">
-      <Project>{e57471f5-65be-4997-be81-edef4435313e}</Project>
-      <Name>DisneyDown.Common.ExternalRetrieval</Name>
-    </ProjectReference>
     <ProjectReference Include="..\DisneyDown.Common.Util.Kit\DisneyDown.Common.Util.Kit.csproj">
       <Project>{1df9eab5-5707-4f5e-8dae-a791c3f3cd42}</Project>
       <Name>DisneyDown.Common.Util.Kit</Name>
