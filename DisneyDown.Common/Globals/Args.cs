@@ -17,12 +17,19 @@ namespace DisneyDown.Common.Globals
             { @"-a",    @"Forces the application to only download and decrypt audio" },
             { @"-b",    @"Enables downloading, processing and concatenating the Disney+ intro (if available)" },
             { @"-e",    @"Forces the application to avoid using the master parser; requires -v or -a but not both" },
+            { @"-k",    @"Forces DisneyDown to not use the defined keyserver regardless of the config" },
             { @"-t",    @"Enables execution timing; reports how long each operation took" },
             { @"-v",    @"Forces the application to only download and decrypt video" },
             { @"-?",    @"Shows basic information about how to use this program" },
             { @"-help", @"Shows basic information about how to use this program" },
             { @"-h",    @"Shows basic information about how to use this program" }
         };
+
+        /// <summary>
+        /// Whether or not the application should disable the usage of the defined keyserver
+        /// </summary>
+        public static bool KeyServerDisabled =>
+            Environment.GetCommandLineArgs().Contains(@"-k");
 
         /// <summary>
         /// Whether or not the application should download and decrypt the Disney+ "Original" bumper

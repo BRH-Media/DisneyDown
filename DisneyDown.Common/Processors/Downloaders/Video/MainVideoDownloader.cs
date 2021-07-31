@@ -1,5 +1,4 @@
 ﻿using DisneyDown.Common.Globals;
-using DisneyDown.Common.KeySystem.Schemas;
 using DisneyDown.Common.Net;
 using DisneyDown.Common.Parsers;
 using DisneyDown.Common.Util;
@@ -145,58 +144,52 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
                                 //report key ID
                                 ConsoleWriters.ConsoleWriteInfo($"Widevine Key ID: {kid}");
 
+                                //pause stopwatch
+                                Timers.StopTimer(Timers.Generic.VideoDownloadTimer);
+
                                 //confirmation
                                 ConsoleWriters.ConsoleWriteQuestion(@"Confirm key ID is correct");
 
                                 //temporarily halt
                                 ConsoleTools.PauseExecution();
 
-                                //report key (if enabled)
+                                //key that must be entered to trigger lookup mode
+                                var lookupModeTrigger = new string('0', 32);
+
+                                //report key or lookup key (if enabled)
                                 if (Objects.KeyServerConnection.Service.ServiceEnabled)
                                 {
-                                    //status update
-                                    ConsoleWriters.ConsoleWriteInfo(@"Reporting to key server");
-
-                                    //perform report
-                                    var report = Objects.KeyServerConnection.ReportKey(kid, Strings.DecryptionKey);
-
-                                    //validation
-                                    if (report != null)
+                                    //report
+                                    if (Strings.DecryptionKey != lookupModeTrigger)
                                     {
-                                        //specific messages
-                                        switch (report.Response.Status.Code)
-                                        {
-                                            case StatusCode.OPERATION_FAILED:
-                                                ConsoleWriters.ConsoleWriteError($@"Key server error: {report.Response.Status.Message}");
-                                                break;
+                                        //status update
+                                        ConsoleWriters.ConsoleWriteInfo(@"Reporting to key server");
 
-                                            case StatusCode.OPERATION_SUCCESS:
-                                                ConsoleWriters.ConsoleWriteSuccess(@"Successfully reported key");
-                                                break;
-
-                                            case StatusCode.ACCESS_DENIED:
-                                                ConsoleWriters.ConsoleWriteError(@"Key server denied access");
-                                                break;
-
-                                            case StatusCode.UNKNOWN_ERROR:
-                                                ConsoleWriters.ConsoleWriteError($@"Key server internal error: {report.Response.Status.Message}");
-                                                break;
-
-                                            case StatusCode.KEY_EXISTS:
-                                                ConsoleWriters.ConsoleWriteError($@"Key already exists on server");
-                                                break;
-
-                                            default:
-                                                ConsoleWriters.ConsoleWriteError(@"Unknown key server status");
-                                                break;
-                                        }
+                                        //perform report
+                                        Objects.KeyServerConnection.ReportKey(kid, Strings.DecryptionKey);
                                     }
                                     else
                                     {
-                                        //report error
-                                        ConsoleWriters.ConsoleWriteError(@"Key server error: Response information was null");
+                                        //status update
+                                        ConsoleWriters.ConsoleWriteInfo(@"Discovering keys from server");
+
+                                        //key result
+                                        var key = Objects.KeyServerConnection.FindKey(kid);
+
+                                        //validation
+                                        if (!string.IsNullOrWhiteSpace(key?.WvKey))
+                                        {
+                                            //override key
+                                            Strings.DecryptionKey = key.WvKey;
+
+                                            //report status
+                                            ConsoleWriters.ConsoleWriteSuccess($@"Discovered key: {key.WvKey}");
+                                        }
                                     }
                                 }
+
+                                //start stopwatch
+                                Timers.StartTimer(Timers.Generic.VideoDownloadTimer);
 
                                 //do download
                                 SegmentHandlers.DownloadAllMpegSegments(videoManifest, videoBaseUri,

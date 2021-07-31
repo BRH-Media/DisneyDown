@@ -33,6 +33,59 @@ namespace DisneyDown.Common.KeySystem
             }
         }
 
+        public static void KeyServerResponseLog(GenericServiceResponse r)
+        {
+            try
+            {
+                //validation
+                if (r != null)
+                {
+                    //specific messages
+                    switch (r.Response.Status.Code)
+                    {
+                        case StatusCode.OPERATION_FAILED:
+                            ConsoleWriters.ConsoleWriteError(
+                                $@"Key server error: {r.Response.Status.Message}");
+                            break;
+
+                        case StatusCode.OPERATION_SUCCESS:
+                            ConsoleWriters.ConsoleWriteSuccess(@"Successfully contacted key server");
+                            break;
+
+                        case StatusCode.ACCESS_DENIED:
+                            ConsoleWriters.ConsoleWriteError(@"Key server denied access");
+                            break;
+
+                        case StatusCode.UNKNOWN_ERROR:
+                            ConsoleWriters.ConsoleWriteError(
+                                $@"Key server internal error: {r.Response.Status.Message}");
+                            break;
+
+                        case StatusCode.KEY_EXISTS:
+                            ConsoleWriters.ConsoleWriteError($@"Key already exists on server");
+                            break;
+
+                        default:
+                            ConsoleWriters.ConsoleWriteError(@"Unknown key server status");
+                            break;
+                    }
+                }
+                else
+                {
+                    //report error
+                    ConsoleWriters.ConsoleWriteError(
+                        @"Key server error: Response information was null");
+                }
+            }
+            catch (Exception ex)
+            {
+                //report error
+                //report error
+                ConsoleWriters.ConsoleWriteError(
+                    $@"Key server error: {ex.Message}");
+            }
+        }
+
         public static Connection FromConnectionFile()
         {
             try
@@ -107,7 +160,7 @@ namespace DisneyDown.Common.KeySystem
             return null;
         }
 
-        public StoredKey FindKey(string keyId)
+        public StoredKey FindKey(string keyId, bool verbose = true)
         {
             try
             {
@@ -139,6 +192,12 @@ namespace DisneyDown.Common.KeySystem
                             MissingMemberHandling = MissingMemberHandling.Ignore
                         });
 
+                        //verbosity
+                        if (verbose)
+
+                            //report status
+                            KeyServerResponseLog(responseData);
+
                         //second-level null validation
                         if (responseData?.Response?.Data?.Length > 0)
 
@@ -157,7 +216,7 @@ namespace DisneyDown.Common.KeySystem
             return null;
         }
 
-        public GenericServiceResponse ReportKey(string keyId, string key)
+        public GenericServiceResponse ReportKey(string keyId, string key, bool verbose = true)
         {
             try
             {
@@ -189,6 +248,12 @@ namespace DisneyDown.Common.KeySystem
                         {
                             MissingMemberHandling = MissingMemberHandling.Ignore
                         });
+
+                        //verbosity
+                        if (verbose)
+
+                            //report status
+                            KeyServerResponseLog(responseData);
 
                         //return final result
                         return responseData;

@@ -306,6 +306,12 @@ namespace DisneyDown.Common.Processors
                                     //setup keyserver
                                     Objects.KeyServerConnection = Connection.FromConnectionFile() ?? new Connection();
 
+                                    //check if keyserver was explicitly disabled
+                                    if (Args.KeyServerDisabled)
+
+                                        //override the config
+                                        Objects.KeyServerConnection.Service.ServiceEnabled = false;
+
                                     //directories for temporary storage
                                     var baseOutputDir = $@"{Strings.AssemblyDirectory}\output";
                                     var baseWorkingDir = $@"{Strings.AssemblyDirectory}\tmp";
