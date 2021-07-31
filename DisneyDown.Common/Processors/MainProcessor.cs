@@ -304,7 +304,7 @@ namespace DisneyDown.Common.Processors
                                 if (ManifestParsers.MasterValid(masterPlaylist) || Args.ExclusiveMode)
                                 {
                                     //setup keyserver
-                                    Objects.KeyServerConnection = Connection.FromConnectionFile();
+                                    Objects.KeyServerConnection = Connection.FromConnectionFile() ?? new Connection();
 
                                     //directories for temporary storage
                                     var baseOutputDir = $@"{Strings.AssemblyDirectory}\output";
