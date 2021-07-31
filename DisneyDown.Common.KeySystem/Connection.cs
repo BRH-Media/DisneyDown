@@ -107,6 +107,56 @@ namespace DisneyDown.Common.KeySystem
             return null;
         }
 
+        public StoredKey FindKey(string keyId)
+        {
+            try
+            {
+                //null validation
+                if (!string.IsNullOrWhiteSpace(keyId))
+                {
+                    //length validation
+                    if (keyId.Length == 32)
+                    {
+                        //setup client
+                        var client = new RestClient(Service.BaseService);
+
+                        //setup request
+                        var request = new RestRequest(Endpoints.UserQueryEndpoint, Method.POST);
+
+                        //setup data
+                        request.AddParameter(@"authUsername", Authentication.Username);
+                        request.AddParameter(@"authPassword",
+                            Sha256Helper.CalculateSha256Hash(Authentication.Password));
+                        request.AddParameter(@"playbackDomain", @"www.disneyplus.com");
+                        request.AddParameter(@"keyId", keyId);
+
+                        //execute request
+                        var response = client.Execute(request).Content;
+
+                        //newtonsoft converter
+                        var responseData = JsonConvert.DeserializeObject<GenericServiceResponse>(response, new JsonSerializerSettings
+                        {
+                            MissingMemberHandling = MissingMemberHandling.Ignore
+                        });
+
+                        //second-level null validation
+                        if (responseData?.Response?.Data?.Length > 0)
+
+                            //return final key
+                            return responseData.Response.Data[0];
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                //report error
+                ConsoleWriters.ConsoleWriteError($@"Failed to locate a key for key ID: {keyId}: {ex.Message}");
+            }
+
+            //default
+            return null;
+        }
+
         public GenericServiceResponse ReportKey(string keyId, string key)
         {
             try
