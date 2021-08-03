@@ -12,6 +12,11 @@ namespace DisneyDown.Common.Globals
         public static string DefaultLang { get; set; } = @"en";
 
         /// <summary>
+        /// Key that must be entered to trigger lookup mode
+        /// </summary>
+        public static string LookupModeTriggerKey { get; } = new string('0', 32);
+
+        /// <summary>
         /// Default language priority file for audio tracks
         /// </summary>
         public static string AudioLangPriorityFile { get; set; } = $@"{AssemblyDirectory}\cfg\audioLangPriority.cfg";

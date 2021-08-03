@@ -122,14 +122,14 @@ namespace DisneyDown.Console
 
                 //program name and argument summary
                 System.Console.WriteLine(
-                    $"{ExecutableName}\n\nwidevine_hex_key master_manifest_URL [output_file_name] {argumentList}");
+                    $"{ExecutableName}\n\nmaster_manifest_URL widevine_hex_key [output_file_name] {argumentList}");
                 System.Console.WriteLine("\n options:");
 
                 //print hard-coded parameter definitions
                 System.Console.WriteLine(
-                    @"  widevine_hex_key    - 32 character content decryption key");
-                System.Console.WriteLine(
                     @"  master_manifest_URL - m3u8 master manifest URL; do not input a locally available manifest");
+                System.Console.WriteLine(
+                    @"  widevine_hex_key    - 32 character content decryption key");
                 System.Console.WriteLine(
                     @"  output_file_name    - Name of the remuxed file in the .\output folder");
 
@@ -169,7 +169,7 @@ namespace DisneyDown.Console
                 Timers.StartTimer(Timers.Generic.ExecutionTimer);
 
                 //verify arguments
-                if (args.Length < 2
+                if (args.Length < 1
                     || args.Contains(@"-?")
                     || args.Contains(@"-help")
                     || args.Contains(@"-h"))
@@ -187,9 +187,22 @@ namespace DisneyDown.Console
                     else
                     {
                         //set required globals
-                        Strings.DecryptionKey = args[0];
-                        Strings.ManifestUrl = args[1];
+                        Strings.ManifestUrl = args[0];
+                        Strings.DecryptionKey = args.Length > 1
+                            ? args[1]
+                            : Strings.LookupModeTriggerKey;
                         Strings.OutFileName = GetOutputFileName(args);
+
+                        //before we begin, check the validity of the decryption key
+                        if (string.IsNullOrWhiteSpace(Strings.DecryptionKey)
+                            || Strings.DecryptionKey?.Length != 32)
+                        {
+                            //report status
+                            ConsoleWriters.ConsoleWriteInfo(@"No key provided; key lookup necessary");
+
+                            //set the decryption key to the lookup trigger
+                            Strings.DecryptionKey = Strings.LookupModeTriggerKey;
+                        }
 
                         //begin
                         var outFile = MainProcessor.StartProcessor();
@@ -198,7 +211,7 @@ namespace DisneyDown.Console
                         if (!string.IsNullOrWhiteSpace(outFile))
                         {
                             //report finality
-                            System.Console.WriteLine("\nDone! Play now? (y/n)");
+                            ConsoleWriters.WriteLine("\nDone! Play now? (y/n)");
 
                             //read the console line
                             var response = System.Console.ReadLine();

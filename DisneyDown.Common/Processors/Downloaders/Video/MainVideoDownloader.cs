@@ -153,14 +153,11 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
                                 //temporarily halt
                                 ConsoleTools.PauseExecution();
 
-                                //key that must be entered to trigger lookup mode
-                                var lookupModeTrigger = new string('0', 32);
-
                                 //report key or lookup key (if enabled)
                                 if (Objects.KeyServerConnection.Service.ServiceEnabled)
                                 {
                                     //report
-                                    if (Strings.DecryptionKey != lookupModeTrigger)
+                                    if (Strings.DecryptionKey != Strings.LookupModeTriggerKey)
                                     {
                                         //status update
                                         ConsoleWriters.ConsoleWriteInfo(@"Reporting to key server");
@@ -184,6 +181,14 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
 
                                             //report status
                                             ConsoleWriters.ConsoleWriteSuccess($@"Discovered key: {key.WvKey}");
+                                        }
+                                        else
+                                        {
+                                            //report status
+                                            ConsoleWriters.ConsoleWriteError(@"No key discovered; process failed");
+
+                                            //return null
+                                            return @"";
                                         }
                                     }
                                 }
