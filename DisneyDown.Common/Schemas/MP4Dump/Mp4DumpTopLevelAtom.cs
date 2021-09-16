@@ -8,11 +8,12 @@
 
 using System;
 using System.Collections.Generic;
+using DisneyDown.Common.Schemas.MP4Dump;
 using Newtonsoft.Json;
 
 namespace DisneyDown.Common.Schemas
 {
-public partial class Mp4DumpSchema
+public partial class Mp4DumpTopLevelAtom
     {
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -36,8 +37,8 @@ public partial class Mp4DumpSchema
         public Mp4DumpSchemaChild[] Children { get; set; }
     }
 
-public partial class Mp4DumpSchema
+public partial class Mp4DumpTopLevelAtom
     {
-        public static Mp4DumpSchema[] FromJson(string json) => JsonConvert.DeserializeObject<Mp4DumpSchema[]>(json, DisneyDown.Common.Schemas.Converter.Settings);
+        public static Mp4DumpTopLevelAtom[] FromJson(string json) => JsonConvert.DeserializeObject<Mp4DumpTopLevelAtom[]>(json, Converter.Settings);
     }
 }

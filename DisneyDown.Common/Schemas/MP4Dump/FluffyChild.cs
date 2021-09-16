@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 
-namespace DisneyDown.Common.Schemas
+namespace DisneyDown.Common.Schemas.MP4Dump
 {
-    public partial class Mp4DumpSchemaChild
+    public partial class FluffyChild
     {
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -22,7 +22,16 @@ namespace DisneyDown.Common.Schemas
         [JsonProperty("duration(ms)", NullValueHandling = NullValueHandling.Ignore)]
         public long? DurationMs { get; set; }
 
+        [JsonProperty("language", NullValueHandling = NullValueHandling.Ignore)]
+        public string Language { get; set; }
+
+        [JsonProperty("handler_type", NullValueHandling = NullValueHandling.Ignore)]
+        public string HandlerType { get; set; }
+
+        [JsonProperty("handler_name", NullValueHandling = NullValueHandling.Ignore)]
+        public string HandlerName { get; set; }
+
         [JsonProperty("children", NullValueHandling = NullValueHandling.Ignore)]
-        public PurpleChild[] Children { get; set; }
+        public TentacledChild[] Children { get; set; }
     }
 }

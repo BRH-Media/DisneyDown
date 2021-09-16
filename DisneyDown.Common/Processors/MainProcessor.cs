@@ -5,7 +5,7 @@ using DisneyDown.Common.Parsers;
 using DisneyDown.Common.Processors.Downloaders.Audio;
 using DisneyDown.Common.Processors.Downloaders.Subtitles;
 using DisneyDown.Common.Processors.Downloaders.Video;
-using DisneyDown.Common.Security;
+using DisneyDown.Common.Security.Hashing;
 using DisneyDown.Common.Util;
 using DisneyDown.Common.Util.Diagnostics;
 using DisneyDown.Common.Util.Kit;
@@ -172,6 +172,87 @@ namespace DisneyDown.Common.Processors
                     {
                         //report progress
                         ConsoleWriters.ConsoleWriteInfo(@"Attempting decryption on video");
+
+                        //decryption key lookup
+                        if (Objects.KeyServerConnection.Service.ServiceEnabled)
+                        {
+                            //key ID storage
+                            var keyId = Strings.LookupModeTriggerKey;
+
+                            //key ID file path
+                            var keyIdFile = $@"{Path.GetDirectoryName(videoFile)}\keyinfo\keyId";
+
+                            //attempt KID location
+                            if (File.Exists(keyIdFile))
+                            {
+                                //read keyID
+                                var read = File.ReadAllText(keyIdFile);
+
+                                //validation
+                                if (!string.IsNullOrWhiteSpace(read) && read.Length == 32)
+
+                                    //override keyID with appropriate value
+                                    keyId = read;
+                            }
+
+                            //keyID validation
+                            if (keyId != Strings.LookupModeTriggerKey)
+                            {
+                                //report
+                                if (Strings.DecryptionKey != Strings.LookupModeTriggerKey)
+                                {
+                                    //status update
+                                    ConsoleWriters.ConsoleWriteInfo(@"Reporting to key server");
+
+                                    //perform report
+                                    Objects.KeyServerConnection.ReportKey(keyId, Strings.DecryptionKey);
+                                }
+                                else
+                                {
+                                    //status update
+                                    ConsoleWriters.ConsoleWriteInfo(@"Discovering keys from server");
+
+                                    //key result
+                                    var key = Objects.KeyServerConnection.FindKey(keyId);
+
+                                    //validation
+                                    if (!string.IsNullOrWhiteSpace(key?.WvKey))
+                                    {
+                                        //override key
+                                        Strings.DecryptionKey = key.WvKey;
+
+                                        //report status
+                                        ConsoleWriters.ConsoleWriteSuccess($@"Discovered key: {key.WvKey}");
+                                    }
+                                    else
+                                    {
+                                        //report status
+                                        ConsoleWriters.ConsoleWriteError(@"No key discovered; process failed");
+
+                                        //return null
+                                        return @"";
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                //report status
+                                ConsoleWriters.ConsoleWriteError(@"No valid key ID was found; process failed");
+
+                                //return null
+                                return @"";
+                            }
+                        }
+
+                        //final validation
+                        if (Strings.DecryptionKey == Strings.LookupModeTriggerKey)
+                        {
+                            //report status
+                            ConsoleWriters.ConsoleWriteError(@"No decryption key available; process failed");
+
+                            //return null
+                            return @"";
+                        }
 
                         //start measuring video decrypt time
                         Timers.StartTimer(Timers.Generic.VideoDecryptTimer);
@@ -363,6 +444,26 @@ namespace DisneyDown.Common.Processors
                                     //download and decrypt video
                                     if (!Args.AudioOnlyMode)
                                         decryptedVideo = StartVideo(masterPlaylist, workingDir);
+
+                                    //audio path validation
+                                    if (!Args.VideoOnlyMode && (string.IsNullOrWhiteSpace(decryptedAudio) || !File.Exists(decryptedAudio)))
+                                    {
+                                        //report problem
+                                        ConsoleWriters.ConsoleWriteError(@"Processing resulted in an invalid audio file; process failed");
+
+                                        //die
+                                        return @"";
+                                    }
+
+                                    //video path validation
+                                    if (!Args.AudioOnlyMode && (string.IsNullOrWhiteSpace(decryptedVideo) || !File.Exists(decryptedVideo)))
+                                    {
+                                        //report problem
+                                        ConsoleWriters.ConsoleWriteError(@"Processing resulted in an invalid video file; process failed");
+
+                                        //die
+                                        return @"";
+                                    }
 
                                     //decrypted video
                                     var decryptedBumperVideo =

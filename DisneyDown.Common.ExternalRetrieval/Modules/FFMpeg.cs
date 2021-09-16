@@ -6,6 +6,7 @@ using DisneyDown.Common.Net;
 using DisneyDown.Common.Security;
 using DisneyDown.Common.Util.Kit;
 using System;
+using DisneyDown.Common.Security.Hashing;
 
 namespace DisneyDown.Common.ExternalRetrieval.Modules
 {

@@ -2,6 +2,7 @@
 using DisneyDown.Common.Security;
 using DisneyDown.Common.Util.Kit;
 using System;
+using DisneyDown.Common.Security.Hashing;
 
 // ReSharper disable UnusedMember.Global
 // ReSharper disable ArrangeTypeModifiers

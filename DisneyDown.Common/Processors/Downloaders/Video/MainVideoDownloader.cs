@@ -192,6 +192,17 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
                                         }
                                     }
                                 }
+                                else
+                                {
+                                    if (Strings.DecryptionKey == Strings.LookupModeTriggerKey)
+                                    {
+                                        //report status
+                                        ConsoleWriters.ConsoleWriteError(@"No decryption key available; process failed");
+
+                                        //return null
+                                        return @"";
+                                    }
+                                }
 
                                 //start stopwatch
                                 Timers.StartTimer(Timers.Generic.VideoDownloadTimer);

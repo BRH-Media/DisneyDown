@@ -3,6 +3,7 @@ using System.IO;
 using System.Reflection;
 using DisneyDown.Common.KeySystem.Schemas;
 using DisneyDown.Common.Security;
+using DisneyDown.Common.Security.Hashing;
 using DisneyDown.Common.Util.Kit;
 using Newtonsoft.Json;
 using RestSharp;

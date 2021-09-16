@@ -2,7 +2,7 @@
 using Newtonsoft.Json.Converters;
 using System.Globalization;
 
-namespace DisneyDown.Common.Schemas
+namespace DisneyDown.Common.Schemas.MP4Dump
 {
     public static class Converter
     {

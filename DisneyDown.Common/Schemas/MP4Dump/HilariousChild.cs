@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace DisneyDown.Common.Schemas
+namespace DisneyDown.Common.Schemas.MP4Dump
 {
     public partial class HilariousChild
     {

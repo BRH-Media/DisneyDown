@@ -188,7 +188,7 @@ namespace DisneyDown.Common.Processors
                     }
 
                     //parse JSON
-                    var jsonObject = Mp4DumpSchema.FromJson(finalJson);
+                    var jsonObject = Mp4DumpTopLevelAtom.FromJson(finalJson);
 
                     //through each atom
                     foreach (var a in jsonObject)

@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace DisneyDown.Common.Security
+namespace DisneyDown.Common.Security.Hashing
 {
     public static class Sha1Helper
     {
