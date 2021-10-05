@@ -36,8 +36,10 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\DataTableConversion.cs" />
     <Compile Include="Globals\Objects.cs" />
     <Compile Include="Globals\Strings.cs" />
     <Compile Include="Globals\Args.cs" />

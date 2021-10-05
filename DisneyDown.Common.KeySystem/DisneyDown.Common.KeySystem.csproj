@@ -45,11 +45,15 @@
     <Compile Include="Connection.cs" />
     <Compile Include="KeySystemEndpoints.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Schemas\GenericServiceResponse.cs" />
-    <Compile Include="Schemas\Response.cs" />
+    <Compile Include="Schemas\UserSchema\UserResponse.cs" />
+    <Compile Include="Schemas\KeySchema\KeyResponse.cs" />
+    <Compile Include="Schemas\UserSchema\UserResponseContents.cs" />
+    <Compile Include="Schemas\KeySchema\KeyResponseContents.cs" />
     <Compile Include="Schemas\Status.cs" />
     <Compile Include="Schemas\StatusCode.cs" />
     <Compile Include="Schemas\StoredKey.cs" />
+    <Compile Include="Schemas\UserSchema\User.cs" />
+    <Compile Include="Schemas\UserSchema\UserResponseContentsData.cs" />
     <Compile Include="ServiceInfo.cs" />
   </ItemGroup>
   <ItemGroup>

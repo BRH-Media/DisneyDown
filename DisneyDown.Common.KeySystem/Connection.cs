@@ -1,13 +1,16 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 using System.Reflection;
 using DisneyDown.Common.KeySystem.Schemas;
-using DisneyDown.Common.Security;
+using DisneyDown.Common.KeySystem.Schemas.KeySchema;
+using DisneyDown.Common.KeySystem.Schemas.UserSchema;
 using DisneyDown.Common.Security.Hashing;
 using DisneyDown.Common.Util.Kit;
 using Newtonsoft.Json;
 using RestSharp;
 
+// ReSharper disable IdentifierTypo
 // ReSharper disable ArrangeModifiersOrder
 
 namespace DisneyDown.Common.KeySystem
@@ -34,7 +37,7 @@ namespace DisneyDown.Common.KeySystem
             }
         }
 
-        public static void KeyServerResponseLog(GenericServiceResponse r)
+        public static void KeyServerResponseLog(Status r)
         {
             try
             {
@@ -42,11 +45,11 @@ namespace DisneyDown.Common.KeySystem
                 if (r != null)
                 {
                     //specific messages
-                    switch (r.Response.Status.Code)
+                    switch (r.Code)
                     {
                         case StatusCode.OPERATION_FAILED:
                             ConsoleWriters.ConsoleWriteError(
-                                $@"Key server error: {r.Response.Status.Message}");
+                                $@"Key server error: {r.Message}");
                             break;
 
                         case StatusCode.OPERATION_SUCCESS:
@@ -59,11 +62,26 @@ namespace DisneyDown.Common.KeySystem
 
                         case StatusCode.UNKNOWN_ERROR:
                             ConsoleWriters.ConsoleWriteError(
-                                $@"Key server internal error: {r.Response.Status.Message}");
+                                $@"Key server internal error: {r.Message}");
                             break;
 
                         case StatusCode.KEY_EXISTS:
                             ConsoleWriters.ConsoleWriteError($@"Key already exists on server");
+                            break;
+
+                        case StatusCode.KEY_DOES_NOT_EXIST:
+                            break;
+
+                        case StatusCode.WHITELIST_ALLOWED:
+                            break;
+
+                        case StatusCode.WHITELIST_DISALLOWED:
+                            break;
+
+                        case StatusCode.NOT_WHITELISTED:
+                            break;
+
+                        case StatusCode.USER_AUTHORISED:
                             break;
 
                         default:
@@ -85,6 +103,118 @@ namespace DisneyDown.Common.KeySystem
                 ConsoleWriters.ConsoleWriteError(
                     $@"Key server error: {ex.Message}");
             }
+        }
+
+        public KeyResponseContents GetAuthorisedKeys(User authorisedUser, bool verbose = true)
+        {
+            try
+            {
+                //validation
+                if (!string.IsNullOrWhiteSpace(Authentication.Password) &&
+                    !string.IsNullOrWhiteSpace(Authentication.Username) && !string.IsNullOrWhiteSpace(Service.BaseService))
+                {
+                    //setup client
+                    var client = new RestClient(Service.BaseService)
+                    {
+                        Proxy = WebRequest.DefaultWebProxy
+                    };
+
+                    //setup request
+                    var request = new RestRequest(authorisedUser.IsAdmin ? Endpoints.SystemQueryListEndpoint : Endpoints.UserQueryListEndpoint, Method.POST);
+
+                    //calculate password to authenticate with
+                    var userPassword = Sha256Helper.CalculateSha256Hash(Authentication.Password).ToLower();
+
+                    //setup data
+                    request.AddParameter(@"authUsername", Authentication.Username);
+                    request.AddParameter(@"authPassword", userPassword);
+
+                    //execute request
+                    var response = client.Execute(request).Content;
+
+                    //ConsoleWriters.WriteLine(response);
+
+                    //newtonsoft converter
+                    var responseData = JsonConvert.DeserializeObject<KeyResponse>(response, new JsonSerializerSettings
+                    {
+                        MissingMemberHandling = MissingMemberHandling.Ignore,
+                        NullValueHandling = NullValueHandling.Ignore
+                    });
+
+                    //verbosity
+                    if (verbose)
+
+                        //report status
+                        KeyServerResponseLog(responseData?.Response?.Status);
+
+                    //return user
+                    return responseData?.Response;
+                }
+            }
+            catch (Exception ex)
+            {
+                //report error
+                ConsoleWriters.ConsoleWriteError($@"A problem occurred whilst trying to query the key server: {ex.Message}");
+            }
+
+            //default
+            return null;
+        }
+
+        public UserResponseContents GetCurrentUser(bool verbose = true)
+        {
+            try
+            {
+                //validation
+                if (!string.IsNullOrWhiteSpace(Authentication.Password) &&
+                    !string.IsNullOrWhiteSpace(Authentication.Username) && !string.IsNullOrWhiteSpace(Service.BaseService))
+                {
+                    //setup client
+                    var client = new RestClient(Service.BaseService)
+                    {
+                        Proxy = WebRequest.DefaultWebProxy
+                    };
+
+                    //setup request
+                    var request = new RestRequest(Endpoints.UserLoginEndpoint, Method.POST);
+
+                    //calculate password to authenticate with
+                    var userPassword = Sha256Helper.CalculateSha256Hash(Authentication.Password).ToLower();
+
+                    //setup data
+                    request.AddParameter(@"authUsername", Authentication.Username);
+                    request.AddParameter(@"authPassword", userPassword);
+
+                    //execute request
+                    var response = client.Execute(request).Content;
+
+                    //ConsoleWriters.WriteLine(response);
+
+                    //newtonsoft converter
+                    var responseData = JsonConvert.DeserializeObject<UserResponse>(response, new JsonSerializerSettings
+                    {
+                        MissingMemberHandling = MissingMemberHandling.Ignore,
+                        NullValueHandling = NullValueHandling.Ignore
+                    });
+
+                    //verbosity
+                    if (verbose)
+
+                        //report status
+                        KeyServerResponseLog(responseData?.Response?.Status);
+
+                    //return user
+                    return responseData?.Response;
+                }
+            }
+            catch (Exception ex)
+            {
+                //report error
+                ConsoleWriters.ConsoleWriteError($@"A problem occurred whilst trying to authenticate with the key server: {ex.Message}");
+            }
+
+            //default
+            return null;
         }
 
         public static Connection FromConnectionFile()
@@ -172,7 +302,10 @@ namespace DisneyDown.Common.KeySystem
                     if (keyId.Length == 32)
                     {
                         //setup client
-                        var client = new RestClient(Service.BaseService);
+                        var client = new RestClient(Service.BaseService)
+                        {
+                            Proxy = WebRequest.DefaultWebProxy
+                        };
 
                         //setup request
                         var request = new RestRequest(Endpoints.UserQueryEndpoint, Method.POST);
@@ -180,7 +313,7 @@ namespace DisneyDown.Common.KeySystem
                         //setup data
                         request.AddParameter(@"authUsername", Authentication.Username);
                         request.AddParameter(@"authPassword",
-                            Sha256Helper.CalculateSha256Hash(Authentication.Password));
+                            Sha256Helper.CalculateSha256Hash(Authentication.Password).ToLower());
                         request.AddParameter(@"playbackDomain", @"www.disneyplus.com");
                         request.AddParameter(@"keyId", keyId);
 
@@ -188,22 +321,23 @@ namespace DisneyDown.Common.KeySystem
                         var response = client.Execute(request).Content;
 
                         //newtonsoft converter
-                        var responseData = JsonConvert.DeserializeObject<GenericServiceResponse>(response, new JsonSerializerSettings
+                        var responseData = JsonConvert.DeserializeObject<KeyResponse>(response, new JsonSerializerSettings
                         {
-                            MissingMemberHandling = MissingMemberHandling.Ignore
+                            MissingMemberHandling = MissingMemberHandling.Ignore,
+                            NullValueHandling = NullValueHandling.Ignore
                         });
 
                         //verbosity
                         if (verbose)
 
                             //report status
-                            KeyServerResponseLog(responseData);
+                            KeyServerResponseLog(responseData?.Response?.Status);
 
                         //second-level null validation
                         if (responseData?.Response?.Data?.Length > 0)
 
                             //return final key
-                            return responseData.Response.Data[0];
+                            return (StoredKey)responseData.Response.Data[0];
                     }
                 }
             }
@@ -217,7 +351,7 @@ namespace DisneyDown.Common.KeySystem
             return null;
         }
 
-        public GenericServiceResponse ReportKey(string keyId, string key, bool verbose = true)
+        public KeyResponse ReportKey(string keyId, string key, bool verbose = true)
         {
             try
             {
@@ -228,7 +362,10 @@ namespace DisneyDown.Common.KeySystem
                     if (keyId.Length == 32 && key.Length == 32)
                     {
                         //setup client
-                        var client = new RestClient(Service.BaseService);
+                        var client = new RestClient(Service.BaseService)
+                        {
+                            Proxy = WebRequest.DefaultWebProxy
+                        };
 
                         //setup request
                         var request = new RestRequest(Endpoints.ReportEndpoint, Method.POST);
@@ -236,7 +373,7 @@ namespace DisneyDown.Common.KeySystem
                         //setup data
                         request.AddParameter(@"authUsername", Authentication.Username);
                         request.AddParameter(@"authPassword",
-                            Sha256Helper.CalculateSha256Hash(Authentication.Password));
+                            Sha256Helper.CalculateSha256Hash(Authentication.Password).ToLower());
                         request.AddParameter(@"playbackDomain", @"www.disneyplus.com");
                         request.AddParameter(@"keyId", keyId);
                         request.AddParameter(@"key", key);
@@ -245,16 +382,17 @@ namespace DisneyDown.Common.KeySystem
                         var response = client.Execute(request).Content;
 
                         //newtonsoft converter
-                        var responseData = JsonConvert.DeserializeObject<GenericServiceResponse>(response, new JsonSerializerSettings
+                        var responseData = JsonConvert.DeserializeObject<KeyResponse>(response, new JsonSerializerSettings
                         {
-                            MissingMemberHandling = MissingMemberHandling.Ignore
+                            MissingMemberHandling = MissingMemberHandling.Ignore,
+                            NullValueHandling = NullValueHandling.Ignore
                         });
 
                         //verbosity
                         if (verbose)
 
                             //report status
-                            KeyServerResponseLog(responseData);
+                            KeyServerResponseLog(responseData?.Response?.Status);
 
                         //return final result
                         return responseData;

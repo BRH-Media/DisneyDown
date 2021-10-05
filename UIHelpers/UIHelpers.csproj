@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{1DF9EAB5-5707-4F5E-8DAE-A791C3F3CD42}</ProjectGuid>
+    <ProjectGuid>{E3CE262B-B962-44FF-ABC0-5EBFB403D51D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DisneyDown.Common.Util.Kit</RootNamespace>
-    <AssemblyName>DisneyDown.Common.Util.Kit</AssemblyName>
+    <RootNamespace>UIHelpers</RootNamespace>
+    <AssemblyName>UIHelpers</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -33,42 +33,11 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\Styling\BoolColour.cs" />
-    <Compile Include="Components\Styling\BoolColourMode.cs" />
-    <Compile Include="Components\FlatDataGridView.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="ConsoleColourSet.cs" />
-    <Compile Include="ConsoleImageAscii.cs" />
-    <Compile Include="ConsoleSpinner.cs" />
-    <Compile Include="ConsoleSpinnerSequence.cs" />
-    <Compile Include="ConsoleTools.cs" />
-    <Compile Include="Enums\ConsoleWriterMode.cs" />
-    <Compile Include="ConsoleWriters.cs" />
-    <Compile Include="Forms\WaitWindowGUI.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\WaitWindowGUI.Designer.cs">
-      <DependentUpon>WaitWindowGUI.cs</DependentUpon>
-    </Compile>
-    <Compile Include="WaitWIndow\WaitWindow.cs" />
-    <Compile Include="WaitWIndow\WaitWindowEventArgs.cs" />
-    <EmbeddedResource Include="Forms\WaitWindowGUI.resx">
-      <DependentUpon>WaitWindowGUI.cs</DependentUpon>
-    </EmbeddedResource>
-    <Compile Include="Unmanaged\Interop.cs" />
-    <Compile Include="Unmanaged\InteropConst.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\UIHelpers\UIHelpers.csproj">
-      <Project>{e3ce262b-b962-44ff-abc0-5ebfb403d51d}</Project>
-      <Name>UIHelpers</Name>
-    </ProjectReference>
+    <Compile Include="UIMessages.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
