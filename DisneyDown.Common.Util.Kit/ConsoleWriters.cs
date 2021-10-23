@@ -1,6 +1,8 @@
 ﻿using DisneyDown.Common.Util.Kit.Enums;
 using System;
 
+// ReSharper disable InvertIf
+// ReSharper disable LocalizableElement
 // ReSharper disable IdentifierTypo
 // ReSharper disable UnusedMember.Global
 
@@ -9,6 +11,14 @@ namespace DisneyDown.Common.Util.Kit
     public static class ConsoleWriters
     {
         public static ConsoleWriterColouringMode ColouringMode { get; set; } = ConsoleWriterColouringMode.ForeColour;
+        public static bool DisableAllOutput { get; set; } = false;
+        public static bool DebugMode { get; set; } = false;
+
+        public static void ClearConsole(bool clear = true)
+        {
+            if (clear)
+                Console.Clear();
+        }
 
         public static void Break()
             => Console.Write("\n");
@@ -29,95 +39,126 @@ namespace DisneyDown.Common.Util.Kit
         public static void WriteLine(string text, ConsoleColor c = ConsoleColor.White,
             ConsoleColor after = ConsoleColor.White)
         {
-            Console.ForegroundColor = c;
-            Console.WriteLine(text);
-            Console.ForegroundColor = after;
+            if (!DisableAllOutput)
+            {
+                Console.ForegroundColor = c;
+                Console.WriteLine(text);
+                Console.ForegroundColor = after;
+            }
         }
 
         public static void Write(string text, ConsoleColor c = ConsoleColor.White,
             ConsoleColor after = ConsoleColor.White)
         {
-            Console.ForegroundColor = c;
-            Console.Write(text);
-            Console.ForegroundColor = after;
+            if (!DisableAllOutput)
+            {
+                Console.ForegroundColor = c;
+                Console.Write(text);
+                Console.ForegroundColor = after;
+            }
         }
 
         public static void ConsoleWriteLineColouredChar(string letters, char c, ConsoleColor backColor,
             ConsoleColor foreColor = ConsoleColor.White)
         {
-            var array = letters.ToCharArray();
+            if (!DisableAllOutput)
+            {
+                var array = letters.ToCharArray();
 
-            foreach (var chr in array)
-                if (chr == c)
-                {
-                    Console.ForegroundColor = foreColor;
-                    Console.BackgroundColor = backColor;
-                    Console.Write(chr);
-                }
+                foreach (var chr in array)
+                    if (chr == c)
+                    {
+                        Console.ForegroundColor = foreColor;
+                        Console.BackgroundColor = backColor;
+                        Console.Write(chr);
+                    }
+                    else
+                    {
+                        ConsoleColourSet.ConsoleColourDef();
+                        Console.Write(chr);
+                    }
+
+                ConsoleColourSet.ConsoleColourDef();
+                Console.WriteLine();
+            }
+        }
+
+        public static void ConsoleWriteDebug(string msg, bool writeDebugNotation = true)
+        {
+            if (!DisableAllOutput && DebugMode)
+            {
+                ConsoleColourSet.ConsoleColourOcr(ColouringMode);
+                if (writeDebugNotation)
+                    Console.WriteLine("[d] " + msg);
                 else
-                {
-                    ConsoleColourSet.ConsoleColourDef();
-                    Console.Write(chr);
-                }
-
-            ConsoleColourSet.ConsoleColourDef();
-            Console.WriteLine();
+                    Console.WriteLine(msg);
+                ConsoleColourSet.ConsoleColourDef();
+            }
         }
 
         public static void ConsoleWriteError(string msg, bool writeErrorNotation = true)
         {
-            ConsoleColourSet.ConsoleColourRed(ColouringMode);
-            if (writeErrorNotation)
-                Console.WriteLine("[!] " + msg);
-            else
-                Console.WriteLine(msg);
-            ConsoleColourSet.ConsoleColourDef();
-        }
-
-        public static void ClearConsole(bool clear = true)
-        {
-            if (clear)
-                Console.Clear();
+            if (!DisableAllOutput)
+            {
+                ConsoleColourSet.ConsoleColourRed(ColouringMode);
+                if (writeErrorNotation)
+                    Console.WriteLine("[!] " + msg);
+                else
+                    Console.WriteLine(msg);
+                ConsoleColourSet.ConsoleColourDef();
+            }
         }
 
         public static void ConsoleWriteQuestion(string msg, bool writeQuestionNotation = true)
         {
-            ConsoleColourSet.ConsoleColourBlu(ColouringMode);
-            if (writeQuestionNotation)
-                Console.WriteLine("[?] " + msg);
-            else
-                Console.WriteLine(msg);
-            ConsoleColourSet.ConsoleColourDef();
+            if (!DisableAllOutput)
+            {
+                ConsoleColourSet.ConsoleColourBlu(ColouringMode);
+                if (writeQuestionNotation)
+                    Console.WriteLine("[?] " + msg);
+                else
+                    Console.WriteLine(msg);
+                ConsoleColourSet.ConsoleColourDef();
+            }
         }
 
         public static void ConsoleWriteSuccess(string msg, bool writeSuccessNotation = true)
         {
-            ConsoleColourSet.ConsoleColourGrn(ColouringMode);
-            if (writeSuccessNotation)
-                Console.WriteLine("[i] " + msg);
-            else
-                Console.WriteLine(msg);
-            ConsoleColourSet.ConsoleColourDef();
+            if (!DisableAllOutput)
+            {
+                ConsoleColourSet.ConsoleColourGrn(ColouringMode);
+                if (writeSuccessNotation)
+                    Console.WriteLine("[i] " + msg);
+                else
+                    Console.WriteLine(msg);
+                ConsoleColourSet.ConsoleColourDef();
+            }
         }
 
         public static void ConsoleWriteInfo(string msg, bool writeInfoNotation = true)
         {
-            ConsoleColourSet.ConsoleColourCyn(ColouringMode);
-            if (writeInfoNotation)
-                Console.WriteLine("[i] " + msg);
-            else
-                Console.WriteLine(msg);
-            ConsoleColourSet.ConsoleColourDef();
+            if (!DisableAllOutput)
+            {
+                ConsoleColourSet.ConsoleColourCyn(ColouringMode);
+                if (writeInfoNotation)
+                    Console.WriteLine("[i] " + msg);
+                else
+                    Console.WriteLine(msg);
+                ConsoleColourSet.ConsoleColourDef();
+            }
         }
 
         public static void ConsoleWriteWarning(string msg, bool writeWarningNotation = true)
         {
-            ConsoleColourSet.ConsoleColourOcr(ColouringMode);
-            if (writeWarningNotation)
-                Console.WriteLine("[!] " + msg);
-            else
-                Console.WriteLine(msg);
-            ConsoleColourSet.ConsoleColourDef();
+            if (!DisableAllOutput)
+            {
+                ConsoleColourSet.ConsoleColourOcr(ColouringMode);
+                if (writeWarningNotation)
+                    Console.WriteLine("[!] " + msg);
+                else
+                    Console.WriteLine(msg);
+                ConsoleColourSet.ConsoleColourDef();
+            }
         }
     }
 }

@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DisneyDown.Common.API
+namespace DisneyDown.Common.API.Structures
 {
-    public class Class1
+    public class ApiConfiguration
     {
     }
 }

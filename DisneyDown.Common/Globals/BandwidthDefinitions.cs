@@ -12,47 +12,47 @@ namespace DisneyDown.Common.Globals
         {
             {
                 10,
-                new QualityRating(@"8500k",@"")
+                new QualityRating(@"8500",@"")
             },
             {
                 9,
-                new QualityRating(@"7000k",@"")
+                new QualityRating(@"7000",@"")
             },
             {
                 8,
-                new QualityRating(@"5500k",@"1920x1080 FHD-HDR")
+                new QualityRating(@"5500",@"1920x1080 FHD-HDR")
             },
             {
                 7,
-                new QualityRating(@"4250k",@"1280x720 HD-SDR")
+                new QualityRating(@"4250",@"1280x720 HD-SDR")
             },
             {
                 6,
-                new QualityRating(@"3000k",@"1280x720 HD-SDR")
+                new QualityRating(@"3000",@"1280x720 HD-SDR")
             },
             {
                 5,
-                new QualityRating(@"2400k",@"1280x720 HD-SDR")
+                new QualityRating(@"2400",@"1280x720 HD-SDR")
             },
             {
                 4,
-                new QualityRating(@"1800k",@"854x480 SD-SDR")
+                new QualityRating(@"1800",@"854x480 SD-SDR")
             },
             {
                 3,
-                new QualityRating(@"1200k",@"854x480 nHD-SDR")
+                new QualityRating(@"1200",@"854x480 nHD-SDR")
             },
             {
                 2,
-                new QualityRating(@"800k",@"640x360 nHD-SDR")
+                new QualityRating(@"800",@"640x360 nHD-SDR")
             },
             {
                 1,
-                new QualityRating(@"480k",@"640x360 nHD-SDR")
+                new QualityRating(@"480",@"640x360 nHD-SDR")
             },
             {
                 0,
-                new QualityRating(@"400k",@"640x360 nHD-SDR")
+                new QualityRating(@"400",@"640x360 nHD-SDR")
             }
         };
 
@@ -60,39 +60,39 @@ namespace DisneyDown.Common.Globals
         {
             {
                 8,
-                new QualityRating(@"1000k",@"1Mbps")
+                new QualityRating(@"1000",@"1Mbps")
             },
             {
                 7,
-                new QualityRating(@"640k",@"640kbps")
+                new QualityRating(@"640",@"640kbps")
             },
             {
                 6,
-                new QualityRating(@"512k",@"512kbps")
+                new QualityRating(@"512",@"512kbps")
             },
             {
                 5,
-                new QualityRating(@"480k",@"480kbps")
+                new QualityRating(@"480",@"480kbps")
             },
             {
                 4,
-                new QualityRating(@"400k",@"400kbps")
+                new QualityRating(@"400",@"400kbps")
             },
             {
                 3,
-                new QualityRating(@"300k",@"300kbps")
+                new QualityRating(@"300",@"300kbps")
             },
             {
                 2,
-                new QualityRating(@"256k",@"256kbps")
+                new QualityRating(@"256",@"256kbps")
             },
             {
                 1,
-                new QualityRating(@"128k",@"128kbps")
+                new QualityRating(@"128",@"128kbps")
             },
             {
                 0,
-                new QualityRating(@"64k",@"64kbps")
+                new QualityRating(@"64",@"64kbps")
             }
         };
     }

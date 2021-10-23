@@ -127,7 +127,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
 
                             //do download
                             SegmentHandlers.DownloadAllMpegSegments(audioManifest, audioBaseUri,
-                                Verification.MainContent, encryptedAudioFile,
+                                Verification.SegmentFilter.MainContent.AudioFilter, encryptedAudioFile,
                                 @"[Main Audio]");
 
                             //report success

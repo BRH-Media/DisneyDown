@@ -21,7 +21,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
                 Timers.StartTimer(Timers.Bumper.BumperVideoDownloadTimer);
 
                 //ensure there is a bumper to download
-                if (playlist.Contains(Verification.BumperIntro))
+                if (playlist.Contains(Verification.SegmentFilter.BumperIntro))
                 {
                     //base URI for the video playlist
                     var videoBaseUri = Methods.GetBaseUrl(playlistUri);
@@ -49,7 +49,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
 
                         //do download
                         SegmentHandlers.DownloadAllMpegSegments(playlist, videoBaseUri,
-                            Verification.BumperIntro, encryptedBumperVideoFile,
+                            Verification.SegmentFilter.BumperIntro, encryptedBumperVideoFile,
                             @"[Bumper Video]");
 
                         //report success

@@ -21,7 +21,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
                 Timers.StartTimer(Timers.Bumper.BumperAudioDownloadTimer);
 
                 //ensure there is a bumper to download
-                if (playlist.Contains(Verification.BumperIntro))
+                if (playlist.Contains(Verification.SegmentFilter.BumperIntro))
                 {
                     //base URI for the audio playlist
                     var audioBaseUri = Methods.GetBaseUrl(playlistUri);
@@ -49,7 +49,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Audio
 
                         //do download
                         SegmentHandlers.DownloadAllMpegSegments(playlist, audioBaseUri,
-                            Verification.BumperIntro, encryptedBumperAudioFile,
+                            Verification.SegmentFilter.BumperIntro, encryptedBumperAudioFile,
                             @"[Bumper Audio]");
 
                         //report success

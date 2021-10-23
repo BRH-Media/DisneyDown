@@ -164,7 +164,7 @@ namespace DisneyDown.Common.Parsers
         private static bool ValidSegmentUrl(string urlSegment)
 
             =>  //if there's any match, it's an instant fail
-                new[] { Verification.BumperIntro, Verification.DubCard }
+                new[] { Verification.SegmentFilter.BumperIntro, Verification.SegmentFilter.DubCard }
                     .All(s => !urlSegment.Contains(s));
 
         /// <summary>
@@ -294,7 +294,7 @@ namespace DisneyDown.Common.Parsers
                     foreach (var m in mapList)
 
                         //validate the URL
-                        if (m.Contains(Verification.BumperIntro))
+                        if (m.Contains(Verification.SegmentFilter.BumperIntro))
 
                             //return result if valid
                             return m;

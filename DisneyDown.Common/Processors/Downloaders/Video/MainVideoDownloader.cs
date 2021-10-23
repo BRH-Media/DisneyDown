@@ -50,6 +50,9 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
                             //report progress
                             ConsoleWriters.ConsoleWriteSuccess($@"Found best video quality manifest: {qualityRating.QualityName}");
 
+                            //apply global
+                            Objects.VideoQuality = qualityRating;
+
                             //create fully-qualified URL for the playlist
                             var masterBaseUri = Methods.GetBaseUrl(masterPlaylistUrl);
                             var videoPlaylistUrl = $"{masterBaseUri}{bestVideoPlaylistPath}";
@@ -209,7 +212,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
 
                                 //do download
                                 SegmentHandlers.DownloadAllMpegSegments(videoManifest, videoBaseUri,
-                                    Verification.MainContent, encryptedVideoFile,
+                                    Verification.SegmentFilter.MainContent.VideoFilter, encryptedVideoFile,
                                     @"[Main Video]");
 
                                 //report success

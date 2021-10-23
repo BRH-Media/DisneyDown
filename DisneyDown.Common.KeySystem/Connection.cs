@@ -337,7 +337,7 @@ namespace DisneyDown.Common.KeySystem
                         if (responseData?.Response?.Data?.Length > 0)
 
                             //return final key
-                            return (StoredKey)responseData.Response.Data[0];
+                            return responseData.Response.Data[0];
                     }
                 }
             }

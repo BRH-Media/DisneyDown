@@ -1,9 +1,12 @@
-﻿namespace DisneyDown.Common.Globals
+﻿using DisneyDown.Common.Globals.FilterValues;
+
+namespace DisneyDown.Common.Globals
 {
     public static class Verification
     {
-        public static string MainContent { get; } = @"-MAIN/";
-        public static string DubCard { get; } = @"DUB_CARD";
-        public static string BumperIntro { get; } = @"-BUMPER/";
+        /// <summary>
+        /// Values used to aid in filtering out incorrect segments
+        /// </summary>
+        public static FilterValuesProvider SegmentFilter => FilterValuesProvider.Init();
     }
 }

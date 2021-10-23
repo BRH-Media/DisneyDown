@@ -1,4 +1,5 @@
-﻿using DisneyDown.Common.Globals;
+﻿using DisneyDown.Common.API.Schemas;
+using DisneyDown.Common.Globals;
 using DisneyDown.Common.Processors;
 using DisneyDown.Common.Util.Diagnostics;
 using DisneyDown.Common.Util.Kit;
@@ -8,7 +9,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Objects = DisneyDown.Common.API.Globals.Objects;
 
+// ReSharper disable LocalizableElement
 // ReSharper disable InconsistentNaming
 
 namespace DisneyDown.Console
@@ -186,6 +189,9 @@ namespace DisneyDown.Console
                             "\n-a and -v flags cannot be combined; this would result in a null output.");
                     else
                     {
+                        //debugging
+                        ConsoleWriters.DebugMode = Args.DebugModeEnabled;
+
                         //set required globals
                         Strings.ManifestUrl = args[0];
                         Strings.DecryptionKey = args.Length > 1

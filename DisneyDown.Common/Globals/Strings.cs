@@ -32,6 +32,11 @@ namespace DisneyDown.Common.Globals
         public static string SubtitleLangPriorityFile { get; set; } = $@"{AssemblyDirectory}\cfg\subtitleLangPriority.cfg";
 
         /// <summary>
+        /// Filter configuration file
+        /// </summary>
+        public static string SegmentFilterConfigurationFile { get; set; } = $@"{AssemblyDirectory}\cfg\segmentFilter.json";
+
+        /// <summary>
         /// Global storage for the Disney+ Manifest URL
         /// </summary>
         public static string ManifestUrl { get; set; } = @"";

@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
+// ReSharper disable RedundantIfElseBlock
 // ReSharper disable UnusedMember.Global
 // ReSharper disable LocalizableElement
 // ReSharper disable InvertIf
@@ -89,6 +90,9 @@ namespace DisneyDown.Common.Processors
                     //store all filtered segments here
                     var segments = new List<PlaylistUriItem>();
 
+                    //debugging output
+                    ConsoleWriters.ConsoleWriteDebug($"Filtering {items.Count} segments based on filter '{filter}'");
+
                     //go through each item and perform the filter
                     foreach (var s in items)
 
@@ -99,20 +103,42 @@ namespace DisneyDown.Common.Processors
 
                             //ensure the cast URI is valid
                             if (!string.IsNullOrWhiteSpace(uri))
+                            {
 
                                 //ensure a valid match
                                 if (uri.Contains(filter))
+                                {
 
                                     //add it to the list of valid segments
                                     segments.Add((PlaylistUriItem)s);
+                                }
+                                else
+                                {
+                                    //debugging output
+                                    ConsoleWriters.ConsoleWriteDebug($"Filter failed: {uri}");
+                                }
+                            }
+                            else
+                            {
+                                //debugging output
+                                ConsoleWriters.ConsoleWriteDebug(@"Filter failed: empty string is not a URL");
+                            }
                         }
                         catch (InvalidCastException)
                         {
-                            //nothing
+                            //do nothing
                         }
+
+                    //debugging output
+                    ConsoleWriters.ConsoleWriteDebug($"Segment filter process completed ({segments.Count}/{items.Count})");
 
                     //return the filled list
                     return segments;
+                }
+                else
+                {
+                    //alert the user
+                    ConsoleWriters.ConsoleWriteError(@"Could not filter HLS segments: null parse result");
                 }
             }
             catch (Exception ex)
@@ -120,6 +146,9 @@ namespace DisneyDown.Common.Processors
                 //report error
                 ConsoleWriters.ConsoleWriteError($@"Playlist segment filter error: {ex.Message}");
             }
+
+            //alert user
+            ConsoleWriters.ConsoleWriteWarning(@"Returned null filter list: no segments will be processed");
 
             //default
             return new List<PlaylistUriItem>();
@@ -156,6 +185,7 @@ namespace DisneyDown.Common.Processors
                         var totalSegments = filteredSegments.Count;
 
                         //report merge file
+                        ConsoleWriters.ConsoleWriteDebug($"Discovered segments: {totalSegments} (Filtered: {p.Items.Count} - '{correctUrlComponent}')");
                         ConsoleWriters.ConsoleWriteInfo($"Starting segment download on merge file: {filePath}\n");
 
                         //go through each item in the playlist
@@ -205,6 +235,16 @@ namespace DisneyDown.Common.Processors
                             }
                         }
                     }
+                    else
+                    {
+                        //report error
+                        ConsoleWriters.ConsoleWriteError(@"Could not download playlist: playlist was not correctly parsed");
+                    }
+                }
+                else
+                {
+                    //report error
+                    ConsoleWriters.ConsoleWriteError(@"Could not download playlist: null playlist was provided");
                 }
             }
             catch (Exception ex)
