@@ -12,8 +12,20 @@ namespace DisneyDown.Common.Globals.FilterValues
     public class FilterValuesProvider
     {
         public FilterValuesMain MainContent { get; } = new FilterValuesMain();
-        public string DubCard { get; set; } = @"DUB_CARD";
-        public string BumperIntro { get; set; } = @"-BUMPER/";
+
+        public FilterValuesItem DubCard { get; set; } = new FilterValuesItem
+        {
+            PrimaryFilter = @"DUB_CARD",
+            SecondaryFilter = @"DUB_CARD",
+            FallbackFilter = @"DUB_CARD"
+        };
+
+        public FilterValuesItem BumperIntro { get; set; } = new FilterValuesItem
+        {
+            PrimaryFilter = @"-BUMPER/",
+            SecondaryFilter = @"-BUMPER/",
+            FallbackFilter = @"-BUMPER/"
+        };
 
         public static FilterValuesProvider Init()
         {

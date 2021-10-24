@@ -1,4 +1,5 @@
-﻿using DisneyDown.Common.Net;
+﻿using DisneyDown.Common.Globals.FilterValues;
+using DisneyDown.Common.Net;
 using DisneyDown.Common.Parsers.HLS;
 using DisneyDown.Common.Parsers.HLS.Playlist;
 using DisneyDown.Common.Util.Diagnostics;
@@ -80,18 +81,20 @@ namespace DisneyDown.Common.Processors
                     stream.Write(bytes, 0, bytes.Length);
         }
 
-        private static List<PlaylistUriItem> FilterUrlItems(IReadOnlyCollection<PlaylistItem> items, string filter)
+        private static List<PlaylistUriItem> FilterUrlItems(IReadOnlyCollection<PlaylistItem> items, FilterValuesItem filter)
         {
             try
             {
                 //ensure we were provided with valid items
-                if (items != null && !string.IsNullOrWhiteSpace(filter))
+                if (items != null && !string.IsNullOrWhiteSpace(filter.PrimaryFilter)
+                                  && !string.IsNullOrWhiteSpace(filter.SecondaryFilter)
+                                  && !string.IsNullOrWhiteSpace(filter.FallbackFilter))
                 {
                     //store all filtered segments here
                     var segments = new List<PlaylistUriItem>();
 
                     //debugging output
-                    ConsoleWriters.ConsoleWriteDebug($"Filtering {items.Count} segments based on filter '{filter}'");
+                    ConsoleWriters.ConsoleWriteDebug($"Filtering {items.Count} segments based on filter '{filter.GetStringRepresentation()}'");
 
                     //go through each item and perform the filter
                     foreach (var s in items)
@@ -104,11 +107,11 @@ namespace DisneyDown.Common.Processors
                             //ensure the cast URI is valid
                             if (!string.IsNullOrWhiteSpace(uri))
                             {
-
                                 //ensure a valid match
-                                if (uri.Contains(filter))
+                                if (uri.Contains(filter.PrimaryFilter)
+                                    || uri.Contains(filter.SecondaryFilter)
+                                    || uri.Contains(filter.FallbackFilter))
                                 {
-
                                     //add it to the list of valid segments
                                     segments.Add((PlaylistUriItem)s);
                                 }
@@ -162,7 +165,7 @@ namespace DisneyDown.Common.Processors
         /// <param name="filePath"></param>
         /// <param name="correctUrlComponent"></param>
         /// <param name="displayPrefix"></param>
-        public static void DownloadAllMpegSegments(string playlist, string baseUri, string correctUrlComponent, string filePath = @"segments.bin", string displayPrefix = @"")
+        public static void DownloadAllMpegSegments(string playlist, string baseUri, FilterValuesItem segmentFilter, string filePath = @"segments.bin", string displayPrefix = @"")
         {
             try
             {
@@ -179,13 +182,13 @@ namespace DisneyDown.Common.Processors
                         var counter = 0;
 
                         //filter out any unnecessary segments (only get the MAIN segments, for example)
-                        var filteredSegments = FilterUrlItems(p.Items, correctUrlComponent);
+                        var filteredSegments = FilterUrlItems(p.Items, segmentFilter);
 
                         //total amount of segments
                         var totalSegments = filteredSegments.Count;
 
                         //report merge file
-                        ConsoleWriters.ConsoleWriteDebug($"Discovered segments: {totalSegments} (Filtered: {p.Items.Count} - '{correctUrlComponent}')");
+                        ConsoleWriters.ConsoleWriteDebug($"Discovered segments: {totalSegments} (Filtered: {p.Items.Count}");
                         ConsoleWriters.ConsoleWriteInfo($"Starting segment download on merge file: {filePath}\n");
 
                         //go through each item in the playlist
@@ -262,7 +265,7 @@ namespace DisneyDown.Common.Processors
         /// <param name="filePath"></param>
         /// <param name="correctUrlComponent"></param>
         /// <param name="displayPrefix"></param>
-        public static string DownloadAllSubtitlesSegments(string playlist, string baseUri, string correctUrlComponent, string filePath = @"subtitles.srt", string displayPrefix = @"")
+        public static string DownloadAllSubtitlesSegments(string playlist, string baseUri, FilterValuesItem segmentFilter, string filePath = @"subtitles.srt", string displayPrefix = @"")
         {
             try
             {
@@ -279,7 +282,7 @@ namespace DisneyDown.Common.Processors
                         var counter = 0;
 
                         //filter out any unnecessary segments (only get the MAIN segments, for example)
-                        var filteredSegments = FilterUrlItems(p.Items, correctUrlComponent);
+                        var filteredSegments = FilterUrlItems(p.Items, segmentFilter);
 
                         //total amount of segments
                         var totalSegments = filteredSegments.Count;

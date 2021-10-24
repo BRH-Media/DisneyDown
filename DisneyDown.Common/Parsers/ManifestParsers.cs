@@ -165,7 +165,9 @@ namespace DisneyDown.Common.Parsers
 
             =>  //if there's any match, it's an instant fail
                 new[] { Verification.SegmentFilter.BumperIntro, Verification.SegmentFilter.DubCard }
-                    .All(s => !urlSegment.Contains(s));
+                    .All(s => !urlSegment.Contains(s.PrimaryFilter)
+                              && !urlSegment.Contains(s.SecondaryFilter)
+                              && !urlSegment.Contains(s.FallbackFilter));
 
         /// <summary>
         /// Lists all manifest MPEG-4 map URLs (MPEG-4 initialisation segment data)
@@ -294,7 +296,9 @@ namespace DisneyDown.Common.Parsers
                     foreach (var m in mapList)
 
                         //validate the URL
-                        if (m.Contains(Verification.SegmentFilter.BumperIntro))
+                        if (m.Contains(Verification.SegmentFilter.BumperIntro.PrimaryFilter)
+                            || m.Contains(Verification.SegmentFilter.BumperIntro.SecondaryFilter)
+                            || m.Contains(Verification.SegmentFilter.BumperIntro.FallbackFilter))
 
                             //return result if valid
                             return m;

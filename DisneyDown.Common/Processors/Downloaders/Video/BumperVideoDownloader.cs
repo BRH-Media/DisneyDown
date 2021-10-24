@@ -21,7 +21,9 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
                 Timers.StartTimer(Timers.Bumper.BumperVideoDownloadTimer);
 
                 //ensure there is a bumper to download
-                if (playlist.Contains(Verification.SegmentFilter.BumperIntro))
+                if (playlist.Contains(Verification.SegmentFilter.BumperIntro.PrimaryFilter)
+                    || playlist.Contains(Verification.SegmentFilter.BumperIntro.SecondaryFilter)
+                    || playlist.Contains(Verification.SegmentFilter.BumperIntro.FallbackFilter))
                 {
                     //base URI for the video playlist
                     var videoBaseUri = Methods.GetBaseUrl(playlistUri);

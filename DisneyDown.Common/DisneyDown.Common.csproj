@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\DataTableConversion.cs" />
+    <Compile Include="Globals\FilterValues\FilterValuesItem.cs" />
     <Compile Include="Globals\FilterValues\FilterValuesProvider.cs" />
     <Compile Include="Globals\FilterValues\FilterValuesMain.cs" />
     <Compile Include="Globals\Objects.cs" />
