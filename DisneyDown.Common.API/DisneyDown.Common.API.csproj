@@ -46,19 +46,24 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommonTools.cs" />
+    <Compile Include="Enums\ExchangeType.cs" />
     <Compile Include="Globals\Objects.cs" />
     <Compile Include="Globals\Strings.cs" />
     <Compile Include="JsonUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Schemas\Converter.cs" />
     <Compile Include="Schemas\Services.cs" />
+    <Compile Include="Schemas\TokenExchangeResponse.cs" />
     <Compile Include="Structures\ApiConfiguration.cs" />
+    <Compile Include="Structures\ApiDevice\ApiDeviceTokenObject.cs" />
     <Compile Include="Structures\ApiDevice\ApiDevice.cs" />
     <Compile Include="Structures\ApiDevice\ApiDeviceAttributes.cs" />
     <Compile Include="Structures\ApiDevice\ApiDeviceChrome.cs" />
     <Compile Include="Structures\ApiDevice\ApiDeviceId.cs" />
     <Compile Include="Schemas\TokenGrantResponse.cs" />
+    <Compile Include="Structures\ApiDevice\ApiDeviceTokenStorage.cs" />
     <Compile Include="Structures\RequestPayloads\DeviceGrantRequestPayload.cs" />
+    <Compile Include="TokenManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

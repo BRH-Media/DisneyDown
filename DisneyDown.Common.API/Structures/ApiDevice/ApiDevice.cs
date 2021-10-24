@@ -32,6 +32,9 @@ namespace DisneyDown.Common.API.Structures.ApiDevice
         public ApiDeviceAttributes Attributes { get; set; } = new ApiDeviceAttributes();
 
         [JsonIgnore]
+        public ApiDeviceTokenStorage Tokens { get; set; } = new ApiDeviceTokenStorage();
+
+        [JsonIgnore]
         public DeviceGrantRequestPayload DeviceRequestPayload => new DeviceGrantRequestPayload()
         {
             Runtime = Runtime,
