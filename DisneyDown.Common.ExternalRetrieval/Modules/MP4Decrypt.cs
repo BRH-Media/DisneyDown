@@ -1,8 +1,6 @@
 ﻿using DisneyDown.Common.Net;
-using DisneyDown.Common.Security;
 using DisneyDown.Common.Util.Kit;
 using System;
-using DisneyDown.Common.Security.Hashing;
 
 // ReSharper disable UnusedMember.Global
 // ReSharper disable ArrangeTypeModifiers
@@ -18,7 +16,7 @@ namespace DisneyDown.Common.ExternalRetrieval.Modules
             try
             {
                 //first step is XML endpoints extraction
-                Endpoints.EnsureXml();
+                Endpoints.EnsureJson();
 
                 //download archive
                 var archive = FetchArchive();
@@ -61,13 +59,13 @@ namespace DisneyDown.Common.ExternalRetrieval.Modules
             try
             {
                 //validation
-                if (!string.IsNullOrWhiteSpace(Globals.SystemEndpoints.MP4DecryptDownloadUrl))
+                if (!string.IsNullOrWhiteSpace(Globals.SystemEndpoints.MP4DecryptEndpoint.DownloadUrl))
                 {
                     //report download
                     ConsoleWriters.ConsoleWriteInfo(@"Downloading MP4Decrypt and MP4Dump...");
 
                     //perform download
-                    var mp4decrypt = ResourceGrab.GrabBytes(Globals.SystemEndpoints.MP4DecryptDownloadUrl);
+                    var mp4decrypt = ResourceGrab.GrabBytes(Globals.SystemEndpoints.MP4DecryptEndpoint.DownloadUrl);
 
                     //validation
                     if (mp4decrypt?.Length > 0)
@@ -76,13 +74,16 @@ namespace DisneyDown.Common.ExternalRetrieval.Modules
                         ConsoleWriters.ConsoleWriteInfo(@"Calculating checksum...");
 
                         //checksum calculation
-                        var checksum = Sha1Helper.Sha1ToHex(Sha1Helper.CalculateSha1Hash(mp4decrypt));
+                        var checksum = Globals.SystemEndpoints.MP4DecryptEndpoint.Checksum.CalculateChecksumFromAlgorithm(mp4decrypt);
 
                         //report checksum retrieval
                         ConsoleWriters.ConsoleWriteInfo(@"Retrieving valid checksum...");
 
                         //valid checksum retrieval
-                        var validChecksum = Globals.SystemEndpoints.MP4DecryptChecksum;
+                        var validChecksum = Globals.SystemEndpoints.MP4DecryptEndpoint.Checksum.RetrieveChecksum();
+
+                        //report
+                        ConsoleWriters.ConsoleWriteInfo($"Official checksum: {validChecksum}");
 
                         //report comparison of checksums
                         ConsoleWriters.ConsoleWriteInfo(@"Comparing checksums...");

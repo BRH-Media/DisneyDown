@@ -14,7 +14,7 @@ namespace DisneyDown.Common.Security.Hashing
             var hash = CalculateSha1Hash(inputBytes);
 
             //convert byte array to hex string
-            var final = Sha1ToHex(hash);
+            var final = hash.ToHex();
 
             //null validation
             return !string.IsNullOrEmpty(final) ? final : @"";
@@ -30,21 +30,6 @@ namespace DisneyDown.Common.Security.Hashing
 
             //return result
             return hash;
-        }
-
-        public static string Sha1ToHex(byte[] hash)
-        {
-            //store strings here
-            var sb = new StringBuilder();
-
-            //each byte in the hash buffer
-            foreach (var t in hash)
-
-                //append the byte in hex form
-                sb.Append(t.ToString("X2"));
-
-            //return hex-formatted string
-            return sb.ToString();
         }
     }
 }

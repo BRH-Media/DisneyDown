@@ -20,7 +20,9 @@ namespace DisneyDown.Common.API.Enums
         [Description("urn:ietf:params:oauth:grant-type:token-exchange")]
         EXCHANGE,
 
+        [Description("refresh")]
         REFRESH,
+
         IDENTITY,
         UNKNOWN
     }

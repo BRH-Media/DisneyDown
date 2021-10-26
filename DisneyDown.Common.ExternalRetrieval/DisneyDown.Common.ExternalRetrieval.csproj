@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.IO.Compression" />
@@ -40,6 +43,8 @@
     <Compile Include="ArchiveHandler.cs" />
     <Compile Include="Endpoints.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="ModuleRetrievalEndpoint.cs" />
+    <Compile Include="ModuleRetrievalEndpointChecksum.cs" />
     <Compile Include="Modules\FFMpeg.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="Modules\MP4Decrypt.cs" />
@@ -59,6 +64,8 @@
       <Name>DisneyDown.Common.Util.Kit</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

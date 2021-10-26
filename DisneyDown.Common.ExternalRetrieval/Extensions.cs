@@ -1,61 +1,49 @@
 ﻿using DisneyDown.Common.Util.Kit;
+using Newtonsoft.Json;
 using System;
 using System.IO;
-using System.Xml.Serialization;
 
 namespace DisneyDown.Common.ExternalRetrieval
 {
     public static class Extensions
     {
-        public static bool ToXml(this Endpoints e, string xmlFile)
+        public static bool ToJson(this Endpoints e, string jsonFile)
         {
             try
             {
                 //verification
-                if (e != null && !string.IsNullOrWhiteSpace(xmlFile))
+                if (e != null && !string.IsNullOrWhiteSpace(jsonFile))
                 {
                     //start serialisation
-                    e.SerializeToXml(xmlFile);
+                    e.SerializeToJson(jsonFile);
 
                     //report success
                     return true;
                 }
 
                 //report error
-                ConsoleWriters.ConsoleWriteError(@"Couldn't save endpoints XML file: invalid parameters");
+                ConsoleWriters.ConsoleWriteError(@"Couldn't save endpoints JSON file: invalid parameters");
             }
             catch (Exception ex)
             {
                 //report error
-                ConsoleWriters.ConsoleWriteError($"Couldn't save endpoints XML file: {ex.Message}");
+                ConsoleWriters.ConsoleWriteError($"Couldn't save endpoints JSON file: {ex.Message}");
             }
 
             //default return
             return false;
         }
 
-        private static void SerializeToXml<T>(this T o, string xmlFilePath)
+        private static void SerializeToJson<T>(this T o, string jsonFilePath)
         {
-            //XML serialisation handler
-            var xmlSerializer = new XmlSerializer(o.GetType());
+            //JSON serialiser
+            var jsonRepresentation = JsonConvert.SerializeObject(o, Formatting.Indented);
 
-            //file handler
-            using (var writer = new StreamWriter(xmlFilePath))
-
-                //serialise straight to the file
-                xmlSerializer.Serialize(writer, o);
+            //serialise straight to the file
+            File.WriteAllText(jsonFilePath, jsonRepresentation);
         }
 
         public static T DeserializeToObject<T>(string filepath) where T : class
-        {
-            //XML serialisation handler
-            var ser = new XmlSerializer(typeof(T));
-
-            //file handler
-            using (var sr = new StreamReader(filepath))
-
-                //deserialise and return the final object result
-                return (T)ser.Deserialize(sr);
-        }
+            => JsonConvert.DeserializeObject<T>(filepath);
     }
 }

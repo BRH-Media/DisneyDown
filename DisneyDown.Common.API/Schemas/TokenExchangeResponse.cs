@@ -10,6 +10,12 @@ namespace DisneyDown.Common.API.Schemas
         [JsonProperty("refresh_token")]
         public string RefreshToken { get; set; }
 
+        [JsonProperty("token_type")]
+        public string TokenType { get; set; }
+
+        [JsonProperty("expiresIn")]
+        public int ExpiresIn { get; set; }
+
         //deserialiser
         public static TokenExchangeResponse FromJson(string json) => JsonConvert.DeserializeObject<TokenExchangeResponse>(json, Converter.Settings);
     }

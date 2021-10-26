@@ -35,6 +35,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Hashing\HashingTools.cs" />
     <Compile Include="Hashing\Md5Helper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Hashing\Sha1Helper.cs" />

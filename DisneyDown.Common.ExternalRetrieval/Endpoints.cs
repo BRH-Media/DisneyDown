@@ -1,45 +1,63 @@
-﻿// ReSharper disable UnusedMember.Global
+﻿using DisneyDown.Common.Util.Kit;
+using System;
+using System.IO;
+
+// ReSharper disable RedundantIfElseBlock
+// ReSharper disable UnusedMember.Global
 // ReSharper disable ArrangeTypeModifiers
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnusedVariable
-
-using DisneyDown.Common.Util.Kit;
-using System;
-using System.IO;
+// ReSharper disable StringLiteralTypo
 
 namespace DisneyDown.Common.ExternalRetrieval
 {
     public class Endpoints
     {
-        public string FFMpegDownloadUrl { get; set; } = @"https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip";
-        public string FFMpegChecksumUrl { get; set; } = @"https://www.gyan.dev/ffmpeg/builds/sha256-release-essentials-zip";
-        public string MP4DecryptDownloadUrl { get; set; } = @"http://zebulon.bok.net/Bento4/binaries/Bento4-SDK-1-6-0-637.x86_64-microsoft-win32.zip";
-        public string MP4DecryptChecksum { get; set; } = @"a60f19aedcdfd9bc7a9fc6a4c7587fefb4c59273";
-        public static string XmlFileDirectory { get; set; } = $@"{Globals.AssemblyDirectory}\cfg";
-
-        public static void EnsureXml()
+        public ModuleRetrievalEndpoint FFMpegEndpoint { get; set; } = new ModuleRetrievalEndpoint
         {
-            //XML file to save/load
-            const string file = @"external.xml";
+            DownloadUrl = @"https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip",
+            Checksum =
+            {
+                Algorithm = @"sha256",
+                Content = @"fetch:aHR0cHM6Ly93d3cuZ3lhbi5kZXYvZmZtcGVnL2J1aWxkcy9wYWNrYWdlcy9mZm1wZWctNC40LjEtZXNzZW50aWFsc19idWlsZC56aXAuc2hhMjU2"
+            }
+        };
+
+        public ModuleRetrievalEndpoint MP4DecryptEndpoint { get; set; } = new ModuleRetrievalEndpoint
+        {
+            DownloadUrl = @"http://zebulon.bok.net/Bento4/binaries/Bento4-SDK-1-6-0-637.x86_64-microsoft-win32.zip",
+            Checksum =
+            {
+                Algorithm = @"sha1",
+                Content = @"return:YTYwZjE5YWVkY2RmZDliYzdhOWZjNmE0Yzc1ODdmZWZiNGM1OTI3Mw=="
+            }
+        };
+
+        public static string JsonFileDirectory { get; set; } = $@"{Globals.AssemblyDirectory}\cfg";
+
+        public static void EnsureJson()
+        {
+            //JSON file to save/load
+            const string file = @"externalModules.json";
 
             //does the folder exist yet
-            if (!Directory.Exists(XmlFileDirectory))
+            if (!Directory.Exists(JsonFileDirectory))
 
                 //no, create it
-                Directory.CreateDirectory(XmlFileDirectory);
+                Directory.CreateDirectory(JsonFileDirectory);
 
             //file final path
-            var filePath = $@"{XmlFileDirectory}\{file}";
+            var filePath = $@"{JsonFileDirectory}\{file}";
 
             //does it not already exist?
             if (!File.Exists(filePath))
 
-                //export current Endpoints object to XML
-                new Endpoints().ToXml(filePath);
+                //export current Endpoints object to JSON
+                new Endpoints().ToJson(filePath);
             else
             {
                 //attempt to load it
-                var e = FromXml(filePath);
+                var e = FromJson(filePath);
 
                 //validation
                 if (e != null)
@@ -49,27 +67,36 @@ namespace DisneyDown.Common.ExternalRetrieval
             }
         }
 
-        public static Endpoints FromXml(string xmlFile)
+        public static Endpoints FromJson(string jsonFile)
         {
             try
             {
                 //verification
-                if (!string.IsNullOrWhiteSpace(xmlFile))
+                if (!string.IsNullOrWhiteSpace(jsonFile))
                 {
-                    //start serialisation
-                    var e = Extensions.DeserializeToObject<Endpoints>(xmlFile);
+                    //validation
+                    if (File.Exists(jsonFile))
+                    {
+                        //start serialisation
+                        var e = Extensions.DeserializeToObject<Endpoints>(File.ReadAllText(jsonFile));
 
-                    //report success
-                    return e;
+                        //report success
+                        return e;
+                    }
+                    else
+                    {
+                        //report error
+                        ConsoleWriters.ConsoleWriteError(@"Tried to read endpoints JSON file but it doesn't exist");
+                    }
                 }
 
                 //report error
-                ConsoleWriters.ConsoleWriteError(@"Couldn't load endpoints XML file: invalid parameters");
+                ConsoleWriters.ConsoleWriteError(@"Couldn't load endpoints JSON file: invalid parameters");
             }
             catch (Exception ex)
             {
                 //report error
-                ConsoleWriters.ConsoleWriteError($"Couldn't load endpoints XML file: {ex.Message}");
+                ConsoleWriters.ConsoleWriteError($"Couldn't load endpoints JSON file: {ex.Message}");
             }
 
             //default return

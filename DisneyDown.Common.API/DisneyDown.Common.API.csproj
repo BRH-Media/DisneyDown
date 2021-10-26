@@ -43,8 +43,10 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net" />
+    <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AuthManager.cs" />
     <Compile Include="CommonTools.cs" />
     <Compile Include="Enums\ExchangeType.cs" />
     <Compile Include="Globals\Objects.cs" />
@@ -55,6 +57,7 @@
     <Compile Include="Schemas\Services.cs" />
     <Compile Include="Schemas\TokenExchangeResponse.cs" />
     <Compile Include="Structures\ApiConfiguration.cs" />
+    <Compile Include="Structures\ApiConfigurationCredentials.cs" />
     <Compile Include="Structures\ApiDevice\ApiDeviceTokenObject.cs" />
     <Compile Include="Structures\ApiDevice\ApiDevice.cs" />
     <Compile Include="Structures\ApiDevice\ApiDeviceAttributes.cs" />
@@ -63,6 +66,7 @@
     <Compile Include="Schemas\TokenGrantResponse.cs" />
     <Compile Include="Structures\ApiDevice\ApiDeviceTokenStorage.cs" />
     <Compile Include="Structures\RequestPayloads\DeviceGrantRequestPayload.cs" />
+    <Compile Include="Structures\RequestPayloads\TokenExchangeRequestPayload.cs" />
     <Compile Include="TokenManager.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -3,10 +3,8 @@
 // ReSharper disable InconsistentNaming
 
 using DisneyDown.Common.Net;
-using DisneyDown.Common.Security;
 using DisneyDown.Common.Util.Kit;
 using System;
-using DisneyDown.Common.Security.Hashing;
 
 namespace DisneyDown.Common.ExternalRetrieval.Modules
 {
@@ -17,7 +15,7 @@ namespace DisneyDown.Common.ExternalRetrieval.Modules
             try
             {
                 //first step is XML endpoints extraction
-                Endpoints.EnsureXml();
+                Endpoints.EnsureJson();
 
                 //download archive
                 var archive = FetchArchive();
@@ -60,13 +58,13 @@ namespace DisneyDown.Common.ExternalRetrieval.Modules
             try
             {
                 //validation
-                if (!string.IsNullOrWhiteSpace(Globals.SystemEndpoints.FFMpegDownloadUrl))
+                if (!string.IsNullOrWhiteSpace(Globals.SystemEndpoints.FFMpegEndpoint.DownloadUrl))
                 {
                     //report download
                     ConsoleWriters.ConsoleWriteInfo(@"Downloading FFMPEG...");
 
                     //perform download
-                    var ffmpeg = ResourceGrab.GrabBytes(Globals.SystemEndpoints.FFMpegDownloadUrl);
+                    var ffmpeg = ResourceGrab.GrabBytes(Globals.SystemEndpoints.FFMpegEndpoint.DownloadUrl);
 
                     //validation
                     if (ffmpeg?.Length > 0)
@@ -75,13 +73,16 @@ namespace DisneyDown.Common.ExternalRetrieval.Modules
                         ConsoleWriters.ConsoleWriteInfo(@"Calculating checksum...");
 
                         //checksum calculation
-                        var checksum = Sha256Helper.Sha256ToHex(Sha256Helper.CalculateSha256Hash(ffmpeg));
+                        var checksum = Globals.SystemEndpoints.FFMpegEndpoint.Checksum.CalculateChecksumFromAlgorithm(ffmpeg);
 
                         //report checksum retrieval
                         ConsoleWriters.ConsoleWriteInfo(@"Retrieving valid checksum...");
 
                         //valid checksum retrieval
-                        var validChecksum = ResourceGrab.GrabString(Globals.SystemEndpoints.FFMpegChecksumUrl);
+                        var validChecksum = Globals.SystemEndpoints.FFMpegEndpoint.Checksum.RetrieveChecksum();
+
+                        //report
+                        ConsoleWriters.ConsoleWriteInfo($"Official checksum: {validChecksum}");
 
                         //report comparison of checksums
                         ConsoleWriters.ConsoleWriteInfo(@"Comparing checksums...");
