@@ -43,7 +43,7 @@ namespace DisneyDown.Common.API.Structures.ApiDevice
             Attributes = Attributes
         };
 
-        public TokenGrantResponse RequestDeviceToken()
+        public TokenGrantResponse RequestDeviceGrant()
         {
             try
             {

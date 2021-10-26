@@ -53,9 +53,14 @@
     <Compile Include="Globals\Strings.cs" />
     <Compile Include="JsonUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Schemas\AuthenticationSchemas\BAMIdentityResponse.cs" />
     <Compile Include="Schemas\Converter.cs" />
+    <Compile Include="Schemas\MediaSchemas\DmcSeriesBundleSchemaContainer\DmcSeriesBundleSchema.cs" />
+    <Compile Include="Schemas\MediaSchemas\DmcVideoBundleSchemaContainer\DmcVideoBundleSchema.cs" />
+    <Compile Include="Schemas\MediaSchemas\DmcVideoSchemaContainer\DmcVideoSchema.cs" />
+    <Compile Include="Schemas\MediaSchemas\PlaybackScenarioSchemaContainer\PlaybackScenarioSchema.cs" />
     <Compile Include="Schemas\Services.cs" />
-    <Compile Include="Schemas\TokenExchangeResponse.cs" />
+    <Compile Include="Schemas\AuthenticationSchemas\TokenExchangeResponse.cs" />
     <Compile Include="Structures\ApiConfiguration.cs" />
     <Compile Include="Structures\ApiConfigurationCredentials.cs" />
     <Compile Include="Structures\ApiDevice\ApiDeviceTokenObject.cs" />
@@ -63,7 +68,7 @@
     <Compile Include="Structures\ApiDevice\ApiDeviceAttributes.cs" />
     <Compile Include="Structures\ApiDevice\ApiDeviceChrome.cs" />
     <Compile Include="Structures\ApiDevice\ApiDeviceId.cs" />
-    <Compile Include="Schemas\TokenGrantResponse.cs" />
+    <Compile Include="Schemas\AuthenticationSchemas\TokenGrantResponse.cs" />
     <Compile Include="Structures\ApiDevice\ApiDeviceTokenStorage.cs" />
     <Compile Include="Structures\RequestPayloads\DeviceGrantRequestPayload.cs" />
     <Compile Include="Structures\RequestPayloads\TokenExchangeRequestPayload.cs" />

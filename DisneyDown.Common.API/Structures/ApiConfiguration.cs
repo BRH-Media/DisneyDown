@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DisneyDown.Common.API.Structures
+﻿namespace DisneyDown.Common.API.Structures
 {
     public class ApiConfiguration
     {
+        public ApiConfigurationCredentials Credentials { get; set; } = new ApiConfigurationCredentials();
     }
 }

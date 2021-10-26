@@ -9,8 +9,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using DisneyDown.Common.API;
-using DisneyDown.Common.API.Enums;
 using Objects = DisneyDown.Common.API.Globals.Objects;
 
 // ReSharper disable LocalizableElement
@@ -196,11 +194,6 @@ namespace DisneyDown.Console
 
                         //service information object
                         Objects.Services = ServiceInformation.GetServices();
-
-                        //device tokens
-                        var token = Objects.CurrentDevice.RequestDeviceToken();
-                        var tokenAuth =
-                            Objects.CurrentDevice.PerformTokenExchange(token.Assertion, ExchangeType.DEVICE);
 
                         //set required globals
                         Strings.ManifestUrl = args[0];
