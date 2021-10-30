@@ -19,17 +19,17 @@ namespace DisneyDown.Common.Globals
         /// <summary>
         /// Default language priority file for audio tracks
         /// </summary>
-        public static string AudioLangPriorityFile { get; set; } = $@"{AssemblyDirectory}\cfg\audioLangPriority.cfg";
+        public static string AudioLangPriorityFile { get; set; } = $@"{AssemblyDirectory}\cfg\priority\audioLangPriority.cfg";
 
         /// <summary>
         /// Default audio group priority file
         /// </summary>
-        public static string AudioGroupPriorityFile { get; set; } = $@"{AssemblyDirectory}\cfg\audioGroupPriority.cfg";
+        public static string AudioGroupPriorityFile { get; set; } = $@"{AssemblyDirectory}\cfg\priority\audioGroupPriority.cfg";
 
         /// <summary>
         /// Default language priority file for subtitle tracks
         /// </summary>
-        public static string SubtitleLangPriorityFile { get; set; } = $@"{AssemblyDirectory}\cfg\subtitleLangPriority.cfg";
+        public static string SubtitleLangPriorityFile { get; set; } = $@"{AssemblyDirectory}\cfg\priority\subtitleLangPriority.cfg";
 
         /// <summary>
         /// Filter configuration file

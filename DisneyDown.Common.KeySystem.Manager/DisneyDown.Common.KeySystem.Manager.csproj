@@ -106,14 +106,6 @@
       <Project>{e60e0cfd-3d67-485d-b96e-7fdd3f1a49e7}</Project>
       <Name>DisneyDown.Common.KeySystem</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DisneyDown.Common.Net\DisneyDown.Common.Net.csproj">
-      <Project>{e8a05637-f1f8-48df-a52f-e17587e832ae}</Project>
-      <Name>DisneyDown.Common.Net</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DisneyDown.Common.Security\DisneyDown.Common.Security.csproj">
-      <Project>{35b93821-9759-4b5f-8adf-c238ed3d0e72}</Project>
-      <Name>DisneyDown.Common.Security</Name>
-    </ProjectReference>
     <ProjectReference Include="..\DisneyDown.Common.Util.Kit\DisneyDown.Common.Util.Kit.csproj">
       <Project>{1df9eab5-5707-4f5e-8dae-a791c3f3cd42}</Project>
       <Name>DisneyDown.Common.Util.Kit</Name>

@@ -38,7 +38,7 @@ namespace DisneyDown.Common.Schemas
                     //alert user
                     ConsoleWriters.ConsoleWriteInfo($"Loading bandwidth definitions from file: {Strings.BandwidthConfigurationFile}");
 
-                    //load it instead of downloading a new copy
+                    //load the JSON content
                     var bandwidthJson = File.ReadAllText(Strings.BandwidthConfigurationFile);
 
                     //verification
@@ -76,7 +76,7 @@ namespace DisneyDown.Common.Schemas
                     //alert user
                     ConsoleWriters.ConsoleWriteInfo(@"No file found; using and exporting default bandwidth definitions");
 
-                    //download a new copy
+                    //create a new bandwidth definitions object
                     var bandwidthDefinitions = new BandwidthDefinitions();
 
                     //serialise the object to formatted JSON
