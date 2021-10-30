@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using DisneyDown.Common.Schemas.MP4Dump;
 using Newtonsoft.Json;
+using Converter = DisneyDown.Common.Util.Converter;
 
 namespace DisneyDown.Common.Schemas
 {

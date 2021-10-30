@@ -1,5 +1,5 @@
 ﻿using DisneyDown.Common.KeySystem;
-using DisneyDown.Common.Parsers;
+using DisneyDown.Common.Schemas;
 
 namespace DisneyDown.Common.Globals
 {
@@ -14,5 +14,10 @@ namespace DisneyDown.Common.Globals
         /// Current key server connection provider; maintains credentials and endpoint methods
         /// </summary>
         public static Connection KeyServerConnection { get; set; } = new Connection();
+
+        /// <summary>
+        /// Current bandwidth definitions; maintains quality filtering information
+        /// </summary>
+        public static BandwidthDefinitions CurrentBandwidthDefinitions { get; set; } = BandwidthDefinitions.GetBandwidthDefinitions();
     }
 }

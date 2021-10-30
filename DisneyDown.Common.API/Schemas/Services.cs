@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using DisneyDown.Common.API.Globals;
+﻿using DisneyDown.Common.API.Globals;
 using DisneyDown.Common.Net;
+using DisneyDown.Common.Util;
 using DisneyDown.Common.Util.Kit;
 using Newtonsoft.Json;
 using RestSharp;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
 // ReSharper disable RedundantIfElseBlock
 // ReSharper disable IdentifierTypo
@@ -63,6 +64,9 @@ namespace DisneyDown.Common.API.Schemas
                         //validation
                         if (services != null)
                         {
+                            //restore verbosity setting to default
+                            ConsoleWriters.DisableAllOutput = false;
+
                             //return the result
                             return services;
                         }
@@ -124,6 +128,7 @@ namespace DisneyDown.Common.API.Schemas
             return null;
         }
     }
+
     public class Application
     {
         [JsonProperty("id")]
@@ -132,6 +137,7 @@ namespace DisneyDown.Common.API.Schemas
         [JsonProperty("name")]
         public string Name { get; set; }
     }
+
     public class CommonHeaders
     {
         [JsonProperty("X-Application-Version")]
@@ -1845,12 +1851,16 @@ namespace DisneyDown.Common.API.Schemas
             {
                 case "DELETE":
                     return Method.DELETE;
+
                 case "GET":
                     return Method.GET;
+
                 case "PATCH":
                     return Method.PATCH;
+
                 case "POST":
                     return Method.POST;
+
                 case "PUT":
                     return Method.PUT;
             }
@@ -1870,15 +1880,19 @@ namespace DisneyDown.Common.API.Schemas
                 case Method.DELETE:
                     serializer.Serialize(writer, "DELETE");
                     return;
+
                 case Method.GET:
                     serializer.Serialize(writer, "GET");
                     return;
+
                 case Method.PATCH:
                     serializer.Serialize(writer, "PATCH");
                     return;
+
                 case Method.POST:
                     serializer.Serialize(writer, "POST");
                     return;
+
                 case Method.PUT:
                     serializer.Serialize(writer, "PUT");
                     return;

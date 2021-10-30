@@ -5,6 +5,7 @@ using DisneyDown.Common.Util.Kit;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
+using Converter = DisneyDown.Common.Util.Converter;
 
 namespace DisneyDown.Common.API.Structures.ApiDevice
 {

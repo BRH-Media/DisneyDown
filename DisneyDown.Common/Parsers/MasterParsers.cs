@@ -1,6 +1,7 @@
 ﻿using DisneyDown.Common.Globals;
 using DisneyDown.Common.Parsers.HLS;
 using DisneyDown.Common.Parsers.HLS.Playlist;
+using DisneyDown.Common.Schemas;
 using DisneyDown.Common.Util.Kit;
 using System;
 using System.Collections.Generic;
@@ -347,7 +348,7 @@ namespace DisneyDown.Common.Parsers
                     }
 
                     //return filtered result
-                    return SortBestPlaylist(playlistUrls.ToArray(), BandwidthDefinitions.VideoDefinitions);
+                    return SortBestPlaylist(playlistUrls.ToArray(), Objects.CurrentBandwidthDefinitions.VideoDefinitions);
                 }
             }
             catch (Exception ex)
@@ -415,7 +416,7 @@ namespace DisneyDown.Common.Parsers
                     var finalPlaylists = FilterLanguages(playlistTags.ToArray(), Strings.AudioLangPriorityFile);
 
                     //return filtered result
-                    return SortBestPlaylist(finalPlaylists, BandwidthDefinitions.AudioDefinitions);
+                    return SortBestPlaylist(finalPlaylists, Objects.CurrentBandwidthDefinitions.AudioDefinitions);
                 }
             }
             catch (Exception ex)

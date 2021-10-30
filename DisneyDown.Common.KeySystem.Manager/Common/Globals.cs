@@ -1,5 +1,4 @@
-﻿using DisneyDown.Common.KeySystem.Schemas;
-using DisneyDown.Common.KeySystem.Schemas.UserSchema;
+﻿using DisneyDown.Common.KeySystem.Schemas.UserSchema;
 
 namespace DisneyDown.Common.KeySystem.Manager.Common
 {

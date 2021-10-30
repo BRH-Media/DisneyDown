@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.IO;
 
-namespace DisneyDown.Common.API
+namespace DisneyDown.Common.Util
 {
     public static class JsonUtil
     {

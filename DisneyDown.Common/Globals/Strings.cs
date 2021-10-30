@@ -37,6 +37,11 @@ namespace DisneyDown.Common.Globals
         public static string SegmentFilterConfigurationFile { get; set; } = $@"{AssemblyDirectory}\cfg\segmentFilter.json";
 
         /// <summary>
+        /// Bandwidth configuration file
+        /// </summary>
+        public static string BandwidthConfigurationFile { get; set; } = $@"{AssemblyDirectory}\cfg\bandwidthDefinitions.json";
+
+        /// <summary>
         /// Global storage for the Disney+ Manifest URL
         /// </summary>
         public static string ManifestUrl { get; set; } = @"";

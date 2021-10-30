@@ -39,6 +39,7 @@
     <Reference Include="System.Data" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Util\Converter.cs" />
     <Compile Include="Extensions\DataTableConversion.cs" />
     <Compile Include="Globals\FilterValues\FilterValuesItem.cs" />
     <Compile Include="Globals\FilterValues\FilterValuesProvider.cs" />
@@ -47,8 +48,9 @@
     <Compile Include="Globals\Strings.cs" />
     <Compile Include="Globals\Args.cs" />
     <Compile Include="Globals\Verification.cs" />
-    <Compile Include="Globals\BandwidthDefinitions.cs" />
-    <Compile Include="Parsers\QualityRating.cs" />
+    <Compile Include="Schemas\BandwidthDefinitions.cs" />
+    <Compile Include="Util\JsonUtil.cs" />
+    <Compile Include="Schemas\QualityRating.cs" />
     <Compile Include="Processors\Downloaders\Audio\BumperAudioDownloader.cs" />
     <Compile Include="Processors\Downloaders\Subtitles\MainSubtitlesDownloader.cs" />
     <Compile Include="Processors\Downloaders\Video\BumperVideoDownloader.cs" />
@@ -108,9 +110,7 @@
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Security\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
