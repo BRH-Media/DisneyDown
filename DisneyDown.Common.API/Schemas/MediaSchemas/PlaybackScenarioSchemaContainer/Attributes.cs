@@ -2,7 +2,7 @@
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.PlaybackScenarioSchemaContainer
 {
-    public class Attributes
+    public partial class Attributes
     {
         [JsonProperty("drms")]
         public string[] Drms { get; set; }

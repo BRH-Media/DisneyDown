@@ -2,7 +2,7 @@
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.PlaybackScenarioSchemaContainer
 {
-    public class Audio
+    public partial class Audio
     {
         [JsonProperty("name")]
         public string Name { get; set; }

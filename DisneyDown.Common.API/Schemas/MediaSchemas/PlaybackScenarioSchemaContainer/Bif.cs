@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.PlaybackScenarioSchemaContainer
 {
-    public class Bif
+    public partial class Bif
     {
         [JsonProperty("rel")]
         public string Rel { get; set; }

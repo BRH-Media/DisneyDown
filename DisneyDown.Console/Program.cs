@@ -1,7 +1,4 @@
-﻿using DisneyDown.Common.API;
-using DisneyDown.Common.API.Enums;
-using DisneyDown.Common.API.Schemas;
-using DisneyDown.Common.Globals;
+﻿using DisneyDown.Common.Globals;
 using DisneyDown.Common.Processors;
 using DisneyDown.Common.Util.Diagnostics;
 using DisneyDown.Common.Util.Kit;
@@ -11,8 +8,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using DisneyDown.Common.API.Schemas.ServicesSchema;
-using Objects = DisneyDown.Common.API.Globals.Objects;
 
 // ReSharper disable LocalizableElement
 // ReSharper disable InconsistentNaming
@@ -171,35 +166,7 @@ namespace DisneyDown.Console
         {
             try
             {
-                //temp
-                //debugging
-                ConsoleWriters.DebugMode = Args.DebugModeEnabled;
-
-                //service information object
-                Objects.Services = ServiceInformation.GetServices();
-
-                //setup API
-                var deviceGrant = Objects.Configuration.DeviceContext.RequestDeviceGrant();
-                var deviceToken =
-                    Objects.Configuration.DeviceContext.PerformTokenExchange(deviceGrant.Assertion,
-                        ExchangeType.DEVICE);
-                var loginToken = Objects.Configuration.DeviceContext.Login(deviceToken.AccessToken);
-                var accountToken =
-                    Objects.Configuration.DeviceContext.RequestAccountGrant(loginToken,
-                        deviceToken.AccessToken);
-                var accountGrant =
-                    Objects.Configuration.DeviceContext.PerformTokenExchange(accountToken.Assertion,
-                        ExchangeType.ACCOUNT);
-
-                //get bundle
-                var videoBundle =
-                    Objects.Configuration.DeviceContext.RequestVideoBundle(@"3tIlSbvKpEk1",
-                        accountGrant.AccessToken);
-
-                //debugging
-                ConsoleWriters.ConsoleWriteDebug(videoBundle.Data.DmcVideoBundle.Video.InternalTitle);
-
-                //main execution timer start
+                //execution timer
                 Timers.StartTimer(Timers.Generic.ExecutionTimer);
 
                 //verify arguments
@@ -220,6 +187,9 @@ namespace DisneyDown.Console
                             "\n-a and -v flags cannot be combined; this would result in a null output.");
                     else
                     {
+                        //debugging
+                        ConsoleWriters.DebugMode = Args.DebugModeEnabled;
+
                         //set required globals
                         Strings.ManifestUrl = args[0];
                         Strings.DecryptionKey = args.Length > 1

@@ -18,6 +18,6 @@ namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoBundleSchemaContain
 
     public partial class DmcVideoBundleSchema
     {
-        public static DmcVideoBundleSchema FromJson(string json) => JsonConvert.DeserializeObject<DmcVideoBundleSchema>(json, DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoBundleSchemaContainer.Converter.Settings);
+        public static DmcVideoBundleSchema FromJson(string json) => JsonConvert.DeserializeObject<DmcVideoBundleSchema>(json, ApiJsonConverter.Settings);
     }
 }

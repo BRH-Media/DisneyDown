@@ -2,7 +2,7 @@
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.PlaybackScenarioSchemaContainer
 {
-    public class Variant
+    public partial class Variant
     {
         [JsonProperty("bandwidth")]
         public long Bandwidth { get; set; }

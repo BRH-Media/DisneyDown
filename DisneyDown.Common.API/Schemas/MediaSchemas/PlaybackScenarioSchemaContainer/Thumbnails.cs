@@ -2,7 +2,7 @@
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.PlaybackScenarioSchemaContainer
 {
-    public class Thumbnails
+    public partial class Thumbnails
     {
         [JsonProperty("bif")]
         public Bif Bif { get; set; }

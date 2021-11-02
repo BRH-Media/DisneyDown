@@ -1,14 +1,10 @@
 ﻿using System;
-using DisneyDown.Common.API.Schemas.ServicesSchema;
 using Newtonsoft.Json;
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.PlaybackScenarioSchemaContainer
 {
-    public class FluffyQos
+    public partial class Qos
     {
-        [JsonProperty("filter")]
-        public string Filter { get; set; }
-
         [JsonProperty("fguid")]
         public Guid Fguid { get; set; }
 
@@ -22,19 +18,31 @@ namespace DisneyDown.Common.API.Schemas.MediaSchemas.PlaybackScenarioSchemaConta
         [JsonProperty("capabilities")]
         public string Capabilities { get; set; }
 
+        [JsonProperty("cdnVendor")]
+        public string CdnVendor { get; set; }
+
         [JsonProperty("pool")]
         public string Pool { get; set; }
 
+        [JsonProperty("encodingFeatures")]
+        public string EncodingFeatures { get; set; }
+
         [JsonProperty("mediaType")]
         public string MediaType { get; set; }
+
+        [JsonProperty("cdnWithOrigin")]
+        public string CdnWithOrigin { get; set; }
+
+        [JsonProperty("platform")]
+        public string Platform { get; set; }
+
+        [JsonProperty("cdnName")]
+        public string CdnName { get; set; }
 
         [JsonProperty("experienceContext")]
         public string ExperienceContext { get; set; }
 
         [JsonProperty("productType")]
         public string ProductType { get; set; }
-
-        [JsonProperty("platform")]
-        public string Platform { get; set; }
     }
 }

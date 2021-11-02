@@ -2,7 +2,7 @@
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.PlaybackScenarioSchemaContainer
 {
-    public class Headers
+    public partial class Headers
     {
         [JsonProperty("x-playback-scenario-name")]
         public string XPlaybackScenarioName { get; set; }

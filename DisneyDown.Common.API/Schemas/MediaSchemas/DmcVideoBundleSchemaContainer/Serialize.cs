@@ -4,6 +4,6 @@ namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoBundleSchemaContain
 {
     public static class Serialize
     {
-        public static string ToJson(this DmcVideoBundleSchema self) => JsonConvert.SerializeObject(self, DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoBundleSchemaContainer.Converter.Settings);
+        public static string ToJson(this DmcVideoBundleSchema self) => JsonConvert.SerializeObject(self, ApiJsonConverter.Settings);
     }
 }
