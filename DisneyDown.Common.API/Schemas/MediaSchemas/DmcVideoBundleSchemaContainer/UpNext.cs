@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoBundleSchemaContainer
 {
-    public class Ffec
+    public partial class UpNext
     {
         [JsonProperty("id")]
         public Guid Id { get; set; }

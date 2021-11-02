@@ -2,7 +2,7 @@
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoBundleSchemaContainer
 {
-    public class Param
+    public partial class Param
     {
         [JsonProperty("name")]
         public string Name { get; set; }

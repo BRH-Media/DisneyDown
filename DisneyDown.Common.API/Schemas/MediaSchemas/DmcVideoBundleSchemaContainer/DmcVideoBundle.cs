@@ -2,7 +2,7 @@
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoBundleSchemaContainer
 {
-    public class DmcVideoBundle
+    public partial class DmcVideoBundle
     {
         [JsonProperty("extras")]
         public Extras Extras { get; set; }
@@ -14,6 +14,6 @@ namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoBundleSchemaContain
         public Related Related { get; set; }
 
         [JsonProperty("video")]
-        public Video Video { get; set; }
+        public DmcVideoBundleVideo Video { get; set; }
     }
 }

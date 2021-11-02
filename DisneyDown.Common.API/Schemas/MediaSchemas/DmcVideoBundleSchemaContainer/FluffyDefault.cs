@@ -2,7 +2,7 @@
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoBundleSchemaContainer
 {
-    public class FluffyDefault
+    public partial class FluffyDefault
     {
         [JsonProperty("content")]
         public string Content { get; set; }

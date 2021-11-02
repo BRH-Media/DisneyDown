@@ -2,7 +2,7 @@
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoBundleSchemaContainer
 {
-    public class Related
+    public partial class Related
     {
         [JsonProperty("experimentToken")]
         public string ExperimentToken { get; set; }

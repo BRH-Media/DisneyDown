@@ -2,12 +2,12 @@
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoBundleSchemaContainer
 {
-    public class VideoText
+    public partial class PurpleText
     {
         [JsonProperty("title")]
-        public FluffyTitle Title { get; set; }
+        public Title Title { get; set; }
 
         [JsonProperty("description")]
-        public FluffyDescription Description { get; set; }
+        public PurpleDescription Description { get; set; }
     }
 }

@@ -1,9 +1,8 @@
-﻿using DisneyDown.Common.API.Schemas.ServicesSchema;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoBundleSchemaContainer
 {
-    public class TypedGenre
+    public partial class TypedGenre
     {
         [JsonProperty("name")]
         public string Name { get; set; }

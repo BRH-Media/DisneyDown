@@ -2,7 +2,7 @@
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoBundleSchemaContainer
 {
-    public class AudioTrack
+    public partial class AudioTrack
     {
         [JsonProperty("features", NullValueHandling = NullValueHandling.Ignore)]
         public string[] Features { get; set; }

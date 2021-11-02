@@ -1,9 +1,8 @@
-﻿using DisneyDown.Common.API.Schemas.ServicesSchema;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoBundleSchemaContainer
 {
-    public class Actor
+    public partial class Actor
     {
         [JsonProperty("characterDetails")]
         public CharacterDetails CharacterDetails { get; set; }

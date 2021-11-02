@@ -2,7 +2,7 @@
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoBundleSchemaContainer
 {
-    public class Rating
+    public partial class Rating
     {
         [JsonProperty("advisories")]
         public object[] Advisories { get; set; }

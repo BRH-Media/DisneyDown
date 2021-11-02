@@ -2,7 +2,7 @@
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoBundleSchemaContainer
 {
-    public class FluffyBackgroundDetail
+    public partial class BackgroundDetail
     {
         [JsonProperty("program")]
         public BackgroundDetailProgram Program { get; set; }

@@ -2,7 +2,7 @@
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoBundleSchemaContainer
 {
-    public class VideoArtMediaMetadata
+    public partial class VideoArtMediaMetadata
     {
         [JsonProperty("urls")]
         public Url[] Urls { get; set; }

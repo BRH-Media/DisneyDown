@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoBundleSchemaContainer
 {
-    public class Video
+    public partial class DmcVideoBundleVideo
     {
         [JsonProperty("badging")]
         public object Badging { get; set; }
@@ -45,10 +45,13 @@ namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoBundleSchemaContain
         public string InternalTitle { get; set; }
 
         [JsonProperty("image")]
-        public VideoImage Image { get; set; }
+        public ItemImage Image { get; set; }
 
         [JsonProperty("labels")]
         public object[] Labels { get; set; }
+
+        [JsonProperty("league")]
+        public object League { get; set; }
 
         [JsonProperty("mediaMetadata")]
         public VideoMediaMetadata MediaMetadata { get; set; }
@@ -57,10 +60,10 @@ namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoBundleSchemaContain
         public object Meta { get; set; }
 
         [JsonProperty("mediaRights")]
-        public VideoMediaRights MediaRights { get; set; }
+        public MediaRights MediaRights { get; set; }
 
         [JsonProperty("milestone")]
-        public Milestone Milestone { get; set; }
+        public PurpleMilestone Milestone { get; set; }
 
         [JsonProperty("originalLanguage")]
         public string OriginalLanguage { get; set; }
@@ -92,6 +95,9 @@ namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoBundleSchemaContain
         [JsonProperty("seriesType")]
         public object SeriesType { get; set; }
 
+        [JsonProperty("sport")]
+        public object Sport { get; set; }
+
         [JsonProperty("tags")]
         public Tag[] Tags { get; set; }
 
@@ -99,7 +105,7 @@ namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoBundleSchemaContain
         public string TargetLanguage { get; set; }
 
         [JsonProperty("text")]
-        public VideoText Text { get; set; }
+        public ItemText Text { get; set; }
 
         [JsonProperty("type")]
         public string Type { get; set; }
@@ -108,7 +114,7 @@ namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoBundleSchemaContain
         public TypedGenre[] TypedGenres { get; set; }
 
         [JsonProperty("videoArt")]
-        public object[] VideoArt { get; set; }
+        public VideoArt[] VideoArt { get; set; }
 
         [JsonProperty("videoId")]
         public Guid VideoId { get; set; }

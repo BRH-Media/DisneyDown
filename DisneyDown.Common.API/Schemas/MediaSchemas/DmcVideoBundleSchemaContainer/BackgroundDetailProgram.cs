@@ -2,7 +2,7 @@
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoBundleSchemaContainer
 {
-    public class BackgroundDetailProgram
+    public partial class BackgroundDetailProgram
     {
         [JsonProperty("default")]
         public PurpleDefault Default { get; set; }

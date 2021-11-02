@@ -3,21 +3,21 @@ using Newtonsoft.Json;
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoBundleSchemaContainer
 {
-    public class ItemImage
+    public partial class ItemImage
     {
-        [JsonProperty("tile")]
-        public Dictionary<string, PurpleBackgroundDetail> Tile { get; set; }
-
-        [JsonProperty("background_details")]
-        public Dictionary<string, PurpleBackgroundDetail> BackgroundDetails { get; set; }
-
-        [JsonProperty("title_treatment")]
-        public PurpleBackgroundUpNext TitleTreatment { get; set; }
-
-        [JsonProperty("title_treatment_centered", NullValueHandling = NullValueHandling.Ignore)]
-        public PurpleBackgroundUpNext TitleTreatmentCentered { get; set; }
+        [JsonProperty("title_treatment_centered")]
+        public BackgroundUpNext TitleTreatmentCentered { get; set; }
 
         [JsonProperty("background_up_next")]
-        public PurpleBackgroundUpNext BackgroundUpNext { get; set; }
+        public BackgroundUpNext BackgroundUpNext { get; set; }
+
+        [JsonProperty("title_treatment")]
+        public BackgroundUpNext TitleTreatment { get; set; }
+
+        [JsonProperty("tile")]
+        public Dictionary<string, BackgroundDetail> Tile { get; set; }
+
+        [JsonProperty("background_details")]
+        public Dictionary<string, BackgroundDetail> BackgroundDetails { get; set; }
     }
 }

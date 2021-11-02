@@ -2,9 +2,9 @@
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoBundleSchemaContainer
 {
-    public class PurpleBrief
+    public partial class PurpleMilestone
     {
-        [JsonProperty("series")]
-        public BriefProgram Series { get; set; }
+        [JsonProperty("up_next")]
+        public UpNext[] UpNext { get; set; }
     }
 }

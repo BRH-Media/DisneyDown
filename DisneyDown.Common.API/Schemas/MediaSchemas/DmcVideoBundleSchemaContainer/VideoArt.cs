@@ -2,7 +2,7 @@
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoBundleSchemaContainer
 {
-    public class VideoArt
+    public partial class VideoArt
     {
         [JsonProperty("mediaMetadata")]
         public VideoArtMediaMetadata MediaMetadata { get; set; }

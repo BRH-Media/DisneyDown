@@ -2,7 +2,7 @@
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoBundleSchemaContainer
 {
-    public class FluffyBrief
+    public partial class Brief
     {
         [JsonProperty("program")]
         public BriefProgram Program { get; set; }

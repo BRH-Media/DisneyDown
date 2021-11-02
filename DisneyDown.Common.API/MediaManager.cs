@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using RestSharp;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace DisneyDown.Common.API
 {
@@ -59,7 +60,7 @@ namespace DisneyDown.Common.API
 
                     //execute and get response
                     var response = client.Execute(request);
-                    ConsoleWriters.ConsoleWriteDebug(response.Content);
+                    File.WriteAllText(@"media.json", response.Content);
 
                     //serialise the response
                     var responseEncoded =

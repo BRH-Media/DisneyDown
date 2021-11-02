@@ -2,7 +2,7 @@
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoBundleSchemaContainer
 {
-    public class CurrentAvailability
+    public partial class CurrentAvailability
     {
         [JsonProperty("region")]
         public string Region { get; set; }

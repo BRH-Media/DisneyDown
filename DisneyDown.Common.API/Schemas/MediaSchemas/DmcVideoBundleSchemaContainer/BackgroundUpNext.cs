@@ -2,9 +2,9 @@
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoBundleSchemaContainer
 {
-    public class PurpleBackgroundUpNext
+    public partial class BackgroundUpNext
     {
         [JsonProperty("1.78")]
-        public PurpleBackgroundDetail The178 { get; set; }
+        public BackgroundDetail The178 { get; set; }
     }
 }

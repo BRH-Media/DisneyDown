@@ -3,23 +3,8 @@ using Newtonsoft.Json;
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoBundleSchemaContainer
 {
-    public partial class VideoMediaMetadata
+    public partial class ItemMediaMetadata
     {
-        [JsonProperty("activeAspectRatio")]
-        public double ActiveAspectRatio { get; set; }
-
-        [JsonProperty("audioTracks")]
-        public AudioTrack[] AudioTracks { get; set; }
-
-        [JsonProperty("captions")]
-        public AudioTrack[] Captions { get; set; }
-
-        [JsonProperty("facets")]
-        public Facet[] Facets { get; set; }
-
-        [JsonProperty("features")]
-        public string[] Features { get; set; }
-
         [JsonProperty("format")]
         public string Format { get; set; }
 

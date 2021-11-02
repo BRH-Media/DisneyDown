@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoBundleSchemaContainer
 {
-    public class ParentRef
+    public partial class ParentRef
     {
         [JsonProperty("encodedSeriesId")]
         public object EncodedSeriesId { get; set; }

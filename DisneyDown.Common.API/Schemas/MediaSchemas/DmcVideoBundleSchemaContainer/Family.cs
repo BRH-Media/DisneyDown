@@ -2,7 +2,7 @@
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoBundleSchemaContainer
 {
-    public class Family
+    public partial class Family
     {
         [JsonProperty("encodedFamilyId")]
         public string EncodedFamilyId { get; set; }
