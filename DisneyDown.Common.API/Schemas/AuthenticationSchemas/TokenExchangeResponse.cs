@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace DisneyDown.Common.API.Schemas
+namespace DisneyDown.Common.API.Schemas.AuthenticationSchemas
 {
     public class TokenExchangeResponse
     {
@@ -17,6 +17,6 @@ namespace DisneyDown.Common.API.Schemas
         public int ExpiresIn { get; set; }
 
         //deserialiser
-        public static TokenExchangeResponse FromJson(string json) => JsonConvert.DeserializeObject<TokenExchangeResponse>(json, Converter.Settings);
+        public static TokenExchangeResponse FromJson(string json) => JsonConvert.DeserializeObject<TokenExchangeResponse>(json, ApiJsonConverter.Settings);
     }
 }

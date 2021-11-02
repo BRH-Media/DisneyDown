@@ -12,6 +12,7 @@ namespace DisneyDown.Common.API.Structures
 {
     public class ApiConfiguration
     {
+        public string ServicesUrl { get; set; } = Strings.DefaultServicesUrl;
         public ApiConfigurationCredentials Credentials { get; set; } = new ApiConfigurationCredentials();
         public ApiDevice.ApiDevice DeviceContext { get; set; } = new ApiDeviceChrome();
 

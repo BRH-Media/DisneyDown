@@ -5,6 +5,7 @@ using DisneyDown.Common.Util.Kit;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
+using DisneyDown.Common.API.Schemas.AuthenticationSchemas;
 using Converter = DisneyDown.Common.Util.Converter;
 
 namespace DisneyDown.Common.API.Structures.ApiDevice
@@ -16,6 +17,9 @@ namespace DisneyDown.Common.API.Structures.ApiDevice
 
         [JsonProperty("BAMSDK_VERSION")]
         public string BamSdkVersion { get; set; } = @"";
+
+        [JsonProperty("BAMSDK_COUNTRY")]
+        public string BamSdkCountry { get; set; } = @"AU";
 
         [JsonProperty("API_KEY")]
         public string ApiKey { get; set; } = @"";

@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace DisneyDown.Common.API.Schemas
+namespace DisneyDown.Common.API.Schemas.AuthenticationSchemas
 {
     public class TokenGrantResponse
     {
@@ -11,6 +11,6 @@ namespace DisneyDown.Common.API.Schemas
         public string GrantType { get; set; }
 
         //deserialiser
-        public static TokenGrantResponse FromJson(string json) => JsonConvert.DeserializeObject<TokenGrantResponse>(json, Converter.Settings);
+        public static TokenGrantResponse FromJson(string json) => JsonConvert.DeserializeObject<TokenGrantResponse>(json, ApiJsonConverter.Settings);
     }
 }

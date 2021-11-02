@@ -2,7 +2,7 @@
 
 // ReSharper disable InconsistentNaming
 
-namespace DisneyDown.Common.API.Schemas
+namespace DisneyDown.Common.API.Schemas.AuthenticationSchemas
 {
     public class BAMIdentityResponse
     {
@@ -10,6 +10,6 @@ namespace DisneyDown.Common.API.Schemas
         public string IdToken { get; set; }
 
         //deserialiser
-        public static BAMIdentityResponse FromJson(string json) => JsonConvert.DeserializeObject<BAMIdentityResponse>(json, Converter.Settings);
+        public static BAMIdentityResponse FromJson(string json) => JsonConvert.DeserializeObject<BAMIdentityResponse>(json, ApiJsonConverter.Settings);
     }
 }

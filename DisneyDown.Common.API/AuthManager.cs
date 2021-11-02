@@ -1,11 +1,11 @@
 ﻿using DisneyDown.Common.API.Globals;
 using DisneyDown.Common.API.Schemas;
-using DisneyDown.Common.API.Structures;
 using DisneyDown.Common.API.Structures.ApiDevice;
 using DisneyDown.Common.Util.Kit;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
+using DisneyDown.Common.API.Schemas.AuthenticationSchemas;
 using Converter = DisneyDown.Common.Util.Converter;
 
 namespace DisneyDown.Common.API
@@ -67,7 +67,7 @@ namespace DisneyDown.Common.API
             return null;
         }
 
-        public static BAMIdentityResponse Login(this ApiDevice deviceContext, ApiConfigurationCredentials credentials, string token)
+        public static BAMIdentityResponse Login(this ApiDevice deviceContext, string token)
         {
             try
             {
@@ -75,7 +75,7 @@ namespace DisneyDown.Common.API
                 if (!string.IsNullOrWhiteSpace(token))
                 {
                     //query string request data
-                    var jsonStringPayload = JsonConvert.SerializeObject(credentials);
+                    var jsonStringPayload = JsonConvert.SerializeObject(Objects.Configuration.Credentials);
 
                     //setup client
                     var client = new RestClient(Objects.Services.Services.BamIdentity.Client.BaseUrl);

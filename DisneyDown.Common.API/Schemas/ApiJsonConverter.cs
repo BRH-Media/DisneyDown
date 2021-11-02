@@ -1,10 +1,11 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.Globalization;
+using DisneyDown.Common.API.Schemas.ServicesSchema;
 
 namespace DisneyDown.Common.API.Schemas
 {
-    public static class Converter
+    public static class ApiJsonConverter
     {
         public static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
         {

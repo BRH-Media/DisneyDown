@@ -20,7 +20,7 @@ namespace DisneyDown.Common.API.Globals
             }
         }
 
-        public static string ServicesUrl { get; set; } = @"https://bam-sdk-configs.bamgrid.com/bam-sdk/v3.0/disney-svod-3d9324fc/browser/v9.0/linux/chrome/prod.json";
+        public static string DefaultServicesUrl { get; set; } = @"https://bam-sdk-configs.bamgrid.com/bam-sdk/v3.0/disney-svod-3d9324fc/browser/v9.0/linux/chrome/prod.json";
 
         public static string ServicesFile { get; set; } = $"{AssemblyDirectory}/cfg/api/disneyPlus.services.json";
         public static string ConfigurationFile { get; set; } = $"{AssemblyDirectory}/cfg/api/disneyPlus.config.json";

@@ -15,7 +15,7 @@ namespace DisneyDown.Common.API
             => GetEndpoint(new Uri(url));
 
         public static string GetEndpoint(this Uri url)
-            => url.PathAndQuery;
+            => HttpUtility.UrlDecode(url.PathAndQuery);
 
         public static string ConvertToQueryString(this TokenExchangeRequestPayload payload)
         {
@@ -33,7 +33,7 @@ namespace DisneyDown.Common.API
             if (e is Enum)
             {
                 var type = e.GetType();
-                var values = System.Enum.GetValues(type);
+                var values = Enum.GetValues(type);
 
                 foreach (int val in values)
                 {
