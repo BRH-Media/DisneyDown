@@ -1,4 +1,5 @@
-﻿using DisneyDown.Common.API.Globals;
+﻿using DisneyDown.Common.API.Enums;
+using DisneyDown.Common.API.Globals;
 using DisneyDown.Common.API.Schemas;
 using DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoBundleSchemaContainer;
 using DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoSchemaContainer;
@@ -9,13 +10,137 @@ using Newtonsoft.Json;
 using RestSharp;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using PlaybackUrl = DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoBundleSchemaContainer.PlaybackUrl;
 
 namespace DisneyDown.Common.API
 {
     public static class MediaManager
     {
+        public static string RequestManifestFromUrl(this ApiDevice deviceContext, string disneyUrl)
+        {
+            try
+            {
+                //validation
+                if (!string.IsNullOrWhiteSpace(disneyUrl))
+                {
+                    //make sure this isn't a series
+                    if (!disneyUrl.ToLower().Contains(@"/series/"))
+                    {
+                        //alert user
+                        ConsoleWriters.ConsoleWriteInfo(@"Requesting device grant token");
+
+                        //request a device grant
+                        var deviceGrantToken = Objects.Configuration.DeviceContext.RequestDeviceGrant();
+
+                        //validation
+                        if (!string.IsNullOrWhiteSpace(deviceGrantToken?.Assertion))
+                        {
+                            //alert user
+                            ConsoleWriters.ConsoleWriteSuccess(@"Device grant successfully retrieved");
+                            ConsoleWriters.ConsoleWriteInfo(@"Requesting device OAuth token");
+
+                            //exchange the token
+                            var deviceAuth =
+                                Objects.Configuration.DeviceContext.PerformTokenExchange(deviceGrantToken.Assertion,
+                                    ExchangeType.DEVICE);
+
+                            //validation
+                            if (!string.IsNullOrWhiteSpace(deviceAuth?.AccessToken))
+                            {
+                                //alert user
+                                ConsoleWriters.ConsoleWriteSuccess(@"Device is authenticated");
+                                ConsoleWriters.Break();
+
+                                //credentials
+                                var creds = Objects.Configuration.Credentials;
+
+                                //validation
+                                if (!string.IsNullOrWhiteSpace(creds.Email) &&
+                                    !string.IsNullOrWhiteSpace(creds.Password))
+                                {
+                                    //alert user
+                                    ConsoleWriters.ConsoleWriteInfo(
+                                        $"Attempting to login with account \"{creds.Email}\"");
+
+                                    //request login
+                                    var loginToken = Objects.Configuration.DeviceContext.Login(deviceAuth.AccessToken);
+
+                                    //validation
+                                    if (!string.IsNullOrWhiteSpace(loginToken?.IdToken))
+                                    {
+                                        //alert user
+                                        ConsoleWriters.ConsoleWriteSuccess(@"Successfully logged into Disney+");
+                                        ConsoleWriters.ConsoleWriteInfo(@"Requesting an account grant");
+
+                                        //request account grant token
+                                        var accountGrantToken =
+                                            Objects.Configuration.DeviceContext.RequestAccountGrant(loginToken,
+                                                deviceAuth.AccessToken);
+
+                                        //validation
+                                        if (!string.IsNullOrWhiteSpace(accountGrantToken?.Assertion))
+                                        {
+                                            //alert user
+                                            ConsoleWriters.ConsoleWriteSuccess(@"Successfully retrieved an account grant token");
+                                            ConsoleWriters.ConsoleWriteInfo(@"Requesting an account OAuth token");
+
+                                            //request account OAuth token
+                                            var accountToken =
+                                                Objects.Configuration.DeviceContext.PerformTokenExchange(
+                                                    accountGrantToken.Assertion, ExchangeType.ACCOUNT);
+
+                                            //validation
+                                            if (!string.IsNullOrWhiteSpace(accountToken?.AccessToken))
+                                            {
+                                            }
+                                        }
+                                        else
+                                        {
+                                            //alert user
+                                            ConsoleWriters.ConsoleWriteError(@"Account grant request failed; please ensure that your credentials are correct");
+                                        }
+                                    }
+                                    else
+                                    {
+                                        //alert user
+                                        ConsoleWriters.ConsoleWriteError(@"Login failed; please verify that your credentials are correct");
+                                    }
+                                }
+                                else
+                                {
+                                    //alert user
+                                    ConsoleWriters.ConsoleWriteError(@"Account information is invalid; please specify valid credentials in the configuration file");
+                                }
+                            }
+                            else
+                            {
+                                //alert user
+                                ConsoleWriters.ConsoleWriteError(@"Device OAuth token was invalid; manifest retrieval failed");
+                            }
+                        }
+                        else
+                        {
+                            //alert user
+                            ConsoleWriters.ConsoleWriteError(@"Device grant token was invalid; manifest retrieval failed");
+                        }
+                    }
+                    else
+                    {
+                        //alert user
+                        ConsoleWriters.ConsoleWriteError(@"The URL that was provided belongs to a TV series; multiple manifests would result from parsing and as such, a specific video URL must be provided.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                //handle error
+                ConsoleWriters.ConsoleWriteDebug($"Experienced an error while trying to get Disney+ manifest: {ex.Message}");
+            }
+
+            //default
+            return @"";
+        }
+
         public static PlaybackScenarioSchema RequestPlaybackInformation(this ApiDevice deviceContext, PlaybackUrl playbackUrl, string token)
         {
             try
@@ -58,7 +183,6 @@ namespace DisneyDown.Common.API
 
                     //execute and get response
                     var response = client.Execute(request);
-                    File.WriteAllText(@"media.json", response.Content);
 
                     //serialise the response
                     var responseEncoded =
@@ -71,7 +195,7 @@ namespace DisneyDown.Common.API
             catch (Exception ex)
             {
                 //handle error
-                ConsoleWriters.ConsoleWriteDebug($"Experienced an error while trying to get Disney+ playback information: {ex}");
+                ConsoleWriters.ConsoleWriteDebug($"Experienced an error while trying to get Disney+ playback information: {ex.Message}");
             }
 
             //default
@@ -135,7 +259,7 @@ namespace DisneyDown.Common.API
             catch (Exception ex)
             {
                 //handle error
-                ConsoleWriters.ConsoleWriteDebug($"Experienced an error while trying to get Disney+ video: {ex}");
+                ConsoleWriters.ConsoleWriteDebug($"Experienced an error while trying to get Disney+ video: {ex.Message}");
             }
 
             //default
@@ -199,7 +323,7 @@ namespace DisneyDown.Common.API
             catch (Exception ex)
             {
                 //handle error
-                ConsoleWriters.ConsoleWriteDebug($"Experienced an error while trying to get Disney+ video bundle: {ex}");
+                ConsoleWriters.ConsoleWriteDebug($"Experienced an error while trying to get Disney+ video bundle: {ex.Message}");
             }
 
             //default
