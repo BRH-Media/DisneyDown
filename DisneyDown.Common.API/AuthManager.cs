@@ -1,17 +1,165 @@
-﻿using DisneyDown.Common.API.Globals;
-using DisneyDown.Common.API.Schemas;
+﻿using DisneyDown.Common.API.Enums;
+using DisneyDown.Common.API.Globals;
+using DisneyDown.Common.API.Schemas.AuthenticationSchemas;
 using DisneyDown.Common.API.Structures.ApiDevice;
 using DisneyDown.Common.Util.Kit;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
-using DisneyDown.Common.API.Schemas.AuthenticationSchemas;
 using Converter = DisneyDown.Common.Util.Converter;
 
 namespace DisneyDown.Common.API
 {
     public static class AuthManager
     {
+        public static ApiDeviceTokenStorage RequestAuthenticationPackage(this ApiDevice deviceContext)
+        {
+            try
+            {
+                //alert user
+                ConsoleWriters.ConsoleWriteInfo(@"Requesting device grant token");
+
+                //request a device grant
+                var deviceGrantToken = Objects.Configuration.DeviceContext.RequestDeviceGrant();
+
+                //validation
+                if (!string.IsNullOrWhiteSpace(deviceGrantToken?.Assertion))
+                {
+                    //alert user
+                    ConsoleWriters.ConsoleWriteSuccess(@"Device grant successfully retrieved");
+                    ConsoleWriters.ConsoleWriteInfo(@"Requesting device OAuth token");
+
+                    //exchange the token
+                    var deviceAuth =
+                        Objects.Configuration.DeviceContext.PerformTokenExchange(deviceGrantToken.Assertion,
+                            ExchangeType.DEVICE);
+
+                    //validation
+                    if (!string.IsNullOrWhiteSpace(deviceAuth?.AccessToken))
+                    {
+                        //alert user
+                        ConsoleWriters.ConsoleWriteSuccess(@"Device is authenticated");
+                        ConsoleWriters.Break();
+
+                        //credentials
+                        var creds = Objects.Configuration.Credentials;
+
+                        //validation
+                        if (!string.IsNullOrWhiteSpace(creds.Email) &&
+                            !string.IsNullOrWhiteSpace(creds.Password))
+                        {
+                            //alert user
+                            ConsoleWriters.ConsoleWriteInfo(
+                                $"Attempting to login with account \"{creds.Email}\"");
+
+                            //request login
+                            var loginToken = Objects.Configuration.DeviceContext.Login(deviceAuth.AccessToken);
+
+                            //validation
+                            if (!string.IsNullOrWhiteSpace(loginToken?.IdToken))
+                            {
+                                //alert user
+                                ConsoleWriters.ConsoleWriteSuccess(@"Successfully logged into Disney+");
+                                ConsoleWriters.ConsoleWriteInfo(@"Requesting an account grant");
+
+                                //request account grant token
+                                var accountGrantToken =
+                                    Objects.Configuration.DeviceContext.RequestAccountGrant(loginToken,
+                                        deviceAuth.AccessToken);
+
+                                //validation
+                                if (!string.IsNullOrWhiteSpace(accountGrantToken?.Assertion))
+                                {
+                                    //alert user
+                                    ConsoleWriters.ConsoleWriteSuccess(@"Successfully retrieved an account grant token");
+                                    ConsoleWriters.ConsoleWriteInfo(@"Requesting an account OAuth token");
+
+                                    //request account OAuth token
+                                    var accountToken =
+                                        Objects.Configuration.DeviceContext.PerformTokenExchange(
+                                            accountGrantToken.Assertion, ExchangeType.ACCOUNT);
+
+                                    //validation
+                                    if (!string.IsNullOrWhiteSpace(accountToken?.AccessToken))
+                                    {
+                                        //alert user
+                                        ConsoleWriters.ConsoleWriteSuccess(@"Successfully retrieved an account OAuth token");
+
+                                        //return the fully-constructed authentication object
+                                        return new ApiDeviceTokenStorage
+                                        {
+                                            Device =
+                                                {
+                                                    GrantToken = deviceGrantToken.GetDisneyToken(),
+                                                    OAuthToken = deviceAuth.GetDisneyToken()
+                                                },
+                                            Account =
+                                                {
+                                                    GrantToken = accountGrantToken.GetDisneyToken(),
+                                                    OAuthToken = accountToken.GetDisneyToken()
+                                                },
+                                            Identity =
+                                                {
+                                                    GrantToken = loginToken.GetDisneyToken()
+                                                },
+                                            Refresh =
+                                                {
+                                                    OAuthToken =
+                                                    {
+                                                        Expiry = new JsonWebToken(accountToken.RefreshToken).ValidTo.ToLocalTime(),
+                                                        Token = accountToken.RefreshToken,
+                                                        Status = TokenStatus.GRANTED
+                                                    }
+                                                }
+                                        };
+                                    }
+                                    else
+                                    {
+                                        //alert user
+                                        ConsoleWriters.ConsoleWriteError(@"Account OAuth request failed; please ensure that your credentials are correct");
+                                    }
+                                }
+                                else
+                                {
+                                    //alert user
+                                    ConsoleWriters.ConsoleWriteError(@"Account grant request failed; please ensure that your credentials are correct");
+                                }
+                            }
+                            else
+                            {
+                                //alert user
+                                ConsoleWriters.ConsoleWriteError(@"Login failed; please verify that your credentials are correct");
+                            }
+                        }
+                        else
+                        {
+                            //alert user
+                            ConsoleWriters.ConsoleWriteError(@"Account information is invalid; please specify valid credentials in the configuration file");
+                        }
+                    }
+                    else
+                    {
+                        //alert user
+                        ConsoleWriters.ConsoleWriteError(@"Device OAuth token was invalid; manifest retrieval failed");
+                    }
+                }
+                else
+                {
+                    //alert user
+                    ConsoleWriters.ConsoleWriteError(@"Device grant token was invalid; manifest retrieval failed");
+                }
+            }
+            catch (Exception ex)
+            {
+                //handle error
+                ConsoleWriters.ConsoleWriteDebug($"Experienced an error while trying to get Disney+ manifest: {ex.Message}");
+            }
+
+            //default
+            return new ApiDeviceTokenStorage();
+        }
+
         public static TokenGrantResponse RequestAccountGrant(this ApiDevice deviceContext, BAMIdentityResponse identity, string token)
         {
             try

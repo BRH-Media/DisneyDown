@@ -9,12 +9,12 @@ namespace DisneyDown.Common.API.Structures.ApiDevice
         /// <summary>
         /// Grants are temporary tokens and do not typically give access to high-level endpoints
         /// </summary>
-        public string GrantToken { get; set; } = @"";
+        public DisneyToken GrantToken { get; set; } = new DisneyToken();
 
         /// <summary>
         /// OAuth tokens are issued via grant exchanges and provide access to high-level endpoints (i.e. login and media information)
         /// </summary>
-        public string OAuthToken { get; set; } = @"";
+        public DisneyToken OAuthToken { get; set; } = new DisneyToken();
 
         public ExchangeType Type { get; } = ExchangeType.UNKNOWN;
 
