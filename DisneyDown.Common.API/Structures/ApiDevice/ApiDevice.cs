@@ -1,11 +1,10 @@
 ﻿using DisneyDown.Common.API.Globals;
-using DisneyDown.Common.API.Schemas;
+using DisneyDown.Common.API.Schemas.AuthenticationSchemas;
 using DisneyDown.Common.API.Structures.RequestPayloads;
 using DisneyDown.Common.Util.Kit;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
-using DisneyDown.Common.API.Schemas.AuthenticationSchemas;
 using Converter = DisneyDown.Common.Util.Converter;
 
 namespace DisneyDown.Common.API.Structures.ApiDevice

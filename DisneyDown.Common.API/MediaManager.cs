@@ -2,19 +2,202 @@
 using DisneyDown.Common.API.Schemas;
 using DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoBundleSchemaContainer;
 using DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoSchemaContainer;
+using DisneyDown.Common.API.Schemas.MediaSchemas.PlaybackScenarioSchemaContainer;
 using DisneyDown.Common.API.Structures.ApiDevice;
 using DisneyDown.Common.Util.Kit;
-using DIsneyDown.Common.API.Schemas.MediaSchemas.PlaybackScenarioSchemaContainer;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
 using System.Collections.Generic;
 using PlaybackUrl = DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoBundleSchemaContainer.PlaybackUrl;
 
+// ReSharper disable RedundantIfElseBlock
+
 namespace DisneyDown.Common.API
 {
     public static class MediaManager
     {
+        public static string RequestManifestFromUrl(this ApiDevice deviceContext, string url)
+        {
+            try
+            {
+                //validation
+                if (!string.IsNullOrWhiteSpace(url))
+                {
+                    //validation
+                    if (!url.Contains(@"/series/"))
+                    {
+                        //request authentication
+                        var authPackage = deviceContext.RequestAuthenticationPackage();
+
+                        //validation
+                        if (authPackage.Account.IsValid)
+                        {
+                            //parse out the ID component
+                            var contentId = url.GetFileNameFromUrl();
+
+                            //validation
+                            if (!string.IsNullOrWhiteSpace(contentId))
+                            {
+                                //figure out what to do
+                                if (contentId.Length > 16)
+                                {
+                                    //alert user
+                                    ConsoleWriters.ConsoleWriteInfo($@"Requesting video object for '{contentId}'");
+
+                                    //must be a video
+                                    var video = deviceContext.RequestVideo(contentId,
+                                        authPackage.Account.OAuthToken.Token);
+
+                                    //validation
+                                    if (video?.Data?.DmcVideo?.Video?.MediaMetadata?.PlaybackUrls?.Length > 0)
+                                    {
+                                        //alert user
+                                        ConsoleWriters.ConsoleWriteInfo(@"Requesting playback information");
+
+                                        //playback URL
+                                        var playbackUrl = video.Data?.DmcVideo?.Video?.MediaMetadata?.PlaybackUrls[0];
+
+                                        //validation
+                                        if (!string.IsNullOrWhiteSpace(playbackUrl?.Href))
+                                        {
+                                            //retrieve playback information
+                                            var playback = deviceContext.RequestPlaybackInformation(playbackUrl,
+                                                authPackage.Account.OAuthToken.Token);
+
+                                            //validation
+                                            if (playback != null)
+                                            {
+                                                //manifest URL
+                                                var manifestUrl = playback.Stream?.Complete.ToString();
+
+                                                //alert user
+                                                ConsoleWriters.ConsoleWriteSuccess($@"Successfully retrieved manifest URL: {manifestUrl}");
+
+                                                //return the manifest
+                                                return manifestUrl;
+                                            }
+                                            else
+                                            {
+                                                //alert user
+                                                ConsoleWriters.ConsoleWriteError(@"Returned playback information object was null; manifest retrieval failed");
+                                            }
+                                        }
+                                        else
+                                        {
+                                            //alert user
+                                            ConsoleWriters.ConsoleWriteError(@"Playback information endpoint was null; manifest retrieval failed");
+                                        }
+                                    }
+                                    else
+                                    {
+                                        //alert user
+                                        ConsoleWriters.ConsoleWriteError(@"Returned video object was null; manifest retrieval failed");
+                                    }
+                                }
+                                else
+                                {
+                                    //alert user
+                                    ConsoleWriters.ConsoleWriteInfo($@"Requesting video bundle for '{contentId}'");
+
+                                    //must be a bundle
+                                    var bundle = deviceContext.RequestVideoBundle(contentId,
+                                        authPackage.Account.OAuthToken.Token);
+
+                                    //validation
+                                    if (bundle?.Data?.DmcVideoBundle?.Video?.MediaMetadata?.PlaybackUrls?.Length > 0)
+                                    {
+                                        //alert user
+                                        ConsoleWriters.ConsoleWriteInfo(@"Requesting playback information");
+
+                                        //playback URL
+                                        var playbackUrl = bundle.Data?.DmcVideoBundle?.Video?.MediaMetadata
+                                            ?.PlaybackUrls[0];
+
+                                        //validation
+                                        if (!string.IsNullOrWhiteSpace(playbackUrl?.Href))
+                                        {
+                                            //retrieve playback information
+                                            var playback = deviceContext.RequestPlaybackInformation(playbackUrl,
+                                                authPackage.Account.OAuthToken.Token);
+
+                                            //validation
+                                            if (playback != null)
+                                            {
+                                                //manifest URL
+                                                var manifestUrl = playback.Stream?.Complete.ToString();
+
+                                                //alert user
+                                                ConsoleWriters.ConsoleWriteSuccess($@"Successfully retrieved manifest URL: {manifestUrl}");
+
+                                                //return the manifest
+                                                return manifestUrl;
+                                            }
+                                            else
+                                            {
+                                                //alert user
+                                                ConsoleWriters.ConsoleWriteError(@"Returned playback information object was null; manifest retrieval failed");
+                                            }
+                                        }
+                                        else
+                                        {
+                                            //alert user
+                                            ConsoleWriters.ConsoleWriteError(@"Playback information endpoint was null; manifest retrieval failed");
+                                        }
+                                    }
+                                    else
+                                    {
+                                        //alert user
+                                        ConsoleWriters.ConsoleWriteError(@"Returned video bundle object was null; manifest retrieval failed");
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                //alert user
+                                ConsoleWriters.ConsoleWriteError(@"Couldn't parse the content ID/bundle ID from the provided URL; manifest retrieval failed");
+                            }
+                        }
+                        else
+                        {
+                            //alert user
+                            ConsoleWriters.ConsoleWriteError(
+                                @"Authentication provider reported an invalid set of tokens; manifest retrieval failed");
+                        }
+                    }
+                    else
+                    {
+                        //alert user
+                        ConsoleWriters.ConsoleWriteError("Series URLs are not supported as they yield multiple manifests;" +
+                                                         " please specify an individual video URL if you wish to download an episode");
+                    }
+                }
+                else
+                {
+                    //alert user
+                    ConsoleWriters.ConsoleWriteError(@"An invalid Disney+ URL was specified; manifest retrieval failed");
+                }
+            }
+            catch (Exception ex)
+            {
+                //alert user
+                ConsoleWriters.ConsoleWriteError($@"Manifest retrieval error: {ex.Message}");
+            }
+
+            //default
+            return @"";
+        }
+
+        public static PlaybackScenarioSchema RequestPlaybackInformation(this ApiDevice deviceContext,
+            Schemas.MediaSchemas.DmcVideoSchemaContainer.PlaybackUrl playbackUrl, string token)
+            => deviceContext.RequestPlaybackInformation(new PlaybackUrl
+            { Href = playbackUrl.Href, Rel = playbackUrl.Rel, Templated = playbackUrl.Templated }, token);
+
+        public static PlaybackScenarioSchema RequestPlaybackInformation(this ApiDevice deviceContext,
+            Schemas.MediaSchemas.DmcSeriesBundleSchemaContainer.PlaybackUrl playbackUrl, string token)
+            => deviceContext.RequestPlaybackInformation(new PlaybackUrl
+            { Href = playbackUrl.Href, Rel = playbackUrl.Rel, Templated = playbackUrl.Templated }, token);
+
         public static PlaybackScenarioSchema RequestPlaybackInformation(this ApiDevice deviceContext, PlaybackUrl playbackUrl, string token)
         {
             try

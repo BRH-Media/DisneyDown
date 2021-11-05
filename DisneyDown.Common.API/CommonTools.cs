@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Web;
 
@@ -26,6 +27,14 @@ namespace DisneyDown.Common.API
 
             //return result
             return queryString;
+        }
+
+        public static string GetFileNameFromUrl(this string url)
+        {
+            if (!Uri.TryCreate(url, UriKind.Absolute, out var uri))
+                uri = new Uri(url);
+
+            return Path.GetFileName(uri.LocalPath);
         }
 
         public static string GetDescription<T>(this T e) where T : IConvertible

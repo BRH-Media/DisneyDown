@@ -1,6 +1,6 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using RestSharp;
+using System;
 
 namespace DisneyDown.Common.API.Schemas.ServicesSchema
 {

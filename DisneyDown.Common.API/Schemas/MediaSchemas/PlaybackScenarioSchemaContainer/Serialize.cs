@@ -1,5 +1,4 @@
-﻿using DIsneyDown.Common.API.Schemas.MediaSchemas.PlaybackScenarioSchemaContainer;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.PlaybackScenarioSchemaContainer
 {

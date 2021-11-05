@@ -2,14 +2,14 @@
 //
 // To parse this JSON data, add NuGet 'Newtonsoft.Json' then do:
 //
-//    using DIsneyDown.Common.API.Schemas.MediaSchemas.PlaybackScenarioSchemaContainer;
+//    using DisneyDown.Common.API.Schemas.MediaSchemas.PlaybackScenarioSchemaContainer;
 //
 //    var playbackScenarioSchema = PlaybackScenarioSchema.FromJson(jsonString);
 
 using DisneyDown.Common.API.Schemas;
 using DisneyDown.Common.API.Schemas.MediaSchemas.PlaybackScenarioSchemaContainer;
 
-namespace DIsneyDown.Common.API.Schemas.MediaSchemas.PlaybackScenarioSchemaContainer
+namespace DisneyDown.Common.API.Schemas.MediaSchemas.PlaybackScenarioSchemaContainer
 {
     using System.Collections.Generic;
     using Newtonsoft.Json;

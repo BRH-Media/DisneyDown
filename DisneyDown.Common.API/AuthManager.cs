@@ -9,6 +9,8 @@ using RestSharp;
 using System;
 using Converter = DisneyDown.Common.Util.Converter;
 
+// ReSharper disable RedundantIfElseBlock
+
 namespace DisneyDown.Common.API
 {
     public static class AuthManager
@@ -18,7 +20,7 @@ namespace DisneyDown.Common.API
             try
             {
                 //alert user
-                ConsoleWriters.ConsoleWriteInfo(@"Requesting device grant token");
+                ConsoleWriters.ConsoleWriteDebug(@"Requesting device grant token");
 
                 //request a device grant
                 var deviceGrantToken = Objects.Configuration.DeviceContext.RequestDeviceGrant();
@@ -27,8 +29,8 @@ namespace DisneyDown.Common.API
                 if (!string.IsNullOrWhiteSpace(deviceGrantToken?.Assertion))
                 {
                     //alert user
-                    ConsoleWriters.ConsoleWriteSuccess(@"Device grant successfully retrieved");
-                    ConsoleWriters.ConsoleWriteInfo(@"Requesting device OAuth token");
+                    ConsoleWriters.ConsoleWriteDebug(@"Device grant successfully retrieved");
+                    ConsoleWriters.ConsoleWriteDebug(@"Requesting device OAuth token");
 
                     //exchange the token
                     var deviceAuth =
@@ -39,8 +41,7 @@ namespace DisneyDown.Common.API
                     if (!string.IsNullOrWhiteSpace(deviceAuth?.AccessToken))
                     {
                         //alert user
-                        ConsoleWriters.ConsoleWriteSuccess(@"Device is authenticated");
-                        ConsoleWriters.Break();
+                        ConsoleWriters.ConsoleWriteDebug(@"Device is authenticated via a device grant");
 
                         //credentials
                         var creds = Objects.Configuration.Credentials;
@@ -50,7 +51,7 @@ namespace DisneyDown.Common.API
                             !string.IsNullOrWhiteSpace(creds.Password))
                         {
                             //alert user
-                            ConsoleWriters.ConsoleWriteInfo(
+                            ConsoleWriters.ConsoleWriteDebug(
                                 $"Attempting to login with account \"{creds.Email}\"");
 
                             //request login
@@ -60,8 +61,8 @@ namespace DisneyDown.Common.API
                             if (!string.IsNullOrWhiteSpace(loginToken?.IdToken))
                             {
                                 //alert user
-                                ConsoleWriters.ConsoleWriteSuccess(@"Successfully logged into Disney+");
-                                ConsoleWriters.ConsoleWriteInfo(@"Requesting an account grant");
+                                ConsoleWriters.ConsoleWriteDebug(@"Successfully logged into Disney+");
+                                ConsoleWriters.ConsoleWriteDebug(@"Requesting an account grant");
 
                                 //request account grant token
                                 var accountGrantToken =
@@ -72,8 +73,8 @@ namespace DisneyDown.Common.API
                                 if (!string.IsNullOrWhiteSpace(accountGrantToken?.Assertion))
                                 {
                                     //alert user
-                                    ConsoleWriters.ConsoleWriteSuccess(@"Successfully retrieved an account grant token");
-                                    ConsoleWriters.ConsoleWriteInfo(@"Requesting an account OAuth token");
+                                    ConsoleWriters.ConsoleWriteDebug(@"Successfully retrieved an account grant token");
+                                    ConsoleWriters.ConsoleWriteDebug(@"Requesting an account OAuth token");
 
                                     //request account OAuth token
                                     var accountToken =
@@ -84,7 +85,7 @@ namespace DisneyDown.Common.API
                                     if (!string.IsNullOrWhiteSpace(accountToken?.AccessToken))
                                     {
                                         //alert user
-                                        ConsoleWriters.ConsoleWriteSuccess(@"Successfully retrieved an account OAuth token");
+                                        ConsoleWriters.ConsoleWriteSuccess(@"Successfully authenticated device with a Disney+ account");
 
                                         //return the fully-constructed authentication object
                                         return new ApiDeviceTokenStorage

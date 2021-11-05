@@ -16,7 +16,21 @@ namespace DisneyDown.Common.API.Structures.ApiDevice
         /// </summary>
         public DisneyToken OAuthToken { get; set; } = new DisneyToken();
 
+        /// <summary>
+        /// What tokens are being stored here? You can use any enum member but it's recommended to use one that includes an OAuth type specifier
+        /// </summary>
         public ExchangeType Type { get; } = ExchangeType.UNKNOWN;
+
+        /// <summary>
+        /// This tests both stored tokens and returns true if one or both are expired
+        /// </summary>
+        public bool IsExpired => GrantToken.IsExpired || OAuthToken.IsExpired;
+
+        /// <summary>
+        /// This tests both stored tokens and returns true if the token is set and the token status
+        /// is correct
+        /// </summary>
+        public bool IsValid => GrantToken.IsValid && OAuthToken.IsValid;
 
         public ApiDeviceTokenObject()
         {

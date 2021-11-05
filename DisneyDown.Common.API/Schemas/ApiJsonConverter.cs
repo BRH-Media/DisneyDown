@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using DisneyDown.Common.API.Schemas.ServicesSchema;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.Globalization;
-using DisneyDown.Common.API.Schemas.ServicesSchema;
 
 namespace DisneyDown.Common.API.Schemas
 {
