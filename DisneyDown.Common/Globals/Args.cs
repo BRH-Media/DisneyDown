@@ -18,6 +18,7 @@ namespace DisneyDown.Common.Globals
             { @"-b",    @"Enables downloading, processing and concatenating the Disney+ intro (if available)" },
             { @"-d",    @"Enables debug messages" },
             { @"-e",    @"Forces the application to avoid using the master parser; requires -v or -a but not both" },
+            { @"-n",    @"Disables input prompts (e.g. press to continue)"},
             { @"-k",    @"Forces DisneyDown to not use the defined keyserver regardless of the config" },
             { @"-t",    @"Enables execution timing; reports how long each operation took" },
             { @"-v",    @"Forces the application to only download and decrypt video" },
@@ -43,6 +44,12 @@ namespace DisneyDown.Common.Globals
         /// </summary>
         public static bool DownloadBumperEnabled =>
             Environment.GetCommandLineArgs().Contains(@"-b");
+
+        /// <summary>
+        /// Whether or not the application will prompt for user input
+        /// </summary>
+        public static bool InputDisabled =>
+            Environment.GetCommandLineArgs().Contains(@"-n");
 
         /// <summary>
         /// Whether or not the application should only download video (not audio)

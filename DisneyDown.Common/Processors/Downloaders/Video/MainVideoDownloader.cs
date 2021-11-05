@@ -150,11 +150,15 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
                                 //pause stopwatch
                                 Timers.StopTimer(Timers.Generic.VideoDownloadTimer);
 
-                                //confirmation
-                                ConsoleWriters.ConsoleWriteQuestion(@"Confirm key ID is correct");
+                                //are we allowed to prompt for input?
+                                if (!Args.InputDisabled)
+                                {
+                                    //confirmation
+                                    ConsoleWriters.ConsoleWriteQuestion(@"Confirm key ID is correct");
 
-                                //temporarily halt
-                                ConsoleTools.PauseExecution();
+                                    //temporarily halt
+                                    ConsoleTools.PauseExecution();
+                                }
 
                                 //report key or lookup key (if enabled)
                                 if (Objects.KeyServerConnection.Service.ServiceEnabled)
