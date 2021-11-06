@@ -54,7 +54,12 @@ namespace DisneyDown.Common.Globals
         /// <summary>
         /// Global storage for the remuxed file name
         /// </summary>
-        public static string OutFileName { get; set; } = @"decryptedDisney.mkv";
+        public static string OutFileName { get; set; } = @"";
+
+        /// <summary>
+        /// Stores the default file name (this shouldn't really change)
+        /// </summary>
+        public static string DefaultOutFileName { get; set; } = @"decryptedDisney.mkv";
 
         /// <summary>
         /// Current directory of the DisneyDown executable

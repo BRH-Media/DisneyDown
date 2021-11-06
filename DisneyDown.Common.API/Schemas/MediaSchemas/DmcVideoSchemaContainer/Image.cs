@@ -1,29 +1,50 @@
 ﻿using Newtonsoft.Json;
-using System;
+using System.Collections.Generic;
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoSchemaContainer
 {
-    public class Image
+    public partial class Image
     {
-        [JsonProperty("aspectRatio")]
-        public double AspectRatio { get; set; }
+        [JsonProperty("tile")]
+        public Dictionary<string, The178_Value> Tile { get; set; }
 
-        [JsonProperty("masterHeight")]
-        public long MasterHeight { get; set; }
+        [JsonProperty("title_treatment_layer")]
+        public Dictionary<string, The178_Value> TitleTreatmentLayer { get; set; }
 
-        [JsonProperty("masterId")]
-        public string MasterId { get; set; }
+        [JsonProperty("title_treatment")]
+        public Dictionary<string, The178_Value> TitleTreatment { get; set; }
 
-        [JsonProperty("masterWidth")]
-        public long MasterWidth { get; set; }
+        [JsonProperty("tile_partner")]
+        public Dictionary<string, The178_Value> TilePartner { get; set; }
 
-        [JsonProperty("purpose")]
-        public string Purpose { get; set; }
+        [JsonProperty("title_treatment_mono")]
+        public TitleTreatmentMono TitleTreatmentMono { get; set; }
 
-        [JsonProperty("sourceEntity")]
-        public string SourceEntity { get; set; }
+        [JsonProperty("title_treatment_centered")]
+        public Background TitleTreatmentCentered { get; set; }
 
-        [JsonProperty("url")]
-        public Uri Url { get; set; }
+        [JsonProperty("hero_partner")]
+        public Dictionary<string, The178_Value> HeroPartner { get; set; }
+
+        [JsonProperty("background")]
+        public Background Background { get; set; }
+
+        [JsonProperty("hero")]
+        public Dictionary<string, The178_Value> Hero { get; set; }
+
+        [JsonProperty("background_up_next")]
+        public BackgroundUpNext BackgroundUpNext { get; set; }
+
+        [JsonProperty("hero_tile")]
+        public Dictionary<string, The178_Value> HeroTile { get; set; }
+
+        [JsonProperty("background_details")]
+        public Dictionary<string, The178_Value> BackgroundDetails { get; set; }
+
+        [JsonProperty("hero_collection")]
+        public Background HeroCollection { get; set; }
+
+        [JsonProperty("thumbnail")]
+        public Thumbnail Thumbnail { get; set; }
     }
 }

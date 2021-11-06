@@ -2,7 +2,7 @@
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoSchemaContainer
 {
-    public class PlaybackUrl
+    public partial class PlaybackUrl
     {
         [JsonProperty("rel")]
         public string Rel { get; set; }

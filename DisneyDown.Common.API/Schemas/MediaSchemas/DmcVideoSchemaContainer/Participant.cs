@@ -2,25 +2,15 @@
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoSchemaContainer
 {
-    public class Participant
+    public partial class Participant
     {
-        [JsonProperty("characterDetails")]
-        public CharacterDetails CharacterDetails { get; set; }
+        [JsonProperty("Actor")]
+        public Actor[] Actor { get; set; }
 
-        [JsonProperty("displayName")]
-        public string DisplayName { get; set; }
+        [JsonProperty("Director")]
+        public Actor[] Director { get; set; }
 
-        [JsonProperty("order")]
-        public long Order { get; set; }
-
-        [JsonProperty("participantId")]
-        [JsonConverter(typeof(ParseStringConverter))]
-        public long ParticipantId { get; set; }
-
-        [JsonProperty("role")]
-        public string Role { get; set; }
-
-        [JsonProperty("sortName")]
-        public string SortName { get; set; }
+        [JsonProperty("Producer")]
+        public Actor[] Producer { get; set; }
     }
 }

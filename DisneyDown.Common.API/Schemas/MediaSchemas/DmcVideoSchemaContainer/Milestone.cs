@@ -1,17 +1,22 @@
 ﻿using Newtonsoft.Json;
-using System;
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoSchemaContainer
 {
-    public class Milestone
+    public partial class Milestone
     {
-        [JsonProperty("id")]
-        public Guid Id { get; set; }
+        [JsonProperty("intro_start")]
+        public Ffec[] IntroStart { get; set; }
 
-        [JsonProperty("milestoneTime")]
-        public MilestoneTime[] MilestoneTime { get; set; }
+        [JsonProperty("FFEI")]
+        public Ffec[] Ffei { get; set; }
 
-        [JsonProperty("milestoneType")]
-        public string MilestoneType { get; set; }
+        [JsonProperty("intro_end")]
+        public Ffec[] IntroEnd { get; set; }
+
+        [JsonProperty("FFEC")]
+        public Ffec[] Ffec { get; set; }
+
+        [JsonProperty("up_next")]
+        public Ffec[] UpNext { get; set; }
     }
 }

@@ -11,7 +11,8 @@ namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoSchemaContainer
         {
             if (reader.TokenType == JsonToken.Null) return null;
             var value = serializer.Deserialize<string>(reader);
-            if (long.TryParse(value, out var l))
+            long l;
+            if (Int64.TryParse(value, out l))
             {
                 return l;
             }
@@ -27,6 +28,9 @@ namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoSchemaContainer
             }
             var value = (long)untypedValue;
             serializer.Serialize(writer, value.ToString());
+            return;
         }
+
+        public static readonly ParseStringConverter Singleton = new ParseStringConverter();
     }
 }

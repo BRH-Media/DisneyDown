@@ -3,12 +3,14 @@ using DisneyDown.Common.API.Schemas;
 using DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoBundleSchemaContainer;
 using DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoSchemaContainer;
 using DisneyDown.Common.API.Schemas.MediaSchemas.PlaybackScenarioSchemaContainer;
+using DisneyDown.Common.API.Structures;
 using DisneyDown.Common.API.Structures.ApiDevice;
 using DisneyDown.Common.Util.Kit;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using PlaybackUrl = DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoBundleSchemaContainer.PlaybackUrl;
 
 // ReSharper disable RedundantIfElseBlock
@@ -17,8 +19,11 @@ namespace DisneyDown.Common.API
 {
     public static class MediaManager
     {
-        public static string RequestManifestFromUrl(this ApiDevice deviceContext, string url)
+        public static MediaInformation RequestManifestFromUrl(this ApiDevice deviceContext, string url)
         {
+            //the information to return
+            var mediaInfo = new MediaInformation();
+
             try
             {
                 //validation
@@ -74,8 +79,14 @@ namespace DisneyDown.Common.API
                                                 //alert user
                                                 ConsoleWriters.ConsoleWriteSuccess($@"Successfully retrieved manifest URL: {manifestUrl}");
 
-                                                //return the manifest
-                                                return manifestUrl;
+                                                //apply media properties
+                                                mediaInfo.MediaTitle = video.Data?.DmcVideo?.Video?.Text?.Title?.Full?.Program?.Default?.Content;
+                                                mediaInfo.MediaDescription = video.Data?.DmcVideo?.Video?.Text?.Description?.Full?.Program?.Default?.Content;
+                                                mediaInfo.MediaReleaseYear = video.Data?.DmcVideo?.Video
+                                                    ?.Releases.Length > 0
+                                                    ? video.Data?.DmcVideo?.Video?.Releases[0].ReleaseYear.ToString()
+                                                    : @"";
+                                                mediaInfo.ManifestUrl = manifestUrl;
                                             }
                                             else
                                             {
@@ -130,8 +141,16 @@ namespace DisneyDown.Common.API
                                                 //alert user
                                                 ConsoleWriters.ConsoleWriteSuccess($@"Successfully retrieved manifest URL: {manifestUrl}");
 
-                                                //return the manifest
-                                                return manifestUrl;
+                                                //apply media properties
+                                                mediaInfo.MediaTitle = bundle.Data?.DmcVideoBundle?.Video?.Text?.Title
+                                                    ?.Full?.Program?.Default?.Content;
+                                                mediaInfo.MediaDescription = bundle.Data?.DmcVideoBundle?.Video?.Text?.Description
+                                                    ?.Full?.Program?.Default?.Content;
+                                                mediaInfo.MediaReleaseYear = bundle.Data?.DmcVideoBundle?.Video
+                                                    ?.Releases.Length > 0
+                                                        ? bundle.Data?.DmcVideoBundle?.Video?.Releases[0].ReleaseYear.ToString()
+                                                        : @"";
+                                                mediaInfo.ManifestUrl = manifestUrl;
                                             }
                                             else
                                             {
@@ -185,7 +204,7 @@ namespace DisneyDown.Common.API
             }
 
             //default
-            return @"";
+            return mediaInfo;
         }
 
         public static PlaybackScenarioSchema RequestPlaybackInformation(this ApiDevice deviceContext,
@@ -304,6 +323,7 @@ namespace DisneyDown.Common.API
 
                     //execute and get response
                     var response = client.Execute(request);
+                    File.WriteAllText(@"video.json", response.Content);
 
                     //serialise the response
                     var responseEncoded =

@@ -3,10 +3,10 @@ using System;
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoSchemaContainer
 {
-    public class Video
+    public partial class Video
     {
         [JsonProperty("badging")]
-        public object Badging { get; set; }
+        public string Badging { get; set; }
 
         [JsonProperty("callToAction")]
         public object CallToAction { get; set; }
@@ -20,6 +20,9 @@ namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoSchemaContainer
         [JsonProperty("currentAvailability")]
         public CurrentAvailability CurrentAvailability { get; set; }
 
+        [JsonProperty("event")]
+        public object Event { get; set; }
+
         [JsonProperty("encodedSeriesId")]
         public string EncodedSeriesId { get; set; }
 
@@ -32,9 +35,6 @@ namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoSchemaContainer
         [JsonProperty("episodeSeriesSequenceNumber")]
         public long EpisodeSeriesSequenceNumber { get; set; }
 
-        [JsonProperty("event")]
-        public object Event { get; set; }
-
         [JsonProperty("family")]
         public Family Family { get; set; }
 
@@ -44,29 +44,32 @@ namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoSchemaContainer
         [JsonProperty("internalTitle")]
         public string InternalTitle { get; set; }
 
-        [JsonProperty("images")]
-        public Image[] Images { get; set; }
+        [JsonProperty("image")]
+        public Image Image { get; set; }
 
         [JsonProperty("labels")]
         public object[] Labels { get; set; }
 
+        [JsonProperty("league")]
+        public object League { get; set; }
+
         [JsonProperty("mediaMetadata")]
         public MediaMetadata MediaMetadata { get; set; }
-
-        [JsonProperty("mediaRights")]
-        public MediaRights MediaRights { get; set; }
 
         [JsonProperty("meta")]
         public object Meta { get; set; }
 
-        [JsonProperty("milestones")]
-        public Milestone[] Milestones { get; set; }
+        [JsonProperty("mediaRights")]
+        public MediaRights MediaRights { get; set; }
+
+        [JsonProperty("milestone")]
+        public Milestone Milestone { get; set; }
 
         [JsonProperty("originalLanguage")]
         public string OriginalLanguage { get; set; }
 
-        [JsonProperty("participants")]
-        public Participant[] Participants { get; set; }
+        [JsonProperty("participant")]
+        public Participant Participant { get; set; }
 
         [JsonProperty("programId")]
         public Guid ProgramId { get; set; }
@@ -92,14 +95,17 @@ namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoSchemaContainer
         [JsonProperty("seriesType")]
         public string SeriesType { get; set; }
 
+        [JsonProperty("sport")]
+        public object Sport { get; set; }
+
         [JsonProperty("tags")]
         public Tag[] Tags { get; set; }
 
         [JsonProperty("targetLanguage")]
         public string TargetLanguage { get; set; }
 
-        [JsonProperty("texts")]
-        public Text[] Texts { get; set; }
+        [JsonProperty("text")]
+        public Text Text { get; set; }
 
         [JsonProperty("type")]
         public string Type { get; set; }

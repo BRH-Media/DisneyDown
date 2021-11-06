@@ -1,4 +1,6 @@
-﻿using DisneyDown.Common.Globals;
+﻿using DisneyDown.Common.API;
+using DisneyDown.Common.API.Schemas.ServicesSchema;
+using DisneyDown.Common.Globals;
 using DisneyDown.Common.Processors;
 using DisneyDown.Common.Util.Diagnostics;
 using DisneyDown.Common.Util.Kit;
@@ -9,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
+// ReSharper disable InvertIf
 // ReSharper disable LocalizableElement
 // ReSharper disable InconsistentNaming
 
@@ -84,7 +87,7 @@ namespace DisneyDown.Console
 
                     //perform validation
                     return validName && validPath
-                            ? Strings.OutFileName
+                            ? Strings.DefaultOutFileName
                             : outFileNameArg;
                 }
             }
@@ -95,7 +98,7 @@ namespace DisneyDown.Console
             }
 
             //default
-            return Strings.OutFileName;
+            return Strings.DefaultOutFileName;
         }
 
         /// <summary>
@@ -106,17 +109,9 @@ namespace DisneyDown.Console
             try
             {
                 //square-bracket list of all arguments
-                var argumentList = @"";
+                var argumentList = Args.Definitions.Select(a => $"[{a.Key}]").Aggregate(@"", (current, argument) => current + $"{argument} ");
 
                 //generate the argument square-bracket list
-                foreach (var a in Args.Definitions)
-                {
-                    //argument format
-                    var argument = $"[{a.Key}]";
-
-                    //append the argument
-                    argumentList += $"{argument} ";
-                }
 
                 //trim any trailing spaces
                 argumentList = argumentList.TrimEnd(' ');
@@ -190,50 +185,118 @@ namespace DisneyDown.Console
                         //debugging
                         ConsoleWriters.DebugMode = Args.DebugModeEnabled;
 
-                        //set required globals
-                        Strings.ManifestUrl = args[0];
-                        Strings.DecryptionKey = args.Length > 1
-                            ? args[1]
-                            : Strings.LookupModeTriggerKey;
-                        Strings.OutFileName = GetOutputFileName(args);
-
-                        //before we begin, check the validity of the decryption key
-                        if (string.IsNullOrWhiteSpace(Strings.DecryptionKey)
-                            || Strings.DecryptionKey?.Length != 32)
-                        {
-                            //report status
-                            ConsoleWriters.ConsoleWriteInfo(@"No key provided; key lookup necessary");
-
-                            //set the decryption key to the lookup trigger
-                            Strings.DecryptionKey = Strings.LookupModeTriggerKey;
-                        }
-
-                        //begin
-                        var outFile = MainProcessor.StartProcessor();
+                        //get file from URL
+                        var type = args[0].GetFileNameFromUrl();
 
                         //validation
-                        if (!string.IsNullOrWhiteSpace(outFile))
+                        if (!string.IsNullOrWhiteSpace(type))
                         {
-                            //report finality
-                            ConsoleWriters.WriteLine("\nDone! Play now? (y/n)");
+                            //get the type of file
+                            var extension = Path.GetExtension(type);
 
-                            //read the console line
-                            var response = System.Console.ReadLine();
+                            //file-type validation
+                            if (extension != @".m3u" && extension != @".m3u8")
+                            {
+                                //can we use the Disney+ API?
+                                if (!Args.ApiDisabled)
+                                {
+                                    //inform user of what's going on
+                                    ConsoleWriters.ConsoleWriteInfo(@"A valid manifest URL was not specified; trying to fetch from the Disney+ API");
 
-                            //figure out the response
-                            if (response == @"y")
-                                PlayContent(outFile);
+                                    //provision API services
+                                    Common.API.Globals.Objects.Services = ServiceInformation.GetServices();
+
+                                    //attempt to get a manifest from the API
+                                    var url = Common.API.Globals.Objects.Configuration.DeviceContext
+                                        .RequestManifestFromUrl(args[0]);
+
+                                    //validation
+                                    if (!string.IsNullOrWhiteSpace(url?.ManifestUrl))
+                                    {
+                                        //override the provided URL with the new manifest URL
+                                        args[0] = url.ManifestUrl;
+
+                                        //attempt to get a new file name
+                                        var fileName = url.CreateFileName();
+
+                                        //validation
+                                        if (!string.IsNullOrWhiteSpace(fileName))
+                                        {
+                                            //assign to global
+                                            Strings.DefaultOutFileName = fileName;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        //die
+                                        return;
+                                    }
+                                }
+                                else
+                                {
+                                    //invalid URL
+                                    ConsoleWriters.ConsoleWriteError(@"Invalid playlist URL");
+
+                                    //die
+                                    return;
+                                }
+                            }
+
+                            //set required globals
+                            Strings.ManifestUrl = args[0];
+                            Strings.DecryptionKey = args.Length > 1
+                                ? args[1]
+                                : Strings.LookupModeTriggerKey;
+                            Strings.OutFileName = GetOutputFileName(args);
+
+                            //before we begin, check the validity of the decryption key
+                            if (string.IsNullOrWhiteSpace(Strings.DecryptionKey)
+                                || Strings.DecryptionKey?.Length != 32)
+                            {
+                                //report status
+                                ConsoleWriters.ConsoleWriteInfo(@"No key provided; key lookup necessary");
+
+                                //set the decryption key to the lookup trigger
+                                Strings.DecryptionKey = Strings.LookupModeTriggerKey;
+                            }
+
+                            //begin
+                            var outFile = MainProcessor.StartProcessor();
+
+                            //validation
+                            if (!string.IsNullOrWhiteSpace(outFile) && !Args.InputDisabled)
+                            {
+                                //report finality
+                                ConsoleWriters.WriteLine("\nDone! Play now? (y/n)");
+
+                                //read the console line
+                                var response = System.Console.ReadLine();
+
+                                //figure out the response
+                                if (response == @"y")
+                                    PlayContent(outFile);
+                            }
+                            else
+                            {
+                                //report finality
+                                ConsoleWriters.WriteLine("\nDone!");
+                            }
+
+                            //main execution timer stop
+                            Timers.StopTimer(Timers.Generic.ExecutionTimer);
+
+                            //line break for timings
+                            if (Timers.TimersEnabled)
+                                System.Console.WriteLine();
+
+                            //report all diagnostics timings
+                            Timers.ReportTimers();
                         }
-
-                        //main execution timer stop
-                        Timers.StopTimer(Timers.Generic.ExecutionTimer);
-
-                        //line break for timings
-                        if (Timers.TimersEnabled)
-                            System.Console.WriteLine();
-
-                        //report all diagnostics timings
-                        Timers.ReportTimers();
+                        else
+                        {
+                            //help information
+                            PrintUsage();
+                        }
                     }
                 }
             }

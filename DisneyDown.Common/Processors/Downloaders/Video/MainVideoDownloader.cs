@@ -214,6 +214,9 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
                                 //start stopwatch
                                 Timers.StartTimer(Timers.Generic.VideoDownloadTimer);
 
+                                //show title
+                                ConsoleWriters.ConsoleWriteInfo($@"Downloading to file: {Strings.OutFileName}");
+
                                 //do download
                                 SegmentHandlers.DownloadAllMpegSegments(videoManifest, videoBaseUri,
                                     Verification.SegmentFilter.MainContent.VideoFilter, encryptedVideoFile,

@@ -2,7 +2,7 @@
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoSchemaContainer
 {
-    public class CharacterDetails
+    public partial class CharacterDetails
     {
         [JsonProperty("character")]
         public string Character { get; set; }
@@ -10,8 +10,5 @@ namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoSchemaContainer
         [JsonProperty("characterId")]
         [JsonConverter(typeof(ParseStringConverter))]
         public long CharacterId { get; set; }
-
-        [JsonProperty("language")]
-        public object Language { get; set; }
     }
 }

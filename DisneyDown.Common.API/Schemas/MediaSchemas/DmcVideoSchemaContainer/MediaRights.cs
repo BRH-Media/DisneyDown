@@ -2,7 +2,7 @@
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoSchemaContainer
 {
-    public class MediaRights
+    public partial class MediaRights
     {
         [JsonProperty("violations")]
         public object[] Violations { get; set; }

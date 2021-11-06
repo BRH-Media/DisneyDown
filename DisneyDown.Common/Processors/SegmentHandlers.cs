@@ -108,9 +108,17 @@ namespace DisneyDown.Common.Processors
                             if (!string.IsNullOrWhiteSpace(uri))
                             {
                                 //ensure a valid match
-                                if (uri.Contains(filter.PrimaryFilter)
-                                    || uri.Contains(filter.SecondaryFilter)
-                                    || uri.Contains(filter.FallbackFilter))
+                                if (uri.Contains(filter.PrimaryFilter))
+                                {
+                                    //add it to the list of valid segments
+                                    segments.Add((PlaylistUriItem)s);
+                                }
+                                else if (uri.Contains(filter.SecondaryFilter))
+                                {
+                                    //add it to the list of valid segments
+                                    segments.Add((PlaylistUriItem)s);
+                                }
+                                else if (uri.Contains(filter.FallbackFilter))
                                 {
                                     //add it to the list of valid segments
                                     segments.Add((PlaylistUriItem)s);
@@ -162,8 +170,8 @@ namespace DisneyDown.Common.Processors
         /// </summary>
         /// <param name="playlist"></param>
         /// <param name="baseUri"></param>
+        /// <param name="segmentFilter"></param>
         /// <param name="filePath"></param>
-        /// <param name="correctUrlComponent"></param>
         /// <param name="displayPrefix"></param>
         public static void DownloadAllMpegSegments(string playlist, string baseUri, FilterValuesItem segmentFilter, string filePath = @"segments.bin", string displayPrefix = @"")
         {
@@ -188,7 +196,7 @@ namespace DisneyDown.Common.Processors
                         var totalSegments = filteredSegments.Count;
 
                         //report merge file
-                        ConsoleWriters.ConsoleWriteDebug($"Discovered segments: {totalSegments} (Filtered: {p.Items.Count}");
+                        ConsoleWriters.ConsoleWriteDebug($"Discovered segments: {totalSegments} (Filtered: {p.Items.Count - totalSegments})");
                         ConsoleWriters.ConsoleWriteInfo($"Starting segment download on merge file: {filePath}\n");
 
                         //go through each item in the playlist
@@ -262,8 +270,8 @@ namespace DisneyDown.Common.Processors
         /// </summary>
         /// <param name="playlist"></param>
         /// <param name="baseUri"></param>
+        /// <param name="segmentFilter"></param>
         /// <param name="filePath"></param>
-        /// <param name="correctUrlComponent"></param>
         /// <param name="displayPrefix"></param>
         public static string DownloadAllSubtitlesSegments(string playlist, string baseUri, FilterValuesItem segmentFilter, string filePath = @"subtitles.srt", string displayPrefix = @"")
         {

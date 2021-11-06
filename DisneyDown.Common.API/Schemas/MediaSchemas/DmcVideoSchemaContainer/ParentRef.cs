@@ -3,7 +3,7 @@ using System;
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoSchemaContainer
 {
-    public class ParentRef
+    public partial class ParentRef
     {
         [JsonProperty("encodedSeriesId")]
         public string EncodedSeriesId { get; set; }

@@ -2,9 +2,9 @@
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoSchemaContainer
 {
-    public partial class DmcVideo
+    public partial class Thumbnail178
     {
-        [JsonProperty("video")]
-        public Video Video { get; set; }
+        [JsonProperty("program")]
+        public Series Program { get; set; }
     }
 }

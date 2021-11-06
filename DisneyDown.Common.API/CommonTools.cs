@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 
+// ReSharper disable UnusedVariable
 // ReSharper disable InvertIf
 
 namespace DisneyDown.Common.API
@@ -17,6 +18,9 @@ namespace DisneyDown.Common.API
 
         public static string GetEndpoint(this Uri url)
             => HttpUtility.UrlDecode(url.PathAndQuery);
+
+        public static string ReplaceInvalidChars(this string filename)
+            => string.Join("_", filename.Split(Path.GetInvalidFileNameChars()));
 
         public static string ConvertToQueryString(this TokenExchangeRequestPayload payload)
         {

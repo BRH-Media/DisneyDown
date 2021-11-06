@@ -214,6 +214,12 @@ namespace DisneyDown.Common.Parsers
                             //case the type information
                             switch (a.Key)
                             {
+                                //primary validation (for subtitles)
+                                case "FORCED" when a.Value == "YES":
+
+                                    //instant invalidation
+                                    return false;
+
                                 //validate the attribute
                                 case @"TYPE" when a.Value == correctTagType:
                                     typeValid = true;

@@ -2,7 +2,7 @@
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoSchemaContainer
 {
-    public class MilestoneTime
+    public partial class MilestoneTime
     {
         [JsonProperty("startMillis")]
         public long StartMillis { get; set; }

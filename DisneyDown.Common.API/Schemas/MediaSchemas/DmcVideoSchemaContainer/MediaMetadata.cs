@@ -3,7 +3,7 @@ using System;
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoSchemaContainer
 {
-    public class MediaMetadata
+    public partial class MediaMetadata
     {
         [JsonProperty("activeAspectRatio")]
         public double ActiveAspectRatio { get; set; }
@@ -18,7 +18,7 @@ namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoSchemaContainer
         public Facet[] Facets { get; set; }
 
         [JsonProperty("features")]
-        public object[] Features { get; set; }
+        public string[] Features { get; set; }
 
         [JsonProperty("format")]
         public string Format { get; set; }

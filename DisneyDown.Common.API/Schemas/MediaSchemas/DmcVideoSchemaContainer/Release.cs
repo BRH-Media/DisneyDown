@@ -3,7 +3,7 @@ using System;
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoSchemaContainer
 {
-    public class Release
+    public partial class Release
     {
         [JsonProperty("releaseDate")]
         public DateTimeOffset ReleaseDate { get; set; }

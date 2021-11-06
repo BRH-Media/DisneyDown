@@ -18,6 +18,7 @@ namespace DisneyDown.Common.Globals
             { @"-b",    @"Enables downloading, processing and concatenating the Disney+ intro (if available)" },
             { @"-d",    @"Enables debug messages" },
             { @"-e",    @"Forces the application to avoid using the master parser; requires -v or -a but not both" },
+            { @"-l",    @"Disables the usage of the API module" },
             { @"-n",    @"Disables input prompts (e.g. press to continue)"},
             { @"-k",    @"Forces DisneyDown to not use the defined keyserver regardless of the config" },
             { @"-t",    @"Enables execution timing; reports how long each operation took" },
@@ -26,6 +27,12 @@ namespace DisneyDown.Common.Globals
             { @"-help", @"Shows basic information about how to use this program" },
             { @"-h",    @"Shows basic information about how to use this program" }
         };
+
+        /// <summary>
+        /// Whether or not the application is allowed to use the Disney+ API
+        /// </summary>
+        public static bool ApiDisabled =>
+            Environment.GetCommandLineArgs().Contains(@"-l");
 
         /// <summary>
         /// Whether or not the application should disable the usage of the defined keyserver

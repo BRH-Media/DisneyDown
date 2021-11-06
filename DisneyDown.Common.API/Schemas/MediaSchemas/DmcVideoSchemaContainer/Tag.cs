@@ -2,7 +2,7 @@
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoSchemaContainer
 {
-    public class Tag
+    public partial class Tag
     {
         [JsonProperty("displayName")]
         public object DisplayName { get; set; }

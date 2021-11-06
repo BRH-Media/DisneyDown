@@ -2,13 +2,13 @@
 
 namespace DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoSchemaContainer
 {
-    public class Rating
+    public partial class Rating
     {
         [JsonProperty("advisories")]
         public object[] Advisories { get; set; }
 
         [JsonProperty("description")]
-        public object Description { get; set; }
+        public string Description { get; set; }
 
         [JsonProperty("filingNumber")]
         public object FilingNumber { get; set; }
