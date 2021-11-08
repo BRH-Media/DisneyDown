@@ -1,4 +1,5 @@
-﻿using DisneyDown.Common.Globals.FilterValues;
+﻿using DisneyDown.Common.Globals;
+using DisneyDown.Common.Globals.FilterValues;
 using DisneyDown.Common.Net;
 using DisneyDown.Common.Parsers.HLS;
 using DisneyDown.Common.Parsers.HLS.Playlist;
@@ -118,7 +119,9 @@ namespace DisneyDown.Common.Processors
                                     //add it to the list of valid segments
                                     segments.Add((PlaylistUriItem)s);
                                 }
-                                else if (uri.Contains(filter.FallbackFilter))
+
+                                //fallback filter must be explicitly enabled via a command-line argument (this helps to prevent weird filtering issues)
+                                else if (uri.Contains(filter.FallbackFilter) && Args.FallbackFilterEnabled)
                                 {
                                     //add it to the list of valid segments
                                     segments.Add((PlaylistUriItem)s);

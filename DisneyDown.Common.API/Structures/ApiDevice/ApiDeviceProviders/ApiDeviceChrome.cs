@@ -1,6 +1,6 @@
 ﻿// ReSharper disable StringLiteralTypo
 
-namespace DisneyDown.Common.API.Structures.ApiDevice
+namespace DisneyDown.Common.API.Structures.ApiDevice.ApiDeviceProviders
 {
     public class ApiDeviceChrome : ApiDevice
     {

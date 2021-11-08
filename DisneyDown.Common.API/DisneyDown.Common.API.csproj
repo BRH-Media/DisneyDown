@@ -65,6 +65,7 @@
     <Compile Include="DisneyToken.cs" />
     <Compile Include="Enums\EndpointType.cs" />
     <Compile Include="Enums\ExchangeType.cs" />
+    <Compile Include="Enums\MediaType.cs" />
     <Compile Include="Enums\TokenStatus.cs" />
     <Compile Include="Globals\Objects.cs" />
     <Compile Include="Globals\Strings.cs" />
@@ -365,10 +366,11 @@
     <Compile Include="Schemas\ServicesSchema\UnacknowledgedEventBuffer.cs" />
     <Compile Include="Structures\ApiConfiguration.cs" />
     <Compile Include="Structures\ApiConfigurationCredentials.cs" />
+    <Compile Include="Structures\ApiDevice\ApiDeviceProviders\ApiDeviceAppleMobile.cs" />
     <Compile Include="Structures\ApiDevice\ApiDeviceTokenObject.cs" />
     <Compile Include="Structures\ApiDevice\ApiDevice.cs" />
     <Compile Include="Structures\ApiDevice\ApiDeviceAttributes.cs" />
-    <Compile Include="Structures\ApiDevice\ApiDeviceChrome.cs" />
+    <Compile Include="Structures\ApiDevice\ApiDeviceProviders\ApiDeviceChrome.cs" />
     <Compile Include="Structures\ApiDevice\ApiDeviceId.cs" />
     <Compile Include="Schemas\AuthenticationSchemas\TokenGrantResponse.cs" />
     <Compile Include="Structures\ApiDevice\ApiDeviceTokenStorage.cs" />

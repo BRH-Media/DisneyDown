@@ -1,5 +1,5 @@
 ﻿using DisneyDown.Common.API.Globals;
-using DisneyDown.Common.API.Structures.ApiDevice;
+using DisneyDown.Common.API.Structures.ApiDevice.ApiDeviceProviders;
 using DisneyDown.Common.Util;
 using DisneyDown.Common.Util.Kit;
 using Newtonsoft.Json;
