@@ -11,22 +11,61 @@ namespace DisneyDown.Common.Globals.FilterValues
 {
     public class FilterValuesProvider
     {
+        /// <summary>
+        /// Stores video, audio and subtitle filters
+        /// </summary>
         public FilterValuesMain MainContent { get; } = new FilterValuesMain();
 
+        /// <summary>
+        /// "Dub Card" filters make sure no irrelevant segments are processed
+        /// </summary>
         public FilterValuesItem DubCard { get; set; } = new FilterValuesItem
         {
-            PrimaryFilter = @"DUB_CARD",
-            SecondaryFilter = @"DUB_CARD",
-            FallbackFilter = @"DUB_CARD"
+            PrimaryFilter =
+            {
+                FilterString = @"DUB_CARD",
+                Enabled = true
+            },
+            SecondaryFilter =
+            {
+                FilterString = @"DUB_CARD",
+                Enabled = true
+            },
+            FallbackFilter =
+            {
+                FilterString = @"DUB_CARD",
+                Enabled = false
+            }
         };
 
+        /// <summary>
+        /// "Bumper intro" filters ensure that the Disney+ Originals intro is detected properly
+        /// </summary>
         public FilterValuesItem BumperIntro { get; set; } = new FilterValuesItem
         {
-            PrimaryFilter = @"-BUMPER/",
-            SecondaryFilter = @"-BUMPER/",
-            FallbackFilter = @"-BUMPER/"
+            PrimaryFilter =
+            {
+                FilterString = @"-BUMPER/",
+                Enabled = true
+            },
+            SecondaryFilter =
+            {
+                FilterString = @"-BUMPER/",
+                Enabled = true
+            },
+            FallbackFilter =
+            {
+                FilterString = @"-BUMPER/",
+                Enabled = false
+            },
         };
 
+        /// <summary>
+        /// This will generate a new filter provider and will write the result to a file.
+        /// If a file already exists, this file will be read instead of a new provider being generated.
+        /// This file may be edited by the user to allow for custom filter values.
+        /// </summary>
+        /// <returns>A new filter provider</returns>
         public static FilterValuesProvider Init()
         {
             try

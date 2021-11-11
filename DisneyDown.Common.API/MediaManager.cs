@@ -323,7 +323,6 @@ namespace DisneyDown.Common.API
 
                     //execute and get response
                     var response = client.Execute(request);
-                    File.WriteAllText(@"video.json", response.Content);
 
                     //serialise the response
                     var responseEncoded =

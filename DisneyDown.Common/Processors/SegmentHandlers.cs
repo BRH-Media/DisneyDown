@@ -1,5 +1,4 @@
-﻿using DisneyDown.Common.Globals;
-using DisneyDown.Common.Globals.FilterValues;
+﻿using DisneyDown.Common.Globals.FilterValues;
 using DisneyDown.Common.Net;
 using DisneyDown.Common.Parsers.HLS;
 using DisneyDown.Common.Parsers.HLS.Playlist;
@@ -87,15 +86,15 @@ namespace DisneyDown.Common.Processors
             try
             {
                 //ensure we were provided with valid items
-                if (items != null && !string.IsNullOrWhiteSpace(filter.PrimaryFilter)
-                                  && !string.IsNullOrWhiteSpace(filter.SecondaryFilter)
-                                  && !string.IsNullOrWhiteSpace(filter.FallbackFilter))
+                if (items != null && !string.IsNullOrWhiteSpace(filter.PrimaryFilter.FilterString)
+                                  && !string.IsNullOrWhiteSpace(filter.SecondaryFilter.FilterString)
+                                  && !string.IsNullOrWhiteSpace(filter.FallbackFilter.FilterString))
                 {
                     //store all filtered segments here
                     var segments = new List<PlaylistUriItem>();
 
                     //debugging output
-                    ConsoleWriters.ConsoleWriteDebug($"Filtering {items.Count} segments based on filter '{filter.GetStringRepresentation()}'");
+                    ConsoleWriters.ConsoleWriteDebug($"Filtering {items.Count} segments based on filter '{filter.StringRepresentation}'");
 
                     //go through each item and perform the filter
                     foreach (var s in items)
@@ -109,19 +108,19 @@ namespace DisneyDown.Common.Processors
                             if (!string.IsNullOrWhiteSpace(uri))
                             {
                                 //ensure a valid match
-                                if (uri.Contains(filter.PrimaryFilter))
+                                if (uri.Contains(filter.PrimaryFilter.FilterString) && filter.PrimaryFilter.Enabled)
                                 {
                                     //add it to the list of valid segments
                                     segments.Add((PlaylistUriItem)s);
                                 }
-                                else if (uri.Contains(filter.SecondaryFilter))
+                                else if (uri.Contains(filter.SecondaryFilter.FilterString) && filter.SecondaryFilter.Enabled)
                                 {
                                     //add it to the list of valid segments
                                     segments.Add((PlaylistUriItem)s);
                                 }
 
-                                //fallback filter must be explicitly enabled via a command-line argument (this helps to prevent weird filtering issues)
-                                else if (uri.Contains(filter.FallbackFilter) && Args.FallbackFilterEnabled)
+                                //fallback filter must be explicitly enabled (note that although it follows the same 'Enabled' property, this property is false by default)
+                                else if (uri.Contains(filter.FallbackFilter.FilterString) && filter.FallbackFilter.Enabled)
                                 {
                                     //add it to the list of valid segments
                                     segments.Add((PlaylistUriItem)s);
