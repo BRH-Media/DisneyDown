@@ -21,9 +21,12 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
                 Timers.StartTimer(Timers.Bumper.BumperVideoDownloadTimer);
 
                 //ensure there is a bumper to download
-                if ((playlist.Contains(Verification.SegmentFilter.BumperIntro.PrimaryFilter.FilterString)&& Verification.SegmentFilter.BumperIntro.PrimaryFilter.Enabled)
-                    || (playlist.Contains(Verification.SegmentFilter.BumperIntro.SecondaryFilter.FilterString) && Verification.SegmentFilter.BumperIntro.SecondaryFilter.Enabled)
-                    || (playlist.Contains(Verification.SegmentFilter.BumperIntro.FallbackFilter.FilterString) && Verification.SegmentFilter.BumperIntro.FallbackFilter.Enabled))
+                if ((playlist.Contains(Verification.SegmentFilter.AuxiliaryContent.BumperIntro.PrimaryFilter.FilterString)
+                        && Verification.SegmentFilter.AuxiliaryContent.BumperIntro.PrimaryFilter.Enabled)
+                    || (playlist.Contains(Verification.SegmentFilter.AuxiliaryContent.BumperIntro.SecondaryFilter.FilterString)
+                        && Verification.SegmentFilter.AuxiliaryContent.BumperIntro.SecondaryFilter.Enabled)
+                    || (playlist.Contains(Verification.SegmentFilter.AuxiliaryContent.BumperIntro.FallbackFilter.FilterString)
+                        && Verification.SegmentFilter.AuxiliaryContent.BumperIntro.FallbackFilter.Enabled))
                 {
                     //base URI for the video playlist
                     var videoBaseUri = Methods.GetBaseUrl(playlistUri);
@@ -51,7 +54,7 @@ namespace DisneyDown.Common.Processors.Downloaders.Video
 
                         //do download
                         SegmentHandlers.DownloadAllMpegSegments(playlist, videoBaseUri,
-                            Verification.SegmentFilter.BumperIntro, encryptedBumperVideoFile,
+                            Verification.SegmentFilter.AuxiliaryContent.BumperIntro, encryptedBumperVideoFile,
                             @"[Bumper Video]");
 
                         //report success

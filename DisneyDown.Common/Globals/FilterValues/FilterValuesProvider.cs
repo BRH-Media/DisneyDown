@@ -12,53 +12,21 @@ namespace DisneyDown.Common.Globals.FilterValues
     public class FilterValuesProvider
     {
         /// <summary>
+        /// Returns true if one or more filters have their Fallback filter strings enabled
+        /// </summary>
+        [JsonIgnore]
+        public bool FallbackTriggered =>
+            MainContent.FallbackTriggered || AuxiliaryContent.FallbackTriggered;
+
+        /// <summary>
         /// Stores video, audio and subtitle filters
         /// </summary>
-        public FilterValuesMain MainContent { get; } = new FilterValuesMain();
+        public FilterValuesMain MainContent { get; set; } = new FilterValuesMain();
 
         /// <summary>
-        /// "Dub Card" filters make sure no irrelevant segments are processed
+        /// Stores the bumper intro and "dub card" filters
         /// </summary>
-        public FilterValuesItem DubCard { get; set; } = new FilterValuesItem
-        {
-            PrimaryFilter =
-            {
-                FilterString = @"DUB_CARD",
-                Enabled = true
-            },
-            SecondaryFilter =
-            {
-                FilterString = @"DUB_CARD",
-                Enabled = true
-            },
-            FallbackFilter =
-            {
-                FilterString = @"DUB_CARD",
-                Enabled = false
-            }
-        };
-
-        /// <summary>
-        /// "Bumper intro" filters ensure that the Disney+ Originals intro is detected properly
-        /// </summary>
-        public FilterValuesItem BumperIntro { get; set; } = new FilterValuesItem
-        {
-            PrimaryFilter =
-            {
-                FilterString = @"-BUMPER/",
-                Enabled = true
-            },
-            SecondaryFilter =
-            {
-                FilterString = @"-BUMPER/",
-                Enabled = true
-            },
-            FallbackFilter =
-            {
-                FilterString = @"-BUMPER/",
-                Enabled = false
-            },
-        };
+        public FilterValuesAuxiliary AuxiliaryContent { get; set; } = new FilterValuesAuxiliary();
 
         /// <summary>
         /// This will generate a new filter provider and will write the result to a file.

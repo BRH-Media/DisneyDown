@@ -1,7 +1,16 @@
-﻿namespace DisneyDown.Common.Globals.FilterValues
+﻿using Newtonsoft.Json;
+
+namespace DisneyDown.Common.Globals.FilterValues
 {
     public class FilterValuesMain
     {
+        /// <summary>
+        /// Returns true if one or more filters have their Fallback filter strings enabled
+        /// </summary>
+        [JsonIgnore]
+        public bool FallbackTriggered =>
+            VideoFilter.FallbackFilter.Enabled || AudioFilter.FallbackFilter.Enabled || SubtitlesFilter.FallbackFilter.Enabled;
+
         /// <summary>
         /// Filters used for video content
         /// </summary>

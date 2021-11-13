@@ -164,7 +164,7 @@ namespace DisneyDown.Common.Parsers
         private static bool ValidSegmentUrl(string urlSegment)
 
             =>  //if there's any match, it's an instant fail
-                new[] { Verification.SegmentFilter.BumperIntro, Verification.SegmentFilter.DubCard }
+                new[] { Verification.SegmentFilter.AuxiliaryContent.BumperIntro, Verification.SegmentFilter.AuxiliaryContent.DubCard }
                     .All(s => (!(urlSegment.Contains(s.PrimaryFilter.FilterString) && s.PrimaryFilter.Enabled))
                               && (!(urlSegment.Contains(s.SecondaryFilter.FilterString) && s.SecondaryFilter.Enabled))
                               && (!(urlSegment.Contains(s.FallbackFilter.FilterString) && s.FallbackFilter.Enabled)));
@@ -296,9 +296,9 @@ namespace DisneyDown.Common.Parsers
                     foreach (var m in mapList)
 
                         //validate the URL
-                        if ((m.Contains(Verification.SegmentFilter.BumperIntro.PrimaryFilter.FilterString) && Verification.SegmentFilter.BumperIntro.PrimaryFilter.Enabled)
-                            || (m.Contains(Verification.SegmentFilter.BumperIntro.SecondaryFilter.FilterString) && Verification.SegmentFilter.BumperIntro.SecondaryFilter.Enabled)
-                            || (m.Contains(Verification.SegmentFilter.BumperIntro.FallbackFilter.FilterString) && Verification.SegmentFilter.BumperIntro.FallbackFilter.Enabled))
+                        if ((m.Contains(Verification.SegmentFilter.AuxiliaryContent.BumperIntro.PrimaryFilter.FilterString) && Verification.SegmentFilter.AuxiliaryContent.BumperIntro.PrimaryFilter.Enabled)
+                            || (m.Contains(Verification.SegmentFilter.AuxiliaryContent.BumperIntro.SecondaryFilter.FilterString) && Verification.SegmentFilter.AuxiliaryContent.BumperIntro.SecondaryFilter.Enabled)
+                            || (m.Contains(Verification.SegmentFilter.AuxiliaryContent.BumperIntro.FallbackFilter.FilterString) && Verification.SegmentFilter.AuxiliaryContent.BumperIntro.FallbackFilter.Enabled))
 
                             //return result if valid
                             return m;
