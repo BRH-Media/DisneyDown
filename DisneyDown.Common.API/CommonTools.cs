@@ -35,10 +35,10 @@ namespace DisneyDown.Common.API
 
         public static string GetFileNameFromUrl(this string url)
         {
-            if (!Uri.TryCreate(url, UriKind.Absolute, out var uri))
+            if (Uri.TryCreate(url, UriKind.Absolute, out var uri))
                 uri = new Uri(url);
 
-            return Path.GetFileName(uri.LocalPath);
+            return uri != null ? Path.GetFileName(uri.LocalPath) : @"";
         }
 
         public static string GetDescription<T>(this T e) where T : IConvertible

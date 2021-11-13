@@ -185,6 +185,25 @@ namespace DisneyDown.Console
                         //debugging
                         ConsoleWriters.DebugMode = Args.DebugModeEnabled;
 
+                        //fallback filter?
+                        if (Verification.SegmentFilter.FallbackTriggered)
+                        {
+                            //confirm with the user
+                            ConsoleWriters.ConsoleWriteQuestion("One or more fallback filter strings were enabled; " +
+                                "fallback filter strings should only be used in special circumstances as they may cause problems with normal segment filtering. " +
+                                "Are you sure you would like to proceed? [y/n]");
+
+                            //read response
+                            var r = System.Console.ReadLine();
+
+                            //verification
+                            if (r.ToLower().Replace(@" ", "") == @"n")
+                            {
+                                //exit
+                                return;
+                            }
+                        }
+
                         //get file from URL
                         var type = args[0].GetFileNameFromUrl();
 

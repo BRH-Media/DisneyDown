@@ -1,4 +1,6 @@
-﻿namespace DisneyDown.Common.Globals.FilterValues
+﻿using Newtonsoft.Json;
+
+namespace DisneyDown.Common.Globals.FilterValues
 {
     public class FilterValuesItem
     {
@@ -20,6 +22,7 @@
         /// <summary>
         /// Represents the filter as PRIMARY|SECONDARY|FALLBACK
         /// </summary>
+        [JsonIgnore]
         public string StringRepresentation
             => $"{PrimaryFilter}|{SecondaryFilter}|{FallbackFilter}";
     }

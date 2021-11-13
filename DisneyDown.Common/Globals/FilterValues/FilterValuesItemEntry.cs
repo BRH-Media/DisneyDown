@@ -11,5 +11,10 @@
         /// This determines whether this particular value will be utilised
         /// </summary>
         public bool Enabled { get; set; } = true;
+
+        public override string ToString()
+        {
+            return FilterString;
+        }
     }
 }
