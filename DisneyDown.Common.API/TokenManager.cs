@@ -13,6 +13,13 @@ namespace DisneyDown.Common.API
 {
     public static class TokenManager
     {
+        /// <summary>
+        /// Exchanges an authentication grant for an OAuth token and an associated refresh token (if eligible)
+        /// </summary>
+        /// <param name="deviceContext"></param>
+        /// <param name="token"></param>
+        /// <param name="tokenType"></param>
+        /// <returns></returns>
         public static TokenExchangeResponse PerformTokenExchange(this ApiDevice deviceContext, string token, ExchangeType tokenType)
         {
             try

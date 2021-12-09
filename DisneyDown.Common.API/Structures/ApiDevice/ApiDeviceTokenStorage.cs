@@ -1,9 +1,51 @@
 ﻿using DisneyDown.Common.API.Enums;
+using DisneyDown.Common.Util.Kit;
+using System;
 
 namespace DisneyDown.Common.API.Structures.ApiDevice
 {
     public class ApiDeviceTokenStorage
     {
+        public bool ExecuteOAuthRefresh(ApiDevice deviceContext)
+        {
+            try
+            {
+                //validation
+                if (!string.IsNullOrWhiteSpace(Refresh.OAuthToken.Token))
+                {
+                    //execute the refresh operation
+                    var result = deviceContext.PerformTokenExchange(Refresh.OAuthToken.Token, ExchangeType.REFRESH);
+
+                    //validation
+                    if (!string.IsNullOrWhiteSpace(result.AccessToken))
+                    {
+                        //set the token
+                        Account.OAuthToken.Token = result.AccessToken;
+                        Account.OAuthToken.Status = TokenStatus.GRANTED;
+
+                        //validation
+                        if (!string.IsNullOrWhiteSpace(result.RefreshToken))
+                        {
+                            //set the refresh token
+                            Refresh.OAuthToken.Token = result.RefreshToken;
+                            Refresh.OAuthToken.Status = TokenStatus.GRANTED;
+                        }
+
+                        //success
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                //report error
+                ConsoleWriters.ConsoleWriteError($"Error occurred whilst trying to refresh an OAuth token: {ex.Message}");
+            }
+
+            //default
+            return false;
+        }
+
         /// <summary>
         /// Device tokens are temporary tokens; they are used to initiate authentication and other "ground-level" processes
         /// </summary>

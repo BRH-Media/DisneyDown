@@ -12,6 +12,11 @@ namespace DisneyDown.Common.API
 {
     public static class DrmManager
     {
+        /// <summary>
+        /// Requests a Nagra certificate (JSON) and converts it into a class for ease of use
+        /// </summary>
+        /// <param name="deviceContext"></param>
+        /// <returns></returns>
         public static NagraServiceCertificateSchema RetrieveNagraCertificate(this ApiDevice deviceContext)
         {
             try
@@ -43,12 +48,28 @@ namespace DisneyDown.Common.API
             return null;
         }
 
+        /// <summary>
+        /// Retrieves a copy of the FairPlay certificate for Disney+
+        /// </summary>
+        /// <param name="deviceContext"></param>
+        /// <returns></returns>
         public static byte[] RetrieveFairPlayCertificate(this ApiDevice deviceContext)
             => RetrieveServiceCertificate(deviceContext, DrmType.FAIRPLAY);
 
+        /// <summary>
+        /// Retrieves a copy of the Widevine certificate for Disney+
+        /// </summary>
+        /// <param name="deviceContext"></param>
+        /// <returns></returns>
         public static byte[] RetrieveWidevineCertificate(this ApiDevice deviceContext)
             => RetrieveServiceCertificate(deviceContext, DrmType.WIDEVINE);
 
+        /// <summary>
+        /// Retrieves the certificate for the provided DRM system
+        /// </summary>
+        /// <param name="deviceContext"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
         public static byte[] RetrieveServiceCertificate(this ApiDevice deviceContext, DrmType type)
         {
             try
@@ -158,6 +179,14 @@ namespace DisneyDown.Common.API
             return null;
         }
 
+        /// <summary>
+        /// Exchanges a license request byte array for a license response byte array.
+        /// The user must generate the license request on their own (e.g., via the respective CDM).
+        /// </summary>
+        /// <param name="deviceContext"></param>
+        /// <param name="licenseRequest"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
         public static byte[] PerformLicenseExchange(this ApiDevice deviceContext, byte[] licenseRequest, DrmType type)
         {
             try

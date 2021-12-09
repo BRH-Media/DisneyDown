@@ -15,6 +15,12 @@ namespace DisneyDown.Common.API
 {
     public static class AuthManager
     {
+        /// <summary>
+        /// Executes a token request chain to receive an account OAuth token. Every time this is executed, the Tokens property of the provided
+        /// deviceContext (ApiDevice) is updated with the return value of this function.
+        /// </summary>
+        /// <param name="deviceContext"></param>
+        /// <returns></returns>
         public static ApiDeviceTokenStorage RequestAuthenticationPackage(this ApiDevice deviceContext)
         {
             try
@@ -23,7 +29,7 @@ namespace DisneyDown.Common.API
                 ConsoleWriters.ConsoleWriteDebug(@"Requesting device grant token");
 
                 //request a device grant
-                var deviceGrantToken = Objects.Configuration.DeviceContext.RequestDeviceGrant();
+                var deviceGrantToken = deviceContext.RequestDeviceGrant();
 
                 //validation
                 if (!string.IsNullOrWhiteSpace(deviceGrantToken?.Assertion))
@@ -33,8 +39,7 @@ namespace DisneyDown.Common.API
                     ConsoleWriters.ConsoleWriteDebug(@"Requesting device OAuth token");
 
                     //exchange the token
-                    var deviceAuth =
-                        Objects.Configuration.DeviceContext.PerformTokenExchange(deviceGrantToken.Assertion,
+                    var deviceAuth = deviceContext.PerformTokenExchange(deviceGrantToken.Assertion,
                             ExchangeType.DEVICE);
 
                     //validation
@@ -55,7 +60,7 @@ namespace DisneyDown.Common.API
                                 $"Attempting to login with account \"{creds.Email}\"");
 
                             //request login
-                            var loginToken = Objects.Configuration.DeviceContext.Login(deviceAuth.AccessToken);
+                            var loginToken = deviceContext.Login(deviceAuth.AccessToken);
 
                             //validation
                             if (!string.IsNullOrWhiteSpace(loginToken?.IdToken))
@@ -66,7 +71,7 @@ namespace DisneyDown.Common.API
 
                                 //request account grant token
                                 var accountGrantToken =
-                                    Objects.Configuration.DeviceContext.RequestAccountGrant(loginToken,
+                                    deviceContext.RequestAccountGrant(loginToken,
                                         deviceAuth.AccessToken);
 
                                 //validation
@@ -78,7 +83,7 @@ namespace DisneyDown.Common.API
 
                                     //request account OAuth token
                                     var accountToken =
-                                        Objects.Configuration.DeviceContext.PerformTokenExchange(
+                                        deviceContext.PerformTokenExchange(
                                             accountGrantToken.Assertion, ExchangeType.ACCOUNT);
 
                                     //validation
@@ -87,8 +92,8 @@ namespace DisneyDown.Common.API
                                         //alert user
                                         ConsoleWriters.ConsoleWriteSuccess(@"Successfully authenticated device with a Disney+ account");
 
-                                        //return the fully-constructed authentication object
-                                        return new ApiDeviceTokenStorage
+                                        //construct the package
+                                        var authenticationPackage = new ApiDeviceTokenStorage
                                         {
                                             Device =
                                                 {
@@ -114,6 +119,12 @@ namespace DisneyDown.Common.API
                                                     }
                                                 }
                                         };
+
+                                        //apply the package to the device context
+                                        deviceContext.Tokens = authenticationPackage;
+
+                                        //return the fully-constructed authentication object
+                                        return authenticationPackage;
                                     }
                                     else
                                     {
@@ -161,6 +172,13 @@ namespace DisneyDown.Common.API
             return new ApiDeviceTokenStorage();
         }
 
+        /// <summary>
+        /// Requests an account OAuth token from an identity token (which in itself cannot be used to authenticate a user)
+        /// </summary>
+        /// <param name="deviceContext"></param>
+        /// <param name="identity"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
         public static TokenGrantResponse RequestAccountGrant(this ApiDevice deviceContext, BAMIdentityResponse identity, string token)
         {
             try
@@ -216,6 +234,12 @@ namespace DisneyDown.Common.API
             return null;
         }
 
+        /// <summary>
+        /// Performs a login request based on the credentials loaded into the configuration object (token should be a device OAuth token)
+        /// </summary>
+        /// <param name="deviceContext"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
         public static BAMIdentityResponse Login(this ApiDevice deviceContext, string token)
         {
             try

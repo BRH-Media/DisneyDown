@@ -10,7 +10,6 @@ using Newtonsoft.Json;
 using RestSharp;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using PlaybackUrl = DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoBundleSchemaContainer.PlaybackUrl;
 
 // ReSharper disable RedundantIfElseBlock
@@ -19,6 +18,13 @@ namespace DisneyDown.Common.API
 {
     public static class MediaManager
     {
+        /// <summary>
+        /// Converts a Disney+ media URL to a manifest by authenticating the user and contacting the API<br />
+        /// NOTE: Does not work for a series URL; you must specify an individual episode URL if you wish to use this.
+        /// </summary>
+        /// <param name="deviceContext"></param>
+        /// <param name="url"></param>
+        /// <returns></returns>
         public static MediaInformation RequestManifestFromUrl(this ApiDevice deviceContext, string url)
         {
             //the information to return
@@ -207,16 +213,37 @@ namespace DisneyDown.Common.API
             return mediaInfo;
         }
 
+        /// <summary>
+        /// Requests playback information for a given video playback URL
+        /// </summary>
+        /// <param name="deviceContext"></param>
+        /// <param name="playbackUrl"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
         public static PlaybackScenarioSchema RequestPlaybackInformation(this ApiDevice deviceContext,
             Schemas.MediaSchemas.DmcVideoSchemaContainer.PlaybackUrl playbackUrl, string token)
             => deviceContext.RequestPlaybackInformation(new PlaybackUrl
             { Href = playbackUrl.Href, Rel = playbackUrl.Rel, Templated = playbackUrl.Templated }, token);
 
+        /// <summary>
+        /// Requests playback information for a given video playback URL
+        /// </summary>
+        /// <param name="deviceContext"></param>
+        /// <param name="playbackUrl"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
         public static PlaybackScenarioSchema RequestPlaybackInformation(this ApiDevice deviceContext,
             Schemas.MediaSchemas.DmcSeriesBundleSchemaContainer.PlaybackUrl playbackUrl, string token)
             => deviceContext.RequestPlaybackInformation(new PlaybackUrl
             { Href = playbackUrl.Href, Rel = playbackUrl.Rel, Templated = playbackUrl.Templated }, token);
 
+        /// <summary>
+        /// Requests playback information for a given video playback URL
+        /// </summary>
+        /// <param name="deviceContext"></param>
+        /// <param name="playbackUrl"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
         public static PlaybackScenarioSchema RequestPlaybackInformation(this ApiDevice deviceContext, PlaybackUrl playbackUrl, string token)
         {
             try
@@ -278,6 +305,13 @@ namespace DisneyDown.Common.API
             return null;
         }
 
+        /// <summary>
+        /// Requests video information based on the content ID provided
+        /// </summary>
+        /// <param name="deviceContext"></param>
+        /// <param name="contentId"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
         public static DmcVideoSchema RequestVideo(this ApiDevice deviceContext, string contentId, string token)
         {
             try
@@ -342,6 +376,13 @@ namespace DisneyDown.Common.API
             return null;
         }
 
+        /// <summary>
+        /// Requests bundle information for video bundle ID provided
+        /// </summary>
+        /// <param name="deviceContext"></param>
+        /// <param name="videoBundleId"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
         public static DmcVideoBundleSchema RequestVideoBundle(this ApiDevice deviceContext, string videoBundleId, string token)
         {
             try
