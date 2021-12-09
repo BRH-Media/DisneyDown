@@ -63,6 +63,8 @@
     <Compile Include="AuthManager.cs" />
     <Compile Include="CommonTools.cs" />
     <Compile Include="DisneyToken.cs" />
+    <Compile Include="DrmManager.cs" />
+    <Compile Include="Enums\DrmType.cs" />
     <Compile Include="Enums\EndpointType.cs" />
     <Compile Include="Enums\ExchangeType.cs" />
     <Compile Include="Enums\MediaType.cs" />
@@ -73,6 +75,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Schemas\AuthenticationSchemas\BAMIdentityResponse.cs" />
     <Compile Include="Schemas\ApiJsonConverter.cs" />
+    <Compile Include="Schemas\DrmSchemas\NagraServiceCertificateSchemaContainer\NagraServiceCertificateSchema.cs" />
     <Compile Include="Schemas\MediaSchemas\DmcSeriesBundleSchemaContainer\Actor.cs" />
     <Compile Include="Schemas\MediaSchemas\DmcSeriesBundleSchemaContainer\AudioTrack.cs" />
     <Compile Include="Schemas\MediaSchemas\DmcSeriesBundleSchemaContainer\BackgroundDetail.cs" />
