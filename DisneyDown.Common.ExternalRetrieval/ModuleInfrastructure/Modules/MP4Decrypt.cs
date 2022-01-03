@@ -25,25 +25,25 @@ namespace DisneyDown.Common.ExternalRetrieval.ModuleInfrastructure.Modules
                 if (archive?.Length > 0)
                 {
                     //report extraction
-                    ConsoleWriters.ConsoleWriteInfo(@"Extracting MP4Decrypt and MP4Dump...");
+                    ConsoleWriters.ConsoleWriteInfo(@"Extracting MP4Decrypt...");
 
                     //execute extraction
                     if (ArchiveHandler.ExtractAllFiles(archive, Globals.SystemEndpoints.MP4DecryptEndpoint.Files))
                     {
                         //report success
-                        ConsoleWriters.ConsoleWriteSuccess(@"MP4Decrypt and MP4Dump successfully extracted");
+                        ConsoleWriters.ConsoleWriteSuccess(@"MP4Decrypt successfully extracted");
 
                         return true;
                     }
 
                     //report failure
-                    ConsoleWriters.ConsoleWriteError(@"MP4Decrypt and MP4Dump extraction failed");
+                    ConsoleWriters.ConsoleWriteError(@"MP4Decrypt extraction failed");
                 }
             }
             catch (Exception ex)
             {
                 //report error
-                ConsoleWriters.ConsoleWriteError($"MP4Decrypt and MP4Dump download and extract error: {ex.Message}");
+                ConsoleWriters.ConsoleWriteError($"MP4Decrypt download and extract error: {ex.Message}");
             }
 
             //default
@@ -58,7 +58,7 @@ namespace DisneyDown.Common.ExternalRetrieval.ModuleInfrastructure.Modules
                 if (!string.IsNullOrWhiteSpace(Globals.SystemEndpoints.MP4DecryptEndpoint.DownloadUrl))
                 {
                     //report download
-                    ConsoleWriters.ConsoleWriteInfo(@"Downloading MP4Decrypt and MP4Dump...");
+                    ConsoleWriters.ConsoleWriteInfo(@"Downloading MP4Decrypt...");
 
                     //perform download
                     var mp4decrypt = ResourceGrab.GrabBytes(Globals.SystemEndpoints.MP4DecryptEndpoint.DownloadUrl);
@@ -91,11 +91,11 @@ namespace DisneyDown.Common.ExternalRetrieval.ModuleInfrastructure.Modules
                         if (valid)
 
                             //successful download
-                            ConsoleWriters.ConsoleWriteSuccess(@"MP4Decrypt and MP4Dump successfully downloaded");
+                            ConsoleWriters.ConsoleWriteSuccess(@"MP4Decrypt successfully downloaded");
                         else
 
                             //download error
-                            ConsoleWriters.ConsoleWriteError(@"MP4Decrypt and MP4Dump download error: checksums do not match");
+                            ConsoleWriters.ConsoleWriteError(@"MP4Decrypt download error: checksums do not match");
 
                         //result
                         return valid ? mp4decrypt : null;
@@ -105,7 +105,7 @@ namespace DisneyDown.Common.ExternalRetrieval.ModuleInfrastructure.Modules
             catch (Exception ex)
             {
                 //report error
-                ConsoleWriters.ConsoleWriteError($"MP4Decrypt and MP4Dump download error: {ex}");
+                ConsoleWriters.ConsoleWriteError($"MP4Decrypt download error: {ex}");
             }
 
             //default

@@ -1,10 +1,10 @@
-﻿// ReSharper disable UnusedMember.Global
-// ReSharper disable ArrangeTypeModifiers
-// ReSharper disable InconsistentNaming
-
-using DisneyDown.Common.Net;
+﻿using DisneyDown.Common.Net;
 using DisneyDown.Common.Util.Kit;
 using System;
+
+// ReSharper disable UnusedMember.Global
+// ReSharper disable ArrangeTypeModifiers
+// ReSharper disable InconsistentNaming
 
 namespace DisneyDown.Common.ExternalRetrieval.ModuleInfrastructure.Modules
 {

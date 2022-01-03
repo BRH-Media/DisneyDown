@@ -341,7 +341,7 @@ namespace DisneyDown.Common.Processors
                 if (!Args.MP4DumpExists)
                 {
                     //download and extract MP4Dump
-                    if (!new MP4DecryptModuleHandler().DownloadAndProcess())
+                    if (!new MP4DumpModuleHandler().DownloadAndProcess())
                     {
                         //report error
                         ConsoleWriters.ConsoleWriteError(@"Launch unsuccessful; MP4Dump is a required component");
