@@ -33,6 +33,16 @@ namespace DisneyDown.Common.ExternalRetrieval
             }
         };
 
+        public ModuleRetrievalEndpoint MP4DumpEndpoint { get; set; } = new ModuleRetrievalEndpoint
+        {
+            DownloadUrl = @"http://zebulon.bok.net/Bento4/binaries/Bento4-SDK-1-6-0-637.x86_64-microsoft-win32.zip",
+            Checksum =
+            {
+                Algorithm = @"sha1",
+                Content = @"return:YTYwZjE5YWVkY2RmZDliYzdhOWZjNmE0Yzc1ODdmZWZiNGM1OTI3Mw=="
+            }
+        };
+
         public static string JsonFileDirectory { get; set; } = $@"{Globals.AssemblyDirectory}\cfg";
 
         public static void EnsureJson()

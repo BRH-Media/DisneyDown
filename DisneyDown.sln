@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30611.23
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisneyDown.Console", "DisneyDown.Console\DisneyDown.Console.csproj", "{127829B8-F399-49E7-BC47-D12138A45FC3}"
 EndProject
@@ -24,6 +24,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisneyDown.Common.KeySystem.Manager", "DisneyDown.Common.KeySystem.Manager\DisneyDown.Common.KeySystem.Manager.csproj", "{57FDCE0C-9AA4-40C1-8635-89BDB7E9B84C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UIHelpers", "UIHelpers\UIHelpers.csproj", "{E3CE262B-B962-44FF-ABC0-5EBFB403D51D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisneyDown.Common.ExternalRetrieval.Manager", "DisneyDown.Common.ExternalRetrieval.Manager\DisneyDown.Common.ExternalRetrieval.Manager.csproj", "{5EE61D2F-3277-47FF-8235-ADB0F27D70B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +77,10 @@ Global
 		{E3CE262B-B962-44FF-ABC0-5EBFB403D51D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E3CE262B-B962-44FF-ABC0-5EBFB403D51D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E3CE262B-B962-44FF-ABC0-5EBFB403D51D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EE61D2F-3277-47FF-8235-ADB0F27D70B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EE61D2F-3277-47FF-8235-ADB0F27D70B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EE61D2F-3277-47FF-8235-ADB0F27D70B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EE61D2F-3277-47FF-8235-ADB0F27D70B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

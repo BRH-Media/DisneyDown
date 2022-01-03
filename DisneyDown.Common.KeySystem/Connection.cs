@@ -188,8 +188,6 @@ namespace DisneyDown.Common.KeySystem
                     //execute request
                     var response = client.Execute(request).Content;
 
-                    //ConsoleWriters.WriteLine(response);
-
                     //newtonsoft converter
                     var responseData = JsonConvert.DeserializeObject<UserResponse>(response, new JsonSerializerSettings
                     {

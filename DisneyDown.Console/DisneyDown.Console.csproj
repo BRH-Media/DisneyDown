@@ -51,6 +51,10 @@
       <Project>{aae2e3ad-4a98-4361-bdeb-83a66dcc0fdf}</Project>
       <Name>DisneyDown.Common.API</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DisneyDown.Common.KeySystem.Manager\DisneyDown.Common.KeySystem.Manager.csproj">
+      <Project>{57fdce0c-9aa4-40c1-8635-89bdb7e9b84c}</Project>
+      <Name>DisneyDown.Common.KeySystem.Manager</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DisneyDown.Common.Util.Kit\DisneyDown.Common.Util.Kit.csproj">
       <Project>{1df9eab5-5707-4f5e-8dae-a791c3f3cd42}</Project>
       <Name>DisneyDown.Common.Util.Kit</Name>

@@ -10,6 +10,7 @@
     <RootNamespace>DisneyDown.Common.ExternalRetrieval</RootNamespace>
     <AssemblyName>DisneyDown.Common.ExternalRetrieval</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <LangVersion>8.0</LangVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
@@ -42,11 +43,14 @@
     <Compile Include="ArchiveHandler.cs" />
     <Compile Include="Endpoints.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="ModuleInfrastructure\ExternalModuleListing.cs" />
     <Compile Include="ModuleRetrievalEndpoint.cs" />
     <Compile Include="ModuleRetrievalEndpointChecksum.cs" />
-    <Compile Include="Modules\FFMpeg.cs" />
+    <Compile Include="ModuleInfrastructure\Modules\FFMpeg.cs" />
     <Compile Include="Globals.cs" />
-    <Compile Include="Modules\MP4Decrypt.cs" />
+    <Compile Include="ModuleInfrastructure\IExternalModule.cs" />
+    <Compile Include="ModuleInfrastructure\Modules\MP4Decrypt.cs" />
+    <Compile Include="ModuleInfrastructure\Modules\MP4Dump.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

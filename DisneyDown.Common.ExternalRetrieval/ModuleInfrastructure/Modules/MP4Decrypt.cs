@@ -1,16 +1,17 @@
-﻿// ReSharper disable UnusedMember.Global
-// ReSharper disable ArrangeTypeModifiers
-// ReSharper disable InconsistentNaming
-
-using DisneyDown.Common.Net;
+﻿using DisneyDown.Common.Net;
 using DisneyDown.Common.Util.Kit;
 using System;
 
-namespace DisneyDown.Common.ExternalRetrieval.Modules
+// ReSharper disable UnusedMember.Global
+// ReSharper disable ArrangeTypeModifiers
+// ReSharper disable InconsistentNaming
+// ReSharper disable UnusedVariable
+
+namespace DisneyDown.Common.ExternalRetrieval.ModuleInfrastructure.Modules
 {
-    public static class FFMpeg
+    public class MP4DecryptModuleHandler : IExternalModule
     {
-        public static bool DownloadAndProcess()
+        public bool DownloadAndProcess()
         {
             try
             {
@@ -24,62 +25,58 @@ namespace DisneyDown.Common.ExternalRetrieval.Modules
                 if (archive?.Length > 0)
                 {
                     //report extraction
-                    ConsoleWriters.ConsoleWriteInfo(@"Extracting FFMPEG...");
-
-                    //required constants
-                    const string fileName = @"ffmpeg.exe";
+                    ConsoleWriters.ConsoleWriteInfo(@"Extracting MP4Decrypt and MP4Dump...");
 
                     //execute extraction
-                    if (ArchiveHandler.ExtractSingleFile(archive, fileName))
+                    if (ArchiveHandler.ExtractAllFiles(archive, Globals.SystemEndpoints.MP4DecryptEndpoint.FileNames))
                     {
                         //report success
-                        ConsoleWriters.ConsoleWriteSuccess(@"FFMPEG successfully extracted");
+                        ConsoleWriters.ConsoleWriteSuccess(@"MP4Decrypt and MP4Dump successfully extracted");
 
-                        //successful
                         return true;
                     }
 
                     //report failure
-                    ConsoleWriters.ConsoleWriteError(@"FFMPEG extraction failed");
+                    ConsoleWriters.ConsoleWriteError(@"MP4Decrypt and MP4Dump extraction failed");
                 }
             }
             catch (Exception ex)
             {
                 //report error
-                ConsoleWriters.ConsoleWriteError($"FFMPEG download and extract error: {ex.Message}");
+                ConsoleWriters.ConsoleWriteError($"MP4Decrypt and MP4Dump download and extract error: {ex.Message}");
             }
 
             //default
             return false;
         }
 
-        public static byte[] FetchArchive()
+        public byte[] FetchArchive()
         {
             try
             {
                 //validation
-                if (!string.IsNullOrWhiteSpace(Globals.SystemEndpoints.FFMpegEndpoint.DownloadUrl))
+                if (!string.IsNullOrWhiteSpace(Globals.SystemEndpoints.MP4DecryptEndpoint.DownloadUrl))
                 {
                     //report download
-                    ConsoleWriters.ConsoleWriteInfo(@"Downloading FFMPEG...");
+                    ConsoleWriters.ConsoleWriteInfo(@"Downloading MP4Decrypt and MP4Dump...");
 
                     //perform download
-                    var ffmpeg = ResourceGrab.GrabBytes(Globals.SystemEndpoints.FFMpegEndpoint.DownloadUrl);
+                    var mp4decrypt = ResourceGrab.GrabBytes(Globals.SystemEndpoints.MP4DecryptEndpoint.DownloadUrl);
 
                     //validation
-                    if (ffmpeg?.Length > 0)
+                    if (mp4decrypt?.Length > 0)
                     {
                         //report checksum calculation
                         ConsoleWriters.ConsoleWriteInfo(@"Calculating checksum...");
 
                         //checksum calculation
-                        var checksum = Globals.SystemEndpoints.FFMpegEndpoint.Checksum.CalculateChecksumFromAlgorithm(ffmpeg);
+                        var checksum = Globals.SystemEndpoints.MP4DecryptEndpoint.Checksum.CalculateChecksumFromAlgorithm(mp4decrypt);
 
                         //report checksum retrieval
                         ConsoleWriters.ConsoleWriteInfo(@"Retrieving valid checksum...");
 
                         //valid checksum retrieval
-                        var validChecksum = Globals.SystemEndpoints.FFMpegEndpoint.Checksum.RetrieveChecksum();
+                        var validChecksum = Globals.SystemEndpoints.MP4DecryptEndpoint.Checksum.RetrieveChecksum();
 
                         //report
                         ConsoleWriters.ConsoleWriteInfo($"Official checksum: {validChecksum}");
@@ -94,21 +91,21 @@ namespace DisneyDown.Common.ExternalRetrieval.Modules
                         if (valid)
 
                             //successful download
-                            ConsoleWriters.ConsoleWriteSuccess(@"FFMPEG successfully downloaded");
+                            ConsoleWriters.ConsoleWriteSuccess(@"MP4Decrypt and MP4Dump successfully downloaded");
                         else
 
                             //download error
-                            ConsoleWriters.ConsoleWriteError(@"FFMPEG download error: checksums do not match");
+                            ConsoleWriters.ConsoleWriteError(@"MP4Decrypt and MP4Dump download error: checksums do not match");
 
                         //result
-                        return valid ? ffmpeg : null;
+                        return valid ? mp4decrypt : null;
                     }
                 }
             }
             catch (Exception ex)
             {
                 //report error
-                ConsoleWriters.ConsoleWriteError($"FFMPEG download error: {ex}");
+                ConsoleWriters.ConsoleWriteError($"MP4Decrypt and MP4Dump download error: {ex}");
             }
 
             //default

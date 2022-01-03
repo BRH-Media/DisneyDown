@@ -1,4 +1,4 @@
-﻿using DisneyDown.Common.ExternalRetrieval.Modules;
+﻿using DisneyDown.Common.ExternalRetrieval.ModuleInfrastructure.Modules;
 using DisneyDown.Common.Globals;
 using DisneyDown.Common.KeySystem;
 using DisneyDown.Common.Parsers;
@@ -309,24 +309,46 @@ namespace DisneyDown.Common.Processors
         {
             try
             {
-                //executable validation
+                //FFMPEG executable validation
                 if (!Args.FFMpegExists)
                 {
                     //download and extract FFMPEG
-                    if (!FFMpeg.DownloadAndProcess())
+                    if (!new FFMpegModuleHandler().DownloadAndProcess())
+                    {
+                        //report error
+                        ConsoleWriters.ConsoleWriteError(@"Launch unsuccessful; FFMPEG is a required component");
 
                         //error occurred; terminate
                         return @"";
+                    }
                 }
 
-                //executable validation
-                if (!Args.MP4DecryptExists || !Args.MP4DumpExists)
+                //MP4Decrypt executable validation
+                if (!Args.MP4DecryptExists)
                 {
                     //download and extract MP4Decrypt
-                    if (!MP4Decrypt.DownloadAndProcess())
+                    if (!new MP4DecryptModuleHandler().DownloadAndProcess())
+                    {
+                        //report error
+                        ConsoleWriters.ConsoleWriteError(@"Launch unsuccessful; MP4Decrypt is a required component");
 
                         //error occurred; terminate
                         return @"";
+                    }
+                }
+
+                //MP4Dump executable validation
+                if (!Args.MP4DumpExists)
+                {
+                    //download and extract MP4Dump
+                    if (!new MP4DecryptModuleHandler().DownloadAndProcess())
+                    {
+                        //report error
+                        ConsoleWriters.ConsoleWriteError(@"Launch unsuccessful; MP4Dump is a required component");
+
+                        //error occurred; terminate
+                        return @"";
+                    }
                 }
 
                 //validation

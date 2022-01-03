@@ -9,6 +9,48 @@ namespace DisneyDown.Common.ExternalRetrieval
 {
     public static class ArchiveHandler
     {
+        public static bool ExtractAllFiles(byte[] archive, string[] fileNames)
+        {
+            try
+            {
+                //validation
+                if (archive?.Length > 0 && fileNames?.Length > 0)
+                {
+                    //go through each entry
+                    foreach (var f in fileNames)
+                    {
+                        //validation
+                        if (!string.IsNullOrWhiteSpace(f))
+                        {
+                            //location
+                            var fullLocation = Path.GetFileName(f);
+
+                            //perform the extraction
+                            if (!ExtractSingleFile(archive, fullLocation))
+                            {
+                                //failure; one of the files did not extract correctly
+                                ConsoleWriters.ConsoleWriteError($"File '{fullLocation}' did not extract correctly; extraction failed");
+
+                                //exit the processor
+                                return false;
+                            }
+                        }
+                    }
+
+                    //process succeeded without any failed extractions
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                //report error
+                ConsoleWriters.ConsoleWriteError($"Archive extraction loop error: {ex}");
+            }
+
+            //default
+            return false;
+        }
+
         public static bool ExtractSingleFile(byte[] archiveData, string fileName, string extractDir = @"")
         {
             try
