@@ -16,6 +16,7 @@ namespace DisneyDown.Common.ExternalRetrieval
         public ModuleRetrievalEndpoint FFMpegEndpoint { get; set; } = new ModuleRetrievalEndpoint
         {
             DownloadUrl = @"https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip",
+            FileNames = new string[] { @"ffmpeg.exe" },
             Checksum =
             {
                 Algorithm = @"sha256",
@@ -26,6 +27,7 @@ namespace DisneyDown.Common.ExternalRetrieval
         public ModuleRetrievalEndpoint MP4DecryptEndpoint { get; set; } = new ModuleRetrievalEndpoint
         {
             DownloadUrl = @"http://zebulon.bok.net/Bento4/binaries/Bento4-SDK-1-6-0-637.x86_64-microsoft-win32.zip",
+            FileNames = new string[] { @"mp4decrypt.exe" },
             Checksum =
             {
                 Algorithm = @"sha1",
@@ -36,6 +38,7 @@ namespace DisneyDown.Common.ExternalRetrieval
         public ModuleRetrievalEndpoint MP4DumpEndpoint { get; set; } = new ModuleRetrievalEndpoint
         {
             DownloadUrl = @"http://zebulon.bok.net/Bento4/binaries/Bento4-SDK-1-6-0-637.x86_64-microsoft-win32.zip",
+            FileNames = new string[] { @"mp4dump.exe" },
             Checksum =
             {
                 Algorithm = @"sha1",
