@@ -1,9 +1,8 @@
 ﻿namespace DisneyDown.Common.ExternalRetrieval
 {
-    public class ModuleRetrievalEndpoint
+    public class ModuleRetrievalEndpointFile
     {
-        public string DownloadUrl { get; set; } = @"";
-        public ModuleRetrievalEndpointFile[] Files { get; set; } = { };
+        public string FileName { get; set; } = @"";
         public ModuleRetrievalEndpointChecksum Checksum { get; set; } = new ModuleRetrievalEndpointChecksum();
     }
 }

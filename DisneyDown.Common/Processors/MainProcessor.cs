@@ -455,17 +455,23 @@ namespace DisneyDown.Common.Processors
                                     //subtitle file
                                     var mergedSubtitles = @"";
 
-                                    //download, parse and merge subtitles
-                                    if (!Args.VideoOnlyMode)
-                                        mergedSubtitles = StartSubtitles(masterPlaylist, workingDir);
+                                    //download and decrypt video
+                                    if (!Args.AudioOnlyMode)
+                                        decryptedVideo = StartVideo(masterPlaylist, workingDir);
+
+                                    //video path validation
+                                    if (!Args.AudioOnlyMode && (string.IsNullOrWhiteSpace(decryptedVideo) || !File.Exists(decryptedVideo)))
+                                    {
+                                        //report problem
+                                        ConsoleWriters.ConsoleWriteError(@"Processing resulted in an invalid video file; process failed");
+
+                                        //die
+                                        return @"";
+                                    }
 
                                     //download and decrypt audio
                                     if (!Args.VideoOnlyMode)
                                         decryptedAudio = StartAudio(masterPlaylist, workingDir);
-
-                                    //download and decrypt video
-                                    if (!Args.AudioOnlyMode)
-                                        decryptedVideo = StartVideo(masterPlaylist, workingDir);
 
                                     //audio path validation
                                     if (!Args.VideoOnlyMode && (string.IsNullOrWhiteSpace(decryptedAudio) || !File.Exists(decryptedAudio)))
@@ -477,15 +483,9 @@ namespace DisneyDown.Common.Processors
                                         return @"";
                                     }
 
-                                    //video path validation
-                                    if (!Args.AudioOnlyMode && (string.IsNullOrWhiteSpace(decryptedVideo) || !File.Exists(decryptedVideo)))
-                                    {
-                                        //report problem
-                                        ConsoleWriters.ConsoleWriteError(@"Processing resulted in an invalid video file; process failed");
-
-                                        //die
-                                        return @"";
-                                    }
+                                    //download, parse and merge subtitles
+                                    if (!Args.VideoOnlyMode)
+                                        mergedSubtitles = StartSubtitles(masterPlaylist, workingDir);
 
                                     //decrypted video
                                     var decryptedBumperVideo =

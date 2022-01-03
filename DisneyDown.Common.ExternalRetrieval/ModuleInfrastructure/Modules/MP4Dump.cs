@@ -23,7 +23,7 @@ namespace DisneyDown.Common.ExternalRetrieval.ModuleInfrastructure.Modules
                     ConsoleWriters.ConsoleWriteInfo(@"Extracting MP4Dump...");
 
                     //execute extraction
-                    if (ArchiveHandler.ExtractAllFiles(archive, Globals.SystemEndpoints.MP4DumpEndpoint.FileNames))
+                    if (ArchiveHandler.ExtractAllFiles(archive, Globals.SystemEndpoints.MP4DumpEndpoint.Files))
                     {
                         //report success
                         ConsoleWriters.ConsoleWriteSuccess(@"MP4Dump successfully extracted");

@@ -51,6 +51,7 @@
     <Compile Include="ModuleInfrastructure\IExternalModule.cs" />
     <Compile Include="ModuleInfrastructure\Modules\MP4Decrypt.cs" />
     <Compile Include="ModuleInfrastructure\Modules\MP4Dump.cs" />
+    <Compile Include="ModuleRetrievalEndpointFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -27,7 +27,7 @@ namespace DisneyDown.Common.ExternalRetrieval.ModuleInfrastructure.Modules
                     ConsoleWriters.ConsoleWriteInfo(@"Extracting FFMPEG...");
 
                     //execute extraction
-                    if (ArchiveHandler.ExtractAllFiles(archive, Globals.SystemEndpoints.FFMpegEndpoint.FileNames))
+                    if (ArchiveHandler.ExtractAllFiles(archive, Globals.SystemEndpoints.FFMpegEndpoint.Files))
                     {
                         //report success
                         ConsoleWriters.ConsoleWriteSuccess(@"FFMPEG successfully extracted");

@@ -9,7 +9,7 @@ namespace DisneyDown.Common.ExternalRetrieval
 {
     public static class ArchiveHandler
     {
-        public static bool ExtractAllFiles(byte[] archive, string[] fileNames)
+        public static bool ExtractAllFiles(byte[] archive, ModuleRetrievalEndpointFile[] fileNames)
         {
             try
             {
@@ -20,10 +20,10 @@ namespace DisneyDown.Common.ExternalRetrieval
                     foreach (var f in fileNames)
                     {
                         //validation
-                        if (!string.IsNullOrWhiteSpace(f))
+                        if (!string.IsNullOrWhiteSpace(f.FileName))
                         {
                             //location
-                            var fullLocation = Path.GetFileName(f);
+                            var fullLocation = Path.GetFileName(f.FileName);
 
                             //perform the extraction
                             if (!ExtractSingleFile(archive, fullLocation))
