@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UIHelpers", "UIHelpers\UIHe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisneyDown.Common.ExternalRetrieval.Manager", "DisneyDown.Common.ExternalRetrieval.Manager\DisneyDown.Common.ExternalRetrieval.Manager.csproj", "{5EE61D2F-3277-47FF-8235-ADB0F27D70B0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisneyDown.Common.SettingsConfigurator", "DisneyDown.Common.SettingsConfigurator\DisneyDown.Common.SettingsConfigurator.csproj", "{44B4D74A-2BCD-4DC3-A7AF-2A7A78BD04F8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +79,10 @@ Global
 		{E3CE262B-B962-44FF-ABC0-5EBFB403D51D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E3CE262B-B962-44FF-ABC0-5EBFB403D51D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E3CE262B-B962-44FF-ABC0-5EBFB403D51D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44B4D74A-2BCD-4DC3-A7AF-2A7A78BD04F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44B4D74A-2BCD-4DC3-A7AF-2A7A78BD04F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44B4D74A-2BCD-4DC3-A7AF-2A7A78BD04F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44B4D74A-2BCD-4DC3-A7AF-2A7A78BD04F8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5EE61D2F-3277-47FF-8235-ADB0F27D70B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5EE61D2F-3277-47FF-8235-ADB0F27D70B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5EE61D2F-3277-47FF-8235-ADB0F27D70B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
