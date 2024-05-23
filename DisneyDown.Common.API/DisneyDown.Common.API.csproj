@@ -44,11 +44,11 @@
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="RestSharp, Version=106.13.0.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
-      <HintPath>..\packages\RestSharp.106.13.0\lib\net452\RestSharp.dll</HintPath>
+    <Reference Include="RestSharp, Version=106.15.0.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.106.15.0\lib\net452\RestSharp.dll</HintPath>
     </Reference>
-    <Reference Include="RestSharp.Serializers.NewtonsoftJson, Version=106.13.0.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
-      <HintPath>..\packages\RestSharp.Serializers.NewtonsoftJson.106.13.0\lib\net452\RestSharp.Serializers.NewtonsoftJson.dll</HintPath>
+    <Reference Include="RestSharp.Serializers.NewtonsoftJson, Version=106.15.0.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.Serializers.NewtonsoftJson.106.15.0\lib\net452\RestSharp.Serializers.NewtonsoftJson.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -244,6 +244,7 @@
     <Compile Include="Schemas\MediaSchemas\PlaybackScenarioSchemaContainer\Thumbnails.cs" />
     <Compile Include="Schemas\MediaSchemas\PlaybackScenarioSchemaContainer\Tracking.cs" />
     <Compile Include="Schemas\MediaSchemas\PlaybackScenarioSchemaContainer\Variant.cs" />
+    <Compile Include="Schemas\PageSchemas\EntityPageInformation.cs" />
     <Compile Include="Schemas\ServicesSchema\Account.cs" />
     <Compile Include="Schemas\ServicesSchema\AccountClient.cs" />
     <Compile Include="Schemas\ServicesSchema\AdEngine.cs" />
@@ -395,9 +396,9 @@
       <Project>{1df9eab5-5707-4f5e-8dae-a791c3f3cd42}</Project>
       <Name>DisneyDown.Common.Util.Kit</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DisneyDown.Common\DisneyDown.Common.csproj">
-      <Project>{a121a22d-a229-4eb5-9d81-908e69ec95ee}</Project>
-      <Name>DisneyDown.Common</Name>
+    <ProjectReference Include="..\DisneyDown.Common.Util\DisneyDown.Common.Util.csproj">
+      <Project>{4189d3cd-0aff-4f0c-92d1-821f5c2f4c0c}</Project>
+      <Name>DisneyDown.Common.Util</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

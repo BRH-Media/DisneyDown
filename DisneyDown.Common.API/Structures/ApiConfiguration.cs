@@ -1,6 +1,6 @@
 ﻿using DisneyDown.Common.API.Globals;
+using DisneyDown.Common.API.Schemas;
 using DisneyDown.Common.API.Structures.ApiDevice.ApiDeviceProviders;
-using DisneyDown.Common.Util;
 using DisneyDown.Common.Util.Kit;
 using Newtonsoft.Json;
 using System;
@@ -13,11 +13,12 @@ namespace DisneyDown.Common.API.Structures
     public class ApiConfiguration
     {
         public string ServicesUrl { get; set; } = Strings.DefaultServicesUrl;
+        public string EntityPageUrl { get; set; } = @"https://disney.api.edge.bamgrid.com/explore/v1.3/page/";
         public ApiConfigurationCredentials Credentials { get; set; } = new ApiConfigurationCredentials();
         public ApiDevice.ApiDevice DeviceContext { get; set; } = new ApiDeviceChrome();
 
         public static ApiConfiguration FromJson(string json) =>
-            JsonConvert.DeserializeObject<ApiConfiguration>(json, Converter.Settings);
+            JsonConvert.DeserializeObject<ApiConfiguration>(json, ApiJsonConverter.Settings);
 
         public static ApiConfiguration GetApiConfiguration(bool verbose = true)
         {

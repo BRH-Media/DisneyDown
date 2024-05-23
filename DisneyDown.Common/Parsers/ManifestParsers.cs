@@ -169,6 +169,131 @@ namespace DisneyDown.Common.Parsers
                               && (!(urlSegment.Contains(s.SecondaryFilter.FilterString) && s.SecondaryFilter.Enabled))
                               && (!(urlSegment.Contains(s.FallbackFilter.FilterString) && s.FallbackFilter.Enabled)));
 
+        public static byte[] ManifestRetrieveWidevinePssh(string playlist, string[][] schemes = null)
+        {
+            try
+            {
+                if (schemes == null)
+                {
+                    schemes = ManifestAllDrmSchemes(playlist);
+                }
+
+                if (schemes?.Length > 0)
+                {
+                    //go through each scheme until we find Widevine
+                    foreach (var s in schemes)
+                    {
+                        if (s[0].Replace("-", "").Contains(DrmSchemeValues.WidevineUuid.ToString().Replace("-", "")))
+                        {
+                            //parse out the pssh box
+                            var boxSplit = s[1].Split(',');
+                            var box = boxSplit.Length > 1 ? boxSplit[1] : null;
+                            if (!string.IsNullOrWhiteSpace(box))
+                            {
+                                //we should now have the base64-encoded PSSH box
+                                var psshBytes = Convert.FromBase64String(box);
+
+                                //validation
+                                if (psshBytes.Length > 0)
+                                {
+                                    return psshBytes;
+                                }
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ConsoleWriters.ConsoleWriteError($"Failed to retrieve Widevine PSSH: {ex}");
+            }
+
+            //default
+            return null;
+        }
+
+        /// <summary>
+        /// Lists all manifest tags that match the filter
+        /// </summary>
+        /// <param name="playlist"></param>
+        /// <returns></returns>
+        public static string[][] ManifestAllDrmSchemes(string playlist)
+        {
+            try
+            {
+                //validation
+                if (!string.IsNullOrWhiteSpace(playlist))
+                {
+                    //attempt load
+                    var p = new PlaylistParser().Parse(playlist);
+
+                    //validation
+                    if (p != null)
+                    {
+                        //playlist schemes are stored temporarily
+                        var schemeList = new List<string[]>();
+
+                        //go through each located tag
+                        foreach (var i in p.Items)
+                        {
+                            try
+                            {
+                                //try casting to tag
+                                var tag = (PlaylistTagItem)i;
+
+                                //verify map
+                                if (tag.Id == PlaylistTagId.EXT_X_SESSION_KEY)
+                                {
+                                    //two parts; 0 shall be the scheme identifier and 1 shall be the URI
+                                    var scheme = new string[2];
+
+                                    //find URI attribute and verify it against the match criteria
+                                    foreach (var a in tag.Attributes)
+                                    {
+                                        if (a.Key == @"KEYFORMAT")
+                                        {
+                                            scheme[0] = a.Value;
+                                        }
+                                        else if (a.Key == @"URI")
+                                        {
+                                            scheme[1] = a.Value;
+                                        }
+                                    }
+
+                                    //append accordingly
+                                    schemeList.Add(scheme);
+                                }
+                            }
+                            catch
+                            {
+                                //ignore
+                            }
+                        }
+
+                        //return the result
+                        return schemeList.ToArray();
+                    }
+                    else
+
+                        //report error
+                        ConsoleWriters.ConsoleWriteError(@"Null playlist parse result; couldn't find DRM schemes");
+                }
+                else
+
+                    //report error
+                    ConsoleWriters.ConsoleWriteError(@"Null or empty playlist supplied; couldn't find DRM schemes");
+            }
+            catch (Exception ex)
+            {
+                //report error
+                ConsoleWriters.ConsoleWriteError($"Playlist parse error: {ex.Message}");
+            }
+
+            //default
+            return null;
+        }
+
         /// <summary>
         /// Lists all manifest MPEG-4 map URLs (MPEG-4 initialisation segment data)
         /// </summary>
@@ -226,7 +351,7 @@ namespace DisneyDown.Common.Parsers
                 else
 
                     //report error
-                    ConsoleWriters.ConsoleWriteError(@"Null or empty playlist supplied; couldn't find");
+                    ConsoleWriters.ConsoleWriteError(@"Null or empty playlist supplied; couldn't find map URL");
             }
             catch (Exception ex)
             {

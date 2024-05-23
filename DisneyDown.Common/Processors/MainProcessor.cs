@@ -1,4 +1,5 @@
-﻿using DisneyDown.Common.ExternalRetrieval.ModuleInfrastructure.Modules;
+﻿using DisneyDown.Common.API;
+using DisneyDown.Common.ExternalRetrieval.ModuleInfrastructure.Modules;
 using DisneyDown.Common.Globals;
 using DisneyDown.Common.KeySystem;
 using DisneyDown.Common.Parsers;
@@ -9,9 +10,11 @@ using DisneyDown.Common.Security.Hashing;
 using DisneyDown.Common.Util;
 using DisneyDown.Common.Util.Diagnostics;
 using DisneyDown.Common.Util.Kit;
+using DisneyDown.KeySystem.CDRM;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using DisneyDown.Common.API.Schemas.ServicesSchema;
 
 // ReSharper disable UnusedVariable
 // ReSharper disable UnusedMember.Global
@@ -415,6 +418,49 @@ namespace DisneyDown.Common.Processors
                                 //check valid master (exclusive mode disables this check, since it can accept a raw stream-ready playlist)
                                 if (ManifestParsers.MasterValid(masterPlaylist) || Args.ExclusiveMode)
                                 {
+                                    //DRM schemes for debugging
+                                    if (Args.DebugModeEnabled)
+                                    {
+                                        ConsoleWriters.ConsoleWriteDebug(@"Searching for supported DRM schemes...");
+                                        var schemes = ManifestParsers.ManifestAllDrmSchemes(masterPlaylist);
+                                        if (schemes?.Length > 0)
+                                        {
+                                            foreach (var s in schemes)
+                                            {
+                                                //widevine?
+                                                ConsoleWriters.ConsoleWriteDebug(
+                                                    s[0].Replace("-", "").Contains(DrmSchemeValues.WidevineUuid
+                                                        .ToString().Replace("-", ""))
+                                                        ? $"Found supported DRM scheme: {s[0]} [WIDEVINE]"
+                                                        : $"Found supported DRM scheme: {s[0]}");
+                                            }
+                                        }
+                                        else
+                                        {
+                                            ConsoleWriters.ConsoleWriteDebug(@"Could not find supported DRM schemes within manifest");
+                                        }
+                                    }
+
+                                    //find Widevine PSSH
+                                    var psshBox = ManifestParsers.ManifestRetrieveWidevinePssh(masterPlaylist);
+                                    var b64PsshBox = @"";
+                                    if (psshBox == null)
+                                    {
+                                        ConsoleWriters.ConsoleWriteError(@"Could not locate Widevine PSSH; WV is the only supported DRM");
+                                        return @"";
+                                    }
+                                    else
+                                    {
+                                        b64PsshBox = Convert.ToBase64String(psshBox);
+                                        if (Args.DebugModeEnabled)
+                                        {
+                                            if (!string.IsNullOrWhiteSpace(b64PsshBox))
+                                            {
+                                                ConsoleWriters.ConsoleWriteDebug($"Widevine PSSH: {b64PsshBox}");
+                                            }
+                                        }
+                                    }
+
                                     //setup keyserver
                                     Objects.KeyServerConnection = Connection.FromConnectionFile() ?? new Connection();
 
@@ -423,6 +469,29 @@ namespace DisneyDown.Common.Processors
 
                                         //override the config
                                         Objects.KeyServerConnection.Service.ServiceEnabled = false;
+
+                                    //we can use CDRM if we cannot get a key via the key server
+                                    if (!Objects.KeyServerConnection.Service.ServiceEnabled &&
+                                        Strings.DecryptionKey == Strings.LookupModeTriggerKey)
+                                    {
+                                        ConsoleWriters.ConsoleWriteInfo(@"Requesting CDRM key");
+                                        var cdrm = CdrmProjectManager.RequestMediaViaPssh(psshBox);
+                                        if (cdrm != null)
+                                        {
+                                            if (cdrm.Keys?.Length > 0)
+                                            {
+                                                //first key is us
+                                                Strings.DecryptionKey = cdrm.Keys[0].Key.Split(':')[1];
+
+                                                //output result
+                                                ConsoleWriters.ConsoleWriteInfo($"Found key: {Strings.DecryptionKey}");
+                                            }
+                                        }
+                                        else
+                                        {
+                                            ConsoleWriters.ConsoleWriteError(@"Failed to retrieve key from CDRM project");
+                                        }
+                                    }
 
                                     //directories for temporary storage
                                     var baseOutputDir = $@"{Strings.AssemblyDirectory}\output";
@@ -501,12 +570,10 @@ namespace DisneyDown.Common.Processors
                                         ? $@"{Path.GetDirectoryName(decryptedVideo)}\bumperVideoDecrypted.mp4"
                                         : "";
 
-
                                     //decrypted audio
                                     var decryptedBumperAudio = !string.IsNullOrWhiteSpace(decryptedAudio)
                                         ? $@"{Path.GetDirectoryName(decryptedAudio)}\bumperAudioDecrypted.mp4"
                                         : "";
-
 
                                     //decrypted bumper to be saved
                                     var decryptedBumper = $@"{outputDir}\decryptedBumper.mkv";

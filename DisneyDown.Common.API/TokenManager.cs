@@ -1,5 +1,6 @@
 ﻿using DisneyDown.Common.API.Enums;
 using DisneyDown.Common.API.Globals;
+using DisneyDown.Common.API.Schemas;
 using DisneyDown.Common.API.Schemas.AuthenticationSchemas;
 using DisneyDown.Common.API.Structures.ApiDevice;
 using DisneyDown.Common.API.Structures.RequestPayloads;
@@ -7,7 +8,6 @@ using DisneyDown.Common.Util.Kit;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
-using Converter = DisneyDown.Common.Util.Converter;
 
 namespace DisneyDown.Common.API
 {
@@ -90,7 +90,7 @@ namespace DisneyDown.Common.API
 
                         //serialise the response
                         var responseEncoded =
-                            JsonConvert.DeserializeObject<TokenExchangeResponse>(response.Content, Converter.Settings);
+                            JsonConvert.DeserializeObject<TokenExchangeResponse>(response.Content, ApiJsonConverter.Settings);
 
                         //return the result
                         return responseEncoded;

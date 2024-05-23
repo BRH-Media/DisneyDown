@@ -3,8 +3,10 @@ using DisneyDown.Common.API.Schemas;
 using DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoBundleSchemaContainer;
 using DisneyDown.Common.API.Schemas.MediaSchemas.DmcVideoSchemaContainer;
 using DisneyDown.Common.API.Schemas.MediaSchemas.PlaybackScenarioSchemaContainer;
+using DisneyDown.Common.API.Schemas.PageSchemas;
 using DisneyDown.Common.API.Structures;
 using DisneyDown.Common.API.Structures.ApiDevice;
+using DisneyDown.Common.Util;
 using DisneyDown.Common.Util.Kit;
 using Newtonsoft.Json;
 using RestSharp;
@@ -45,7 +47,39 @@ namespace DisneyDown.Common.API
                         if (authPackage.Account.IsValid)
                         {
                             //parse out the ID component
-                            var contentId = url.GetFileNameFromUrl();
+                            var entityId = url.GetFileNameFromUrl();
+                            var contentId = @"";
+
+                            if (!string.IsNullOrWhiteSpace(entityId))
+                            {
+                                if (!entityId.Contains(@"entity-") && url.Contains(@"play/"))
+                                {
+                                    entityId = $"entity-{entityId}";
+                                }
+
+                                //retrieve data
+                                ConsoleWriters.ConsoleWriteInfo(@"Requesting page information (entity)");
+                                var entityInfo = deviceContext.RequestEntityPageInfo(entityId,
+                                    authPackage.Account.OAuthToken.Token);
+
+                                //validation
+                                if (entityInfo?.Data?.Page?.Actions?.Length > 0)
+                                {
+                                    foreach (var a in entityInfo?.Data?.Page?.Actions)
+                                    {
+                                        if (!string.IsNullOrWhiteSpace(a.ContentId?.ToString() ?? ""))
+                                        {
+                                            contentId = a.ContentId.ToString();
+                                            break;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    ConsoleWriters.ConsoleWriteError(@"Could not get entity information; response invalid");
+                                    return mediaInfo;
+                                }
+                            }
 
                             //validation
                             if (!string.IsNullOrWhiteSpace(contentId))
@@ -370,6 +404,60 @@ namespace DisneyDown.Common.API
             {
                 //handle error
                 ConsoleWriters.ConsoleWriteDebug($"Experienced an error while trying to get Disney+ video: {ex.Message}");
+            }
+
+            //default
+            return null;
+        }
+
+        /// <summary>
+        /// Requests page information for content (this is part of the Disney+ move towards GraphQL; do not expect this to work long-term
+        /// </summary>
+        /// <param name="deviceContext"></param>
+        /// <param name="entityPageId"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public static EntityPageInformation RequestEntityPageInfo(this ApiDevice deviceContext, string entityPageId, string token)
+        {
+            try
+            {
+                //validation
+                if (!string.IsNullOrWhiteSpace(token) && !string.IsNullOrWhiteSpace(entityPageId))
+                {
+                    //setup client
+                    var client = new RestClient(Methods.GetBaseUrl(Objects.Configuration.EntityPageUrl));
+                    var uri = new Uri($"{Objects.Configuration.EntityPageUrl}/{entityPageId}");
+                    var endpoint = uri.PathAndQuery;
+
+                    //setup request
+                    var request = new RestRequest(entityPageId)
+                    {
+                        Method = Method.GET
+                    };
+
+                    //generic headers
+                    request.AddHeader(@"X-BAMSDK-PLATFORM", Objects.Services.CommonHeaders.XBamsdkPlatform.Replace("{SDKPlatform}", deviceContext.BamSdkPlatform));
+                    request.AddHeader(@"X-BAMSDK-VERSION", Objects.Services.CommonHeaders.XBamsdkVersion.Replace("{SDKVersion}", deviceContext.BamSdkVersion));
+
+                    //request-specific headers
+                    request.AddHeader(@"Authorization", $"Bearer {token}");
+                    request.AddHeader(@"Accept", "application/json");
+
+                    //execute and get response
+                    var response = client.Execute(request);
+
+                    //serialise the response
+                    var responseEncoded =
+                        JsonConvert.DeserializeObject<EntityPageInformation>(response.Content, ApiJsonConverter.Settings);
+
+                    //return the result
+                    return responseEncoded;
+                }
+            }
+            catch (Exception ex)
+            {
+                //handle error
+                ConsoleWriters.ConsoleWriteDebug($"Experienced an error while trying to get Disney+ entity page information: {ex.Message}");
             }
 
             //default

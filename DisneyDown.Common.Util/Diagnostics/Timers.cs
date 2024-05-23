@@ -1,5 +1,4 @@
-﻿using DisneyDown.Common.Globals;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Linq;
 
@@ -125,7 +124,7 @@ namespace DisneyDown.Common.Util.Diagnostics
         /// <summary>
         /// Formats and prints all diagnostics timers to the console
         /// </summary>
-        public static void ReportTimers()
+        public static void ReportTimers(bool bumperEnabled = false)
         {
             try
             {
@@ -150,7 +149,7 @@ namespace DisneyDown.Common.Util.Diagnostics
                     Console.WriteLine($"║ Subtitles Parse/Merge   ║ {PadTimerLine(StopwatchStringFormat(Generic.SubtitlesParseTimer))} ║");
 
                     //has the user enabled downloading the Disney+ intro (bumper)?
-                    if (!Args.DownloadBumperEnabled)
+                    if (bumperEnabled)
 
                         //bumpers not enabled; close the timings box
                         Console.WriteLine($"╚═════════════════════════╩═{borderAdd}╝");

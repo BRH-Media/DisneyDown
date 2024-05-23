@@ -40,9 +40,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\ValidUrl.cs" />
+    <Compile Include="Globals\DrmSchemeValues.cs" />
     <Compile Include="Globals\FilterValues\FilterValuesAuxiliary.cs" />
     <Compile Include="Globals\FilterValues\FilterValuesItemEntry.cs" />
-    <Compile Include="Util\Converter.cs" />
     <Compile Include="Extensions\DataTableConversion.cs" />
     <Compile Include="Globals\FilterValues\FilterValuesItem.cs" />
     <Compile Include="Globals\FilterValues\FilterValuesProvider.cs" />
@@ -52,7 +52,6 @@
     <Compile Include="Globals\Args.cs" />
     <Compile Include="Globals\Verification.cs" />
     <Compile Include="Schemas\BandwidthDefinitions.cs" />
-    <Compile Include="Util\JsonUtil.cs" />
     <Compile Include="Schemas\QualityRating.cs" />
     <Compile Include="Processors\Downloaders\Audio\BumperAudioDownloader.cs" />
     <Compile Include="Processors\Downloaders\Subtitles\MainSubtitlesDownloader.cs" />
@@ -70,10 +69,6 @@
     <Compile Include="Schemas\MP4Dump\Serialize.cs" />
     <Compile Include="Schemas\MP4Dump\StickyChild.cs" />
     <Compile Include="Schemas\MP4Dump\TentacledChild.cs" />
-    <Compile Include="Util\Diagnostics\BumperTimers.cs" />
-    <Compile Include="Util\Diagnostics\MainTimers.cs" />
-    <Compile Include="Util\Extensions.cs" />
-    <Compile Include="Util\Methods.cs" />
     <Compile Include="Processors\MainProcessor.cs" />
     <Compile Include="Processors\Downloaders\Audio\MainAudioDownloader.cs" />
     <Compile Include="Processors\Downloaders\Video\MainVideoDownloader.cs" />
@@ -82,9 +77,12 @@
     <Compile Include="Parsers\MasterParsers.cs" />
     <Compile Include="Processors\SegmentHandlers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Util\Diagnostics\Timers.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DisneyDown.Common.API\DisneyDown.Common.API.csproj">
+      <Project>{aae2e3ad-4a98-4361-bdeb-83a66dcc0fdf}</Project>
+      <Name>DisneyDown.Common.API</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DisneyDown.Common.ExternalRetrieval\DisneyDown.Common.ExternalRetrieval.csproj">
       <Project>{e57471f5-65be-4997-be81-edef4435313e}</Project>
       <Name>DisneyDown.Common.ExternalRetrieval</Name>
@@ -109,12 +107,21 @@
       <Project>{1df9eab5-5707-4f5e-8dae-a791c3f3cd42}</Project>
       <Name>DisneyDown.Common.Util.Kit</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DisneyDown.Common.Util\DisneyDown.Common.Util.csproj">
+      <Project>{4189d3cd-0aff-4f0c-92d1-821f5c2f4c0c}</Project>
+      <Name>DisneyDown.Common.Util</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DisneyDown.KeySystem.CDRM\DisneyDown.KeySystem.CDRM.csproj">
+      <Project>{942586dc-e3c2-4eac-b603-eabd76751d20}</Project>
+      <Name>DisneyDown.KeySystem.CDRM</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -5,7 +5,7 @@ using DisneyDown.Common.Util.Kit;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
-using Converter = DisneyDown.Common.Util.Converter;
+using DisneyDown.Common.API.Schemas;
 
 namespace DisneyDown.Common.API.Structures.ApiDevice
 {
@@ -52,7 +52,7 @@ namespace DisneyDown.Common.API.Structures.ApiDevice
             try
             {
                 //JSON request data
-                var jsonPayload = JsonConvert.SerializeObject(DeviceRequestPayload, Converter.Settings);
+                var jsonPayload = JsonConvert.SerializeObject(DeviceRequestPayload, ApiJsonConverter.Settings);
 
                 //setup client
                 var client = new RestClient(Objects.Services.Services.Device.Client.BaseUrl);
@@ -83,7 +83,7 @@ namespace DisneyDown.Common.API.Structures.ApiDevice
 
                 //serialise the response
                 var responseEncoded =
-                    JsonConvert.DeserializeObject<TokenGrantResponse>(response.Content, Converter.Settings);
+                    JsonConvert.DeserializeObject<TokenGrantResponse>(response.Content, ApiJsonConverter.Settings);
 
                 //return the result
                 return responseEncoded;
@@ -91,7 +91,7 @@ namespace DisneyDown.Common.API.Structures.ApiDevice
             catch (Exception ex)
             {
                 //error handling
-                ConsoleWriters.ConsoleWriteError($"Device token request error: {ex.Message}");
+                ConsoleWriters.ConsoleWriteError($"Device token request error: {ex}");
             }
 
             //default

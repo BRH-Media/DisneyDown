@@ -7,7 +7,7 @@ using Microsoft.IdentityModel.JsonWebTokens;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
-using Converter = DisneyDown.Common.Util.Converter;
+using DisneyDown.Common.API.Schemas;
 
 // ReSharper disable RedundantIfElseBlock
 
@@ -218,7 +218,7 @@ namespace DisneyDown.Common.API
 
                     //serialise the response
                     var responseEncoded =
-                        JsonConvert.DeserializeObject<TokenGrantResponse>(response.Content, Converter.Settings);
+                        JsonConvert.DeserializeObject<TokenGrantResponse>(response.Content, ApiJsonConverter.Settings);
 
                     //return the result
                     return responseEncoded;
@@ -279,7 +279,7 @@ namespace DisneyDown.Common.API
 
                     //serialise the response
                     var responseEncoded =
-                        JsonConvert.DeserializeObject<BAMIdentityResponse>(response.Content, Converter.Settings);
+                        JsonConvert.DeserializeObject<BAMIdentityResponse>(response.Content, ApiJsonConverter.Settings);
 
                     //return the result
                     return responseEncoded;

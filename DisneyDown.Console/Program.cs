@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using DisneyDown.Common.KeySystem;
 
 // ReSharper disable InvertIf
 // ReSharper disable LocalizableElement
@@ -188,6 +189,9 @@ namespace DisneyDown.Console
                         //validation
                         if (!string.IsNullOrWhiteSpace(type))
                         {
+                            //provision API services
+                            Common.API.Globals.Objects.Services = ServiceInformation.GetServices();
+
                             //debugging
                             ConsoleWriters.DebugMode = Args.DebugModeEnabled;
 
@@ -221,9 +225,6 @@ namespace DisneyDown.Console
                                 {
                                     //inform user of what's going on
                                     ConsoleWriters.ConsoleWriteInfo(@"A valid manifest URL was not specified; trying to fetch from the Disney+ API");
-
-                                    //provision API services
-                                    Common.API.Globals.Objects.Services = ServiceInformation.GetServices();
 
                                     //attempt to get a manifest from the API
                                     var url = Common.API.Globals.Objects.Configuration.DeviceContext
