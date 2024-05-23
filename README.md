@@ -14,3 +14,5 @@ Additionally, please always encapsulate manifest URLs in double quotes e.g. `Dis
 
 ### Notes on CDRM Project
 Create a file in the program folder called `cdrmToken.txt` and fill it with your account token for Disney+. If you need help finding this, open the network inspector while logged into Disney+ and you will find this token being sent to an endpoint called `/dust` very frequently. **Do not specify a key** if you intend to use CDRM, simply provide the manifest and any desired flags (make sure you use `-m` if you find trouble with very long manifest URLs).
+
+Your command should resemble this `DisneyDown.Console.exe "manifest.m3u8" -m -d`. If you're part of the pilot program for the KeyServer system, then you need to set the `ServiceEnabled` flag to `false` in the configuration file in order to use an alternate key source like CDRM.
