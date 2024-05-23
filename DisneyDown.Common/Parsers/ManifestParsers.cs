@@ -47,9 +47,9 @@ namespace DisneyDown.Common.Parsers
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                //nothing
+                Console.WriteLine(ex.ToString());
             }
 
             //default

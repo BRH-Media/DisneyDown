@@ -14,6 +14,7 @@ namespace DisneyDown.Common.Parsers.HLS.Playlist
         EXT_X_DISCONTINUITY,
         EXT_X_KEY,
         EXT_X_MAP,
+        EXT_X_DS_MARKER,
         EXT_X_PROGRAM_DATE_TIME,
         EXT_X_DATERANGE,
         EXT_X_TARGETDURATION,

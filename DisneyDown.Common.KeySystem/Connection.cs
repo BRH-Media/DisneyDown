@@ -9,6 +9,7 @@ using DisneyDown.Common.Security.Hashing;
 using DisneyDown.Common.Util.Kit;
 using Newtonsoft.Json;
 using RestSharp;
+using UIHelpers;
 
 // ReSharper disable IdentifierTypo
 // ReSharper disable ArrangeModifiersOrder

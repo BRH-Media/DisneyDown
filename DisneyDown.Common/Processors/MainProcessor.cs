@@ -374,10 +374,17 @@ namespace DisneyDown.Common.Processors
                     else
                     {
                         //ensure manifest URI is a valid URI and is a valid HLS manifest file
-                        var masterUriValid =
+                        bool masterUriValid;
 
+                        //override for argument
+                        if (Args.DoNotValidateManifestUri)
+                        {
+                            masterUriValid = true;
+                        }
+                        else
+                        {
                             //attempt to create a URI object from the provided master manifest URL
-                            Uri.TryCreate(Strings.ManifestUrl, UriKind.Absolute, out var uriResult)
+                            masterUriValid = Uri.TryCreate(Strings.ManifestUrl, UriKind.Absolute, out var uriResult)
 
                                              //can be either HTTP or HTTPS; no other protocols are allowed
                                              && (uriResult.Scheme == Uri.UriSchemeHttp ||
@@ -385,7 +392,9 @@ namespace DisneyDown.Common.Processors
 
                                              //can be either a .m3u8 file or a .m3u file; others are not valid HLS manifests
                                              && (new FileInfo(uriResult.AbsolutePath).Extension.ToLower() == @".m3u8"
-                                                    || new FileInfo(uriResult.AbsolutePath).Extension.ToLower() == @".m3u");
+                                                 || new FileInfo(uriResult.AbsolutePath).Extension.ToLower() ==
+                                                 @".m3u");
+                        }
 
                         //only proceed if valid
                         if (!masterUriValid)
@@ -484,16 +493,20 @@ namespace DisneyDown.Common.Processors
                                     }
 
                                     //download, parse and merge subtitles
-                                    if (!Args.VideoOnlyMode)
+                                    if (!Args.VideoOnlyMode && !Args.AudioOnlyMode)
                                         mergedSubtitles = StartSubtitles(masterPlaylist, workingDir);
 
                                     //decrypted video
-                                    var decryptedBumperVideo =
-                                        $@"{Path.GetDirectoryName(decryptedVideo)}\bumperVideoDecrypted.mp4";
+                                    var decryptedBumperVideo = !string.IsNullOrWhiteSpace(decryptedVideo)
+                                        ? $@"{Path.GetDirectoryName(decryptedVideo)}\bumperVideoDecrypted.mp4"
+                                        : "";
+
 
                                     //decrypted audio
-                                    var decryptedBumperAudio =
-                                        $@"{Path.GetDirectoryName(decryptedAudio)}\bumperAudioDecrypted.mp4";
+                                    var decryptedBumperAudio = !string.IsNullOrWhiteSpace(decryptedAudio)
+                                        ? $@"{Path.GetDirectoryName(decryptedAudio)}\bumperAudioDecrypted.mp4"
+                                        : "";
+
 
                                     //decrypted bumper to be saved
                                     var decryptedBumper = $@"{outputDir}\decryptedBumper.mkv";
@@ -647,7 +660,7 @@ namespace DisneyDown.Common.Processors
             catch (Exception ex)
             {
                 //report error
-                ConsoleWriters.ConsoleWriteError($@"Main process error: {ex.Message}");
+                ConsoleWriters.ConsoleWriteError($@"Main process error: {ex}");
             }
 
             //default

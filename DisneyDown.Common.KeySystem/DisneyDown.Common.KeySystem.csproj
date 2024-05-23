@@ -65,6 +65,10 @@
       <Project>{1df9eab5-5707-4f5e-8dae-a791c3f3cd42}</Project>
       <Name>DisneyDown.Common.Util.Kit</Name>
     </ProjectReference>
+    <ProjectReference Include="..\UIHelpers\UIHelpers.csproj">
+      <Project>{e3ce262b-b962-44ff-abc0-5ebfb403d51d}</Project>
+      <Name>UIHelpers</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

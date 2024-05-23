@@ -20,6 +20,7 @@ namespace DisneyDown.Common.Globals
             { @"-e",    @"Forces the application to avoid using the master parser; requires -v or -a but not both" },
             { @"-l",    @"Disables the usage of the API module" },
             { @"-n",    @"Disables input prompts (e.g. press to continue)"},
+            { @"-m",    @"Disables manifest URI validation"},
             { @"-k",    @"Forces DisneyDown to not use the defined keyserver regardless of the config" },
             { @"-t",    @"Enables execution timing; reports how long each operation took" },
             { @"-v",    @"Forces the application to only download and decrypt video" },
@@ -27,6 +28,12 @@ namespace DisneyDown.Common.Globals
             { @"-help", @"Shows basic information about how to use this program" },
             { @"-h",    @"Shows basic information about how to use this program" }
         };
+
+        /// <summary>
+        /// Whether or not the application is allowed to validate manifest URIs
+        /// </summary>
+        public static bool DoNotValidateManifestUri =>
+            Environment.GetCommandLineArgs().Contains(@"-m");
 
         /// <summary>
         /// Whether or not the application is allowed to use the Disney+ API

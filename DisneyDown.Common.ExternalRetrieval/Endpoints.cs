@@ -1,6 +1,6 @@
-﻿using DisneyDown.Common.Util.Kit;
-using System;
+﻿using System;
 using System.IO;
+using DisneyDown.Common.Util.Kit;
 
 // ReSharper disable RedundantIfElseBlock
 // ReSharper disable UnusedMember.Global
@@ -16,7 +16,7 @@ namespace DisneyDown.Common.ExternalRetrieval
         public ModuleRetrievalEndpoint FFMpegEndpoint { get; set; } = new ModuleRetrievalEndpoint
         {
             DownloadUrl = @"https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip",
-            Files = new ModuleRetrievalEndpointFile[]
+            Files = new[]
             {
                 new ModuleRetrievalEndpointFile
                 {
@@ -33,7 +33,7 @@ namespace DisneyDown.Common.ExternalRetrieval
         public ModuleRetrievalEndpoint MP4DecryptEndpoint { get; set; } = new ModuleRetrievalEndpoint
         {
             DownloadUrl = @"http://zebulon.bok.net/Bento4/binaries/Bento4-SDK-1-6-0-637.x86_64-microsoft-win32.zip",
-            Files = new ModuleRetrievalEndpointFile[]
+            Files = new[]
             {
                 new ModuleRetrievalEndpointFile
                 {
@@ -50,7 +50,7 @@ namespace DisneyDown.Common.ExternalRetrieval
         public ModuleRetrievalEndpoint MP4DumpEndpoint { get; set; } = new ModuleRetrievalEndpoint
         {
             DownloadUrl = @"http://zebulon.bok.net/Bento4/binaries/Bento4-SDK-1-6-0-637.x86_64-microsoft-win32.zip",
-            Files = new ModuleRetrievalEndpointFile[]
+            Files = new[]
             {
                 new ModuleRetrievalEndpointFile
                 {
