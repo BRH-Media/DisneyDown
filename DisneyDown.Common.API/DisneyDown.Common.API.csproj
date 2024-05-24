@@ -371,6 +371,7 @@
     <Compile Include="Structures\ApiConfiguration.cs" />
     <Compile Include="Structures\ApiConfigurationCredentials.cs" />
     <Compile Include="Structures\ApiDevice\ApiDeviceProviders\ApiDeviceAppleMobile.cs" />
+    <Compile Include="Structures\ApiDevice\ApiDeviceProviders\ApiDeviceFirefox.cs" />
     <Compile Include="Structures\ApiDevice\ApiDeviceTokenObject.cs" />
     <Compile Include="Structures\ApiDevice\ApiDevice.cs" />
     <Compile Include="Structures\ApiDevice\ApiDeviceAttributes.cs" />

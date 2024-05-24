@@ -1,5 +1,4 @@
-﻿using DisneyDown.Common.API;
-using DisneyDown.Common.ExternalRetrieval.ModuleInfrastructure.Modules;
+﻿using DisneyDown.Common.ExternalRetrieval.ModuleInfrastructure.Modules;
 using DisneyDown.Common.Globals;
 using DisneyDown.Common.KeySystem;
 using DisneyDown.Common.Parsers;
@@ -14,7 +13,6 @@ using DisneyDown.KeySystem.CDRM;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using DisneyDown.Common.API.Schemas.ServicesSchema;
 
 // ReSharper disable UnusedVariable
 // ReSharper disable UnusedMember.Global
@@ -485,6 +483,13 @@ namespace DisneyDown.Common.Processors
 
                                                 //output result
                                                 ConsoleWriters.ConsoleWriteInfo($"Found key: {Strings.DecryptionKey}");
+                                            }
+                                            else
+                                            {
+                                                ConsoleWriters.ConsoleWriteError(!string.IsNullOrWhiteSpace(cdrm.Error)
+                                                    ? $"CDRM reported an error: {cdrm.Error}"
+                                                    : $"Unknown CDRM error");
+                                                return @"";
                                             }
                                         }
                                         else

@@ -38,6 +38,11 @@ namespace DisneyDown.Common.Net
         /// </summary>
         public Dictionary<string, string> Data { get; set; } = new Dictionary<string, string>();
 
+        /// <summary>
+        /// HTTP raw body; overrides Data
+        /// </summary>
+        public byte[] DataRaw { get; set; } = {};
+
         public ServiceFrame()
         {
             //blank initialiser

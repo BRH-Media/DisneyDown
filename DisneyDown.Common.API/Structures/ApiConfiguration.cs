@@ -15,7 +15,7 @@ namespace DisneyDown.Common.API.Structures
         public string ServicesUrl { get; set; } = Strings.DefaultServicesUrl;
         public string EntityPageUrl { get; set; } = @"https://disney.api.edge.bamgrid.com/explore/v1.3/page/";
         public ApiConfigurationCredentials Credentials { get; set; } = new ApiConfigurationCredentials();
-        public ApiDevice.ApiDevice DeviceContext { get; set; } = new ApiDeviceChrome();
+        public ApiDevice.ApiDevice DeviceContext { get; set; } = new ApiDeviceFirefox();
 
         public static ApiConfiguration FromJson(string json) =>
             JsonConvert.DeserializeObject<ApiConfiguration>(json, ApiJsonConverter.Settings);
