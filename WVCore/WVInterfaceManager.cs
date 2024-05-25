@@ -1,6 +1,9 @@
-﻿using System.Text;
-using DisneyDown.Common.Net;
+﻿using DisneyDown.Common.Net;
 using DisneyDown.Common.Util.Kit;
+using System.Text;
+using WVCore.Schemas;
+
+// ReSharper disable InconsistentNaming
 
 namespace WVCore
 {
@@ -16,7 +19,7 @@ namespace WVCore
             {
                 if (c > 127)
                 {
-                    // This character is too big for ASCII  
+                    // This character is too big for ASCII
                     var encodedValue = "\\u" + ((int)c).ToString("x4");
                     sb.Append(encodedValue);
                 }
@@ -55,7 +58,27 @@ namespace WVCore
                             var lic = HttpUtil.PostData(DisneyLicenseServerUrl, hdr, chl);
                             if (lic.Length > 0)
                             {
-                                ConsoleWriters.ConsoleWriteInfo(@"Received a license response; decoding within CDM");
+                                if (lic.IsValidJsonBytes())
+                                {
+                                    var e = WVErrorListing.FromJson(Encoding.Default.GetString(lic));
+                                    if (e != null)
+                                    {
+                                        ConsoleWriters.ConsoleWriteError(@"License server error(s):");
+                                        foreach (var m in e.Errors)
+                                        {
+                                            ConsoleWriters.ConsoleWriteError($"- '{m.Code}'");
+                                        }
+                                    }
+                                    else
+                                    {
+                                        ConsoleWriters.ConsoleWriteError(@"An unknown error occurred; the licensing server did not serve a ProtoBuf response as expected");
+                                    }
+
+                                    return null!;
+                                }
+
+                                ConsoleWriters.ConsoleWriteInfo(
+                                    @"Received a license response; decoding within CDM");
                                 var b64 = Convert.ToBase64String(lic);
                                 if (cdm.ProvideLicense(b64))
                                 {

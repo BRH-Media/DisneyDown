@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DisneyDown.Common.API\DisneyDown.Common.API.csproj" />
     <ProjectReference Include="..\DisneyDown.Common.Util.Kit\DisneyDown.Common.Util.Kit.csproj" />
     <ProjectReference Include="..\WVCore\WVCore.csproj" />
   </ItemGroup>

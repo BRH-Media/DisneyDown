@@ -1,5 +1,7 @@
-﻿using DisneyDown.Common.Util.Kit;
-using DisneyDown.Common.Util.Kit.Enums;
+﻿using DisneyDown.Common.API;
+using DisneyDown.Common.API.Globals;
+using DisneyDown.Common.API.Schemas.ServicesSchema;
+using DisneyDown.Common.Util.Kit;
 using WVCore;
 
 namespace DisneyDown.WidevineCrypto
@@ -13,20 +15,48 @@ namespace DisneyDown.WidevineCrypto
                 if (File.Exists(@"cdrmToken.txt"))
                 {
                     var token = File.ReadAllText(@"cdrmToken.txt");
-                    var pssh = args[0];
-                    var key = WVInterfaceManager.GetCdmHexKeyForPssh(pssh, token);
-                    if (!string.IsNullOrWhiteSpace(key))
-                    {
-                        ConsoleWriters.ConsoleWriteSuccess(@"Success! The licensing server has provided you with decryption information");
-                        ConsoleWriters.Break();
 
-                        var details = key.Split(@":");
-                        ConsoleWriters.ConsoleWriteInfo($"KID: {details[0]}");
-                        ConsoleWriters.ConsoleWriteInfo($"KEY: {details[1]}");
+                    //validation
+                    if (!string.IsNullOrWhiteSpace(token))
+                    {
+                        if (token.ToLower() == @"obtainvia.login")
+                        {
+                            //auth package request required
+                            ConsoleWriters.ConsoleWriteInfo(@"Authentication via Disney+ login is required");
+                            Objects.Services = ServiceInformation.GetServices();
+                            var auth = Objects.Configuration.DeviceContext.RequestAuthenticationPackage();
+                            if (!string.IsNullOrWhiteSpace(auth?.Account?.OAuthToken?.Token))
+                            {
+                                token = auth.Account?.OAuthToken?.Token;
+                            }
+                            else
+                            {
+                                ConsoleWriters.ConsoleWriteError(@"Failed to retrieve authentication data; licence request cannot proceed");
+                                Console.ReadKey();
+                                return;
+                            }
+                        }
+
+                        var pssh = args[0];
+                        var key = WVInterfaceManager.GetCdmHexKeyForPssh(pssh, token);
+                        if (!string.IsNullOrWhiteSpace(key))
+                        {
+                            ConsoleWriters.ConsoleWriteSuccess(
+                                @"Success! The Disney+ licensing server has provided you with decryption information");
+                            ConsoleWriters.Break();
+
+                            var details = key.Split(@":");
+                            ConsoleWriters.ConsoleWriteInfo($"KID: {details[0]}");
+                            ConsoleWriters.ConsoleWriteInfo($"KEY: {details[1]}");
+                        }
+                        else
+                        {
+                            ConsoleWriters.ConsoleWriteError(@"Failed to retrieve keys");
+                        }
                     }
                     else
                     {
-                        ConsoleWriters.ConsoleWriteError(@"Failed to retrieve keys");
+                        ConsoleWriters.ConsoleWriteError(@"Invalid token data");
                     }
                 }
                 else
