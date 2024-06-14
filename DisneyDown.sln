@@ -35,7 +35,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisneyDown.Common.Util", "D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WVCore", "WVCore\WVCore.csproj", "{5D7878A9-775A-432A-91AC-BBC3CA7D3301}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisneyDown.WidevineCrypto", "DisneyDown.WidevineCrypto\DisneyDown.WidevineCrypto.csproj", "{415124A6-B2A8-44CA-B933-B04ECD70D27E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DisneyDown.WidevineCrypto", "DisneyDown.WidevineCrypto\DisneyDown.WidevineCrypto.csproj", "{415124A6-B2A8-44CA-B933-B04ECD70D27E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisneyDown.GenericWidevineCrypto", "DisneyDown.GenericWidevineCrypto\DisneyDown.GenericWidevineCrypto.csproj", "{BF503CCB-DCAB-4E42-B060-76661AFD61B8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -111,6 +113,10 @@ Global
 		{415124A6-B2A8-44CA-B933-B04ECD70D27E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{415124A6-B2A8-44CA-B933-B04ECD70D27E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{415124A6-B2A8-44CA-B933-B04ECD70D27E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF503CCB-DCAB-4E42-B060-76661AFD61B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF503CCB-DCAB-4E42-B060-76661AFD61B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF503CCB-DCAB-4E42-B060-76661AFD61B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF503CCB-DCAB-4E42-B060-76661AFD61B8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

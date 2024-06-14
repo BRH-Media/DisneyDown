@@ -2,53 +2,50 @@
 
 namespace WVCore
 {
-    internal class HttpUtil
+    public static class WVHttpUtil
     {
-        public static HttpClient Client { get; set; } = new HttpClient(new HttpClientHandler
+        public static string DefaultUserAgent => @"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0";
+
+        public static HttpClient Client { get; set; } = new(new HttpClientHandler
         {
             AllowAutoRedirect = true,
-            //Proxy = null
         });
 
-        public static byte[] PostData(string URL, Dictionary<string, string> headers, string postData)
+        public static byte[] PostData(string url, Dictionary<string, string> headers, string postData)
         {
             var mediaType = postData.StartsWith("{") ? "application/json" : "application/x-www-form-urlencoded";
             var content = new StringContent(postData, Encoding.UTF8, mediaType);
-            //ByteArrayContent content = new ByteArrayContent(postData);
-
-            var response = Post(URL, headers, content);
+            var response = Post(url, headers, content);
             var bytes = response.Content.ReadAsByteArrayAsync().Result;
             return bytes;
         }
 
-        public static byte[] PostData(string URL, Dictionary<string, string> headers, byte[] postData)
+        public static byte[] PostData(string url, Dictionary<string, string> headers, byte[] postData)
         {
             var content = new ByteArrayContent(postData);
-
-            var response = Post(URL, headers, content);
+            var response = Post(url, headers, content);
             var bytes = response.Content.ReadAsByteArrayAsync().Result;
             return bytes;
         }
 
-        public static byte[] PostData(string URL, Dictionary<string, string> headers, Dictionary<string, string> postData)
+        public static byte[] PostData(string url, Dictionary<string, string> headers, Dictionary<string, string> postData)
         {
             var content = new FormUrlEncodedContent(postData);
-
-            var response = Post(URL, headers, content);
+            var response = Post(url, headers, content);
             var bytes = response.Content.ReadAsByteArrayAsync().Result;
             return bytes;
         }
 
-        public static string GetWebSource(string URL, Dictionary<string, string> headers = null)
+        public static string GetWebSource(string url, Dictionary<string, string>? headers = null)
         {
-            var response = Get(URL, headers);
+            var response = Get(url, headers);
             var bytes = response.Content.ReadAsByteArrayAsync().Result;
             return Encoding.UTF8.GetString(bytes);
         }
 
-        public static byte[] GetBinary(string URL, Dictionary<string, string> headers = null)
+        public static byte[] GetBinary(string url, Dictionary<string, string>? headers = null)
         {
-            var response = Get(URL, headers);
+            var response = Get(url, headers);
             var bytes = response.Content.ReadAsByteArrayAsync().Result;
             return bytes;
         }
@@ -58,32 +55,35 @@ namespace WVCore
             return Encoding.UTF8.GetString(bytes);
         }
 
-        private static HttpResponseMessage Get(string URL, Dictionary<string, string> headers = null)
+        private static HttpResponseMessage Get(string url, Dictionary<string, string>? headers = null)
         {
             var request = new HttpRequestMessage()
             {
-                RequestUri = new Uri(URL),
+                RequestUri = new Uri(url),
                 Method = HttpMethod.Get
             };
 
-            if (headers != null)
-                foreach (var header in headers)
-                    request.Headers.TryAddWithoutValidation(header.Key, header.Value);
+            if (headers == null)
+                return Send(request);
+            foreach (var (key, value) in headers)
+                request.Headers.TryAddWithoutValidation(key, value);
 
             return Send(request);
         }
 
-        private static HttpResponseMessage Post(string URL, Dictionary<string, string> headers, HttpContent content)
+        private static HttpResponseMessage Post(string url, Dictionary<string, string> headers, HttpContent content)
         {
             var request = new HttpRequestMessage
             {
-                RequestUri = new Uri(URL),
+                RequestUri = new Uri(url),
                 Method = HttpMethod.Post,
                 Content = content
             };
 
             foreach (var (key, value) in headers)
+            {
                 request.Headers.TryAddWithoutValidation(key, value);
+            }
 
             return Send(request);
         }

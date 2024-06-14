@@ -8,6 +8,8 @@ namespace DisneyDown.WidevineCrypto
 {
     internal class Program
     {
+        private static string DisneyLicenseServerUrl => @"https://disney.playback.edge.bamgrid.com/widevine/v1/obtain-license";
+
         public static void Main(string[] args)
         {
             if (args.Length > 0)
@@ -37,8 +39,21 @@ namespace DisneyDown.WidevineCrypto
                             }
                         }
 
+                        ConsoleWriters.ConsoleWriteInfo(@"Fetching service certificate");
+                        var cert = WVInterfaceManager.GetDisneyWidevineCertificateB64();
+                        if (string.IsNullOrWhiteSpace(cert))
+                        {
+                            ConsoleWriters.ConsoleWriteError(@"Failed to retrieve certificate (null result)");
+                            return;
+                        }
                         var pssh = args[0];
-                        var key = WVInterfaceManager.GetCdmHexKeyForPssh(pssh, token);
+                        var config = new WVInterfaceConfig
+                        {
+                            LicenceAuthorization = token ?? @"",
+                            LicenceCertificate = cert,
+                            LicenceServer = DisneyLicenseServerUrl
+                        };
+                        var key = WVInterfaceManager.GetCdmHexKeyForPssh(pssh, config);
                         if (!string.IsNullOrWhiteSpace(key))
                         {
                             ConsoleWriters.ConsoleWriteSuccess(

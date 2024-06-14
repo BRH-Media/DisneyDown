@@ -10,7 +10,6 @@ namespace WVCore
     public static class WVInterfaceManager
     {
         private static string DisneyServiceCertificateUrl => "https://playback-certs.bamgrid.com/static/v1.0/widevine.bin";
-        private static string DisneyLicenseServerUrl => @"https://disney.playback.edge.bamgrid.com/widevine/v1/obtain-license";
 
         private static string EncodeNonAsciiCharacters(string value)
         {
@@ -31,77 +30,68 @@ namespace WVCore
             return sb.ToString();
         }
 
-        public static string GetCdmHexKeyForPssh(string pssh, string authToken = "")
+        public static string GetCdmHexKeyForPssh(string pssh, WVInterfaceConfig config)
         {
             try
             {
                 ConsoleWriters.ConsoleWriteInfo(@"Checking CDM files");
                 if (WVDeviceManager.DeviceFilesPresent())
                 {
-                    ConsoleWriters.ConsoleWriteInfo(@"Requesting service certificate");
-                    var certBytes = GetDisneyWidevineCertificateB64();
-                    if (!string.IsNullOrWhiteSpace(certBytes))
+                    var clientBlob = new FileInfo(WVDeviceManager.DeviceIdBlobFile);
+                    var clientKey = new FileInfo(WVDeviceManager.DeviceKeyFile);
+                    var cdm = new WVApi(clientBlob, clientKey);
+                    ConsoleWriters.ConsoleWriteInfo(@"Requesting Widevine challenge");
+                    var chl = cdm.GetChallenge(pssh, config.LicenceCertificate);
+                    if (chl.Length > 0)
                     {
-                        ConsoleWriters.ConsoleWriteSuccess(@"Successfully obtained certificate data");
-                        var clientBlob = new FileInfo(WVDeviceManager.DeviceIdBlobFile);
-                        var clientKey = new FileInfo(WVDeviceManager.DeviceKeyFile);
-                        var cdm = new WVApi(clientBlob, clientKey);
-                        ConsoleWriters.ConsoleWriteInfo(@"Requesting Widevine challenge");
-                        var chl = cdm.GetChallenge(pssh, certBytes);
-                        if (chl.Length > 0)
-                        {
-                            ConsoleWriters.ConsoleWriteInfo(@"Challenge generated; forwarding it to the server");
-                            var hdr = new Dictionary<string, string>
+                        ConsoleWriters.ConsoleWriteInfo(@"Challenge generated; forwarding it to the server");
+                        var hdr = new Dictionary<string, string>
                             {
-                                { @"Authorization", $"Bearer {EncodeNonAsciiCharacters(authToken)}" }
+                                { @"Authorization", $"Bearer {EncodeNonAsciiCharacters(config.LicenceAuthorization)}" },
+                                { @"User-Agent", config.LicenceClient }
                             };
-                            var lic = HttpUtil.PostData(DisneyLicenseServerUrl, hdr, chl);
-                            if (lic.Length > 0)
+
+                        foreach (var (key, value) in
+                                 config.LicenceHeaders.Where(h => h.Key.ToLower() != @"authorization" && h.Key.ToLower() != "user-agent"))
+                        {
+                            hdr.Add(key, value);
+                        }
+
+                        var lic = WVHttpUtil.PostData(config.LicenceServer, hdr, chl);
+                        if (lic.Length > 0)
+                        {
+                            if (lic.IsValidJsonBytes())
                             {
-                                if (lic.IsValidJsonBytes())
+                                var e = WVErrorListing.FromJson(Encoding.Default.GetString(lic));
+                                ConsoleWriters.ConsoleWriteError(@"License server error(s):");
+                                foreach (var m in e.Errors)
                                 {
-                                    var e = WVErrorListing.FromJson(Encoding.Default.GetString(lic));
-                                    if (e != null)
-                                    {
-                                        ConsoleWriters.ConsoleWriteError(@"License server error(s):");
-                                        foreach (var m in e.Errors)
-                                        {
-                                            ConsoleWriters.ConsoleWriteError($"- '{m.Code}'");
-                                        }
-                                    }
-                                    else
-                                    {
-                                        ConsoleWriters.ConsoleWriteError(@"An unknown error occurred; the licensing server did not serve a ProtoBuf response as expected");
-                                    }
-
-                                    return null!;
+                                    ConsoleWriters.ConsoleWriteError($"- '{m.Code}'");
                                 }
 
-                                ConsoleWriters.ConsoleWriteInfo(
-                                    @"Received a license response; decoding within CDM");
-                                var b64 = Convert.ToBase64String(lic);
-                                if (cdm.ProvideLicense(b64))
-                                {
-                                    var key = cdm.GetKeys();
-                                    if (key.Count > 0)
-                                    {
-                                        return key[0].ToString();
-                                    }
-                                }
+                                return null!;
                             }
-                            else
+
+                            ConsoleWriters.ConsoleWriteInfo(
+                                @"Received a license response; decoding within CDM");
+                            var b64 = Convert.ToBase64String(lic);
+                            if (cdm.ProvideLicense(b64))
                             {
-                                ConsoleWriters.ConsoleWriteError(@"Invalid response from license server");
+                                var key = cdm.GetKeys();
+                                if (key.Count > 0)
+                                {
+                                    return key[0].ToString();
+                                }
                             }
                         }
                         else
                         {
-                            ConsoleWriters.ConsoleWriteError(@"Invalid Widevine challenge");
+                            ConsoleWriters.ConsoleWriteError(@"Invalid response from license server");
                         }
                     }
                     else
                     {
-                        ConsoleWriters.ConsoleWriteError(@"Invalid service certificate");
+                        ConsoleWriters.ConsoleWriteError(@"Invalid Widevine challenge");
                     }
                 }
             }
